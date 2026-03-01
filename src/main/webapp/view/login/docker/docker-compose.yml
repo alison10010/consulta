@@ -1,0 +1,34 @@
+version: "3.9"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        WAR_FILE: consulta.war
+    container_name: wildfly-consulta
+    restart: always
+    ports:
+      - "8080:8080"
+
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+    volumes:
+      - /mnt/documentos:/mnt/documentos   # Host -> Container
+
+    environment:
+      SPRING_DATASOURCE_URL: "jdbc:mysql://host.docker.internal:3306/consulta?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=America/Rio_Branco"
+      SPRING_DATASOURCE_USERNAME: "ifbr"
+      SPRING_DATASOURCE_PASSWORD: "@ifbr#Walker"
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: "com.mysql.cj.jdbc.Driver"
+
+      SPRING_JPA_GENERATE_DDL: "true"
+      SPRING_JPA_SHOW_SQL: "false"
+      SPRING_JPA_HIBERNATE_DDL_AUTO: "update"
+
+      LOGGING_LEVEL_ROOT: "info"
+      SPRING_MVC_VIEW_PREFIX: "/view/"
+      SPRING_MVC_VIEW_SUFFIX: ".xhtml"
+      SPRING_WEB_RESOURCES_STATIC_LOCATIONS: "classpath:/static/"

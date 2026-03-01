@@ -1,0 +1,192 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    template="/view/layout/admin.xhtml">
+
+    <ui:define name="title">Contato</ui:define>
+
+    <ui:define name="content">
+
+        <!-- Leaflet (mapa clicável) -->
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+              integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="anonymous"/>
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+                integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="anonymous"></script>
+
+        <style>
+            .page{ padding:32px; display:flex; justify-content:center; }
+
+            .form-card{
+                width:100%;
+                max-width:1100px;
+                background:var(--card);
+                border:1px solid var(--border);
+                border-radius:var(--radius);
+                box-shadow:var(--shadow);
+                padding:28px;
+            }
+
+            .form-title{ font-weight:900; letter-spacing:-.02em; }
+
+            .form-control{
+                border-radius:14px;
+                border:1px solid rgba(15,23,42,.14);
+            }
+            .form-control:focus{
+                border-color:rgba(47,107,255,.45);
+                box-shadow:0 0 0 .25rem rgba(47,107,255,.15);
+            }
+
+            .btn-primary{
+                border:none;
+                font-weight:800;
+                border-radius:999px;
+                padding:12px 18px;
+                background:linear-gradient(135deg,var(--primary),var(--accent));
+                box-shadow:0 14px 35px rgba(47,107,255,.22);
+            }
+
+            .map-wrap{
+                border-radius:16px;
+                overflow:hidden;
+                border:1px solid rgba(0,0,0,.12);
+                background:#fff;
+            }
+            #map{ width:100%; height:360px; }
+
+            .hint{ color: rgba(15,23,42,.62); font-size: .92rem; }
+            .mini{ font-size:.86rem; color: rgba(15,23,42,.62); }
+
+            .btn-cep{
+                border-radius:999px !important;
+                font-weight:800;
+            }
+        </style>
+
+        <div class="page">
+        
+        	<p:growl id="messages" />
+
+            <h:form id="frm" styleClass="form-card">
+
+                <p class="text-muted mb-4">Informações pessoais, endereço e localização</p>
+
+                <!-- ===== DADOS PESSOAIS ===== -->
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Nome</label>
+                        <h:inputText id="nome" value="#{bean.nome}" styleClass="form-control"
+                                     placeholder="Nome completo"/>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Email</label>
+                        <h:inputText id="email" value="#{bean.email}" styleClass="form-control"
+                                     placeholder="email@exemplo.com"/>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="form-check mt-4">
+                            <h:selectBooleanCheckbox id="emailConfirmado"
+                                                     value="#{bean.emailConfirmado}"
+                                                     styleClass="form-check-input"/>
+                            <label class="form-check-label fw-semibold">
+                                Email confirmado
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- ===== CONTATO ===== -->
+				<h5 class="fw-bold mb-2">Contato</h5>
+				<p class="mini mb-3">Informe os meios de contato disponíveis</p>
+				
+				<div class="row g-3 mb-4">
+				
+				    <!-- Telefone -->
+				    <div class="col-md-4">
+				        <label class="form-label fw-semibold">Telefone</label>
+				        <h:inputText id="telefone"
+				                     value="#{bean.telefone}"
+				                     styleClass="form-control"
+				                     placeholder="(68) 3222-0000"
+				                     oninput="maskTelefone(this)"/>
+				    </div>
+				
+				    <!-- Celular -->
+				    <div class="col-md-4">
+				        <label class="form-label fw-semibold">Celular</label>
+				        <h:inputText id="celular"
+				                     value="#{bean.celular}"
+				                     styleClass="form-control"
+				                     placeholder="(68) 9 9999-9999"
+				                     oninput="maskCelular(this)"/>
+				    </div>
+				
+				    <!-- Email -->
+				    <div class="col-md-4">
+				        <label class="form-label fw-semibold">Email</label>
+				        <h:inputText id="emailContato"
+				                     value="#{bean.email}"
+				                     styleClass="form-control"
+				                     placeholder="email@exemplo.com"/>
+				    </div>
+				
+				</div>
+				
+				<!-- ===== WHATSAPP ===== -->
+				<div class="row g-3 align-items-center mb-4">
+				
+				    <!-- Possui WhatsApp -->
+				    <div class="col-md-3">
+				        <div class="form-check mt-4">
+				            <h:selectBooleanCheckbox id="possuiWhatsapp"
+				                                     value="#{bean.possuiWhatsapp}"
+				                                     styleClass="form-check-input"
+				                                     onclick="toggleWhatsapp();"/>
+				            <label class="form-check-label fw-semibold">
+				                Possui WhatsApp
+				            </label>
+				        </div>
+				    </div>
+				
+				    <!-- Número WhatsApp -->
+				    <div class="col-md-5">
+				        <label class="form-label fw-semibold">Número do WhatsApp</label>
+				        <h:inputText id="numeroWhatsapp"
+				                     value="#{bean.numeroWhatsapp}"
+				                     styleClass="form-control"
+				                     placeholder="(68) 9 9999-9999"
+				                     disabled="#{!bean.possuiWhatsapp}"
+				                     oninput="maskCelular(this)"/>
+				        <div class="mini mt-1">
+				            Preencha somente se possuir WhatsApp
+				        </div>
+				    </div>
+				
+				</div>
+				                
+
+                
+
+                <div class="d-flex justify-content-end gap-2">
+                    <button type="reset" class="btn btn-outline-secondary rounded-pill px-4"
+                            onclick="limparMarcador();">
+                        Cancelar
+                    </button>
+
+                    <p:commandButton value="Salvar"
+                                     icon="bi bi-check-lg"
+                                     styleClass="btn btn-primary px-4"
+                                     action="#{bean.salvar}"
+                                     update="@form"/>
+                </div>
+
+            </h:form>
+        </div>
+        
+
+    </ui:define>
+</ui:composition>

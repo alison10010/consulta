@@ -1,0 +1,271 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    template="/view/layout/admin.xhtml">
+
+    <ui:define name="title">Dashboard de Relatórios</ui:define>
+
+    <ui:define name="content">
+        <style>
+            :root {
+                --brand: #2b6cff;
+                --brand-2: #7a5cff;
+                --ink: #0f172a;
+                --muted: #64748b;
+                --bg: #f8fafc;
+                --card: rgba(255, 255, 255, 0.95);
+                --stroke: rgba(15, 23, 42, 0.08);
+                --shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+                --radius: 20px;
+                --radius-sm: 14px;
+            }
+
+            .wrap {
+                background: 
+                    radial-gradient(at 0% 0%, rgba(43, 108, 255, 0.05) 0px, transparent 50%),
+                    radial-gradient(at 100% 0%, rgba(122, 92, 255, 0.05) 0px, transparent 50%),
+                    var(--bg);
+                min-height: 100vh;
+                padding: 1.5rem;
+            }
+
+            /* Dashboard Header */
+            .dash-header { margin-bottom: 2rem; }
+            .dash-header h1 { font-weight: 800; color: var(--ink); font-size: 1.75rem; margin: 0; }
+            .dash-header p { color: var(--muted); margin: 0.25rem 0 0 0; }
+
+            /* KPIs */
+            .grid-kpis {
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 1.5rem;
+                margin-bottom: 2rem;
+            }
+
+            .kpi-card {
+                background: #fff;
+                border: 1px solid var(--stroke);
+                border-radius: var(--radius-sm);
+                padding: 1.5rem;
+                display: flex;
+                align-items: center;
+                transition: transform 0.2s;
+            }
+            .kpi-card:hover { transform: translateY(-3px); }
+            
+            .kpi-icon {
+                width: 48px; height: 48px;
+                border-radius: 12px;
+                display: flex; align-items: center; justify-content: center;
+                font-size: 1.5rem; margin-right: 1rem;
+            }
+            .icon-total { background: #eef2ff; color: #4f46e5; }
+            .icon-ocupada { background: #ecfdf5; color: #10b981; }
+            .icon-livre { background: #fff7ed; color: #f59e0b; }
+            .icon-guia { background: #fdf2f8; color: #db2777; }
+
+            .kpi-info .t { font-size: 0.75rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+            .kpi-info .v { font-size: 1.5rem; font-weight: 800; color: var(--ink); line-height: 1; margin-top: 4px; }
+
+            /* Filters */
+            .filter-container {
+                background: var(--card);
+                border: 1px solid var(--stroke);
+                border-radius: var(--radius);
+                padding: 1.5rem;
+                margin-bottom: 1.5rem;
+                box-shadow: var(--shadow);
+            }
+
+            .filter-grid {
+                display: grid;
+                grid-template-columns: 2fr 1fr 1fr 0.5fr auto;
+                gap: 1rem;
+                align-items: end;
+            }
+
+            .lbl { font-size: 0.75rem; font-weight: 700; color: var(--ink); display: block; margin-bottom: 0.5rem; }
+
+            /* Custom Data Table */
+            .ui-datatable { border-radius: var(--radius-sm); overflow: hidden; border: 1px solid var(--stroke) !important; }
+            .ui-datatable thead th { background: #f8fafc !important; color: var(--muted) !important; font-size: 0.75rem !important; text-transform: uppercase !important; padding: 1rem !important; }
+            .ui-datatable tbody td { padding: 1rem !important; font-size: 0.875rem !important; }
+
+            .badge {
+                padding: 4px 10px; border-radius: 6px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+            }
+            .badge-pago { background: #dcfce7; color: #15803d; }
+            .badge-pendente { background: #fee2e2; color: #b91c1c; }
+
+            @media (max-width: 1200px) {
+                .grid-kpis { grid-template-columns: repeat(2, 1fr); }
+                .filter-grid { grid-template-columns: 1fr 1fr; }
+            }
+            @media (max-width: 768px) {
+                .grid-kpis { grid-template-columns: 1fr; }
+                .filter-grid { grid-template-columns: 1fr; }
+            }
+        </style>
+
+        <div class="wrap">
+            <h:form id="frmRelatorio">
+                
+                <div class="dash-header">
+                    <h4>Relatórios e Métricas</h4>
+                    <p>Monitore o desempenho de consultas e emissão de guias.</p>
+                </div>
+
+                <div class="grid-kpis">
+                    <div class="kpi-card">
+                        <div class="kpi-icon icon-total"><i class="pi pi-calendar"></i></div>
+                        <div class="kpi-info">
+                            <div class="t">Total Horários</div>
+                            <div class="v">#{relatorioController.totalConsultas}</div>
+                        </div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-icon icon-ocupada"><i class="pi pi-check-circle"></i></div>
+                        <div class="kpi-info">
+                            <div class="t">Ocupadas</div>
+                            <div class="v">#{relatorioController.totalConsultasOcupadas}</div>
+                        </div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-icon icon-livre"><i class="pi pi-clock"></i></div>
+                        <div class="kpi-info">
+                            <div class="t">LIVRES</div>
+                            <div class="v">#{relatorioController.totalConsultasLivres}</div>
+                        </div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-icon icon-guia"><i class="pi pi-file"></i></div>
+                        <div class="kpi-info">
+                            <div class="t">GUIAS</div>
+                            <div class="v">#{relatorioController.totalGuias}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="filter-container">
+                    <div class="filter-grid">
+                        <div>
+                            <span class="lbl">Período de Análise</span>
+                            <p:datePicker id="dpPeriodo" value="#{relatorioController.periodo}" selectionMode="range" 
+                                          pattern="dd/MM/yyyy" showIcon="true" style="width:100%" />
+                        </div>
+                        <div>
+						    <span class="lbl">Status Consulta</span>
+						    <p:selectOneMenu id="stConsulta"
+						                     value="#{relatorioController.statusConsultaFiltro}"
+						                     style="width:100%">
+						        
+						        <f:selectItem itemLabel="Todos os Status" itemValue="#{null}" />
+						        
+						        <f:selectItems value="#{relatorioController.statusConsultaValues}"
+						                       var="st"
+						                       itemLabel="#{st.toString()}" 
+						                       itemValue="#{st}" />
+						    </p:selectOneMenu>
+						</div>
+						
+						<div>
+						    <span class="lbl">Status Guia</span>
+						    <p:selectOneMenu id="stGuia"
+						                     value="#{relatorioController.statusGuiaFiltro}"
+						                     style="width:100%">
+						        
+						        <f:selectItem itemLabel="Todas as Guias" itemValue="#{null}" />
+						        
+						        <f:selectItems value="#{relatorioController.statusGuiaValues}"
+						                       var="sg"
+						                       itemLabel="#{sg.toString()}"
+						                       itemValue="#{sg}" />
+						    </p:selectOneMenu>
+						</div>
+
+                        <div style="padding-bottom: 10px;">
+                            <span class="lbl">Ocupados</span>
+                            <p:selectBooleanCheckbox value="#{relatorioController.somenteOcupados}" itemLabel="Sim" />
+                        </div>
+                        <div class="d-flex" style="gap:5px">
+                            <p:commandButton icon="pi pi-search" actionListener="#{relatorioController.pesquisar}"
+                                             update=":frmRelatorio" styleClass="ui-button-primary rounded-button" />
+                            <p:commandButton icon="pi pi-refresh" actionListener="#{relatorioController.limparFiltros}"
+                                             update=":frmRelatorio" styleClass="ui-button-secondary ui-button-flat rounded-button" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="filter-container">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h2 style="font-size: 1.1rem; font-weight: 700; margin: 0; color: var(--ink)">Detalhamento</h2>
+                        <div class="export-actions">
+                            <p:commandButton value="Consultas XLSX" icon="pi pi-download" styleClass="ui-button-flat ui-button-plain text-sm"
+                                             onclick="PrimeFaces.exporter.exportData('frmRelatorio:tabs:tblConsultas', {type:'xlsx', fileName:'consultas'});" />
+                            <p:commandButton value="Guias XLSX" icon="pi pi-download" styleClass="ui-button-flat ui-button-plain text-sm"
+                                             onclick="PrimeFaces.exporter.exportData('frmRelatorio:tabs:tblGuias', {type:'xlsx', fileName:'guias'});" />
+                        </div>
+                    </div>
+
+                    <p:tabView id="tabs" styleClass="mt-2">
+                        <p:tab title="Consultas Médicas">
+                            <p:dataTable id="tblConsultas" value="#{relatorioController.consultas}" var="h" paginatorPosition="bottom"
+                                         paginator="true" rows="10" reflow="true" tableStyle="width:100%">
+                                
+                                <p:column headerText="Data/Hora" sortBy="#{h.data}">
+                                    <h:outputText value="#{h.data}" converter="localDateConverter" style="font-weight: 600" />
+                                    <h:outputText value=" às #{h.hora}" class="text-muted small" />
+                                </p:column>
+
+                                <p:column headerText="Paciente">
+                                    <h:outputText value="#{h.paciente != null ? h.paciente.nome : '—'}" />
+                                </p:column>
+
+                                <p:column headerText="Status Agendamento">
+                                    <span class="badge #{h.status eq 'MARCADA' ? 'badge-pago' : 'badge-pendente'}">
+								        #{h.status}
+								    </span>
+                                </p:column>
+
+                                <p:column headerText="Pagamento" style="text-align:center">
+                                    <i class="pi #{h.agendamentoPago ? 'pi-check-circle text-success' : 'pi-times-circle text-danger'}"></i>
+                                </p:column>
+                            </p:dataTable>
+                        </p:tab>
+
+                        <p:tab title="Relatório de Guias">
+                            <p:dataTable id="tblGuias" value="#{relatorioController.guias}" var="g"
+                                         paginator="true" rows="10" reflow="true" paginatorPosition="bottom">
+                                
+                                <p:column headerText="Código" style="font-family: monospace; font-weight: bold">
+                                    <h:outputText value="#{g.codigo}" />
+                                </p:column>
+
+                                <p:column headerText="Emissão">
+                                    <h:outputText value="#{g.emitidaEm}" />
+                                </p:column>
+
+                                <p:column headerText="Especialidade">
+                                    <h:outputText value="#{g.especialidade}" styleClass="text-primary fw-bold" />
+                                </p:column>
+
+                                <p:column headerText="Financeiro">
+                                    <div class="small">Original: <b>R$ #{g.valorOriginal}</b></div>
+                                    <div class="text-success fw-bold">Final: R$ #{g.valorComDesconto}</div>
+                                </p:column>
+
+                                <p:column headerText="Status Guia">
+                                     <span class="badge #{g.status eq 'GERADA' ? 'badge-pago' : 'badge-pendente'}">
+                                        #{g.status}
+                                    </span>
+                                </p:column>
+                            </p:dataTable>
+                        </p:tab>
+                    </p:tabView>
+                </div>
+            </h:form>
+        </div>
+    </ui:define>
+</ui:composition>

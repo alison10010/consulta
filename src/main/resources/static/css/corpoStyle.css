@@ -1,0 +1,47 @@
+
+/* label no card */
+label:not(.form-check-label):not(.custom-file-label) {
+    font-weight: 400;
+}
+
+/* Espaço Entre Campos dos Forms */
+.espacaoCampo{ 
+    margin-bottom: 20px;
+}
+
+/* Cards Laranjas - Inicio */
+.card-laranja:not(.card-outline)>.card-header {
+    color: #fff;
+    background-color: #ff6600;
+}
+.card-primary.card-outline {
+    border-top: 3px solid  #ff6600;
+}
+/* Cards Laranjas - Fim */
+
+/* Mensagem de Error nos campos */
+.mensagem {
+  color: red;
+}
+
+/* Texto centralizado */
+.centro{
+	text-align: center;
+}
+
+/* CheckBox das Aplicações */
+.form-check-inline {
+    margin-right: 2.75rem;
+}
+
+.divCentro{
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+}
+
+.cardForm:hover {
+   background-color: #000;
+   cursor: pointer;
+}
+

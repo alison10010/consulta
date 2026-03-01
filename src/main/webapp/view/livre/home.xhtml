@@ -1,0 +1,741 @@
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Corretor Saúde Premium | Encontre o plano ideal</title>
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+
+  <style>
+    :root{
+      --brand:#2b6cff;
+      --brand-2:#7a5cff;
+      --ink:#0f172a;
+      --muted:#475569;
+      --bg:#f6f8ff;
+      --card:#ffffff;
+      --stroke:rgba(15,23,42,.10);
+      --shadow: 0 18px 60px rgba(15, 23, 42, .10);
+      --shadow-soft: 0 12px 40px rgba(15, 23, 42, .08);
+      --radius: 22px;
+    }
+
+    body{
+      color: var(--ink);
+      background:
+        radial-gradient(1200px 600px at 10% 5%, rgba(43,108,255,.14), transparent 55%),
+        radial-gradient(1000px 520px at 90% 15%, rgba(122,92,255,.14), transparent 55%),
+        linear-gradient(180deg, #ffffff 0%, var(--bg) 100%);
+      min-height: 100vh;
+    }
+
+    .navbar{
+      backdrop-filter: blur(10px);
+      background: rgba(255,255,255,.70);
+      border-bottom: 1px solid var(--stroke);
+    }
+
+    .brand-dot{
+      width: 12px; height: 12px; border-radius: 999px;
+      background: linear-gradient(135deg, var(--brand), var(--brand-2));
+      display: inline-block;
+      box-shadow: 0 10px 30px rgba(43,108,255,.35);
+      margin-right: .5rem;
+    }
+
+    .hero{
+      padding: 5.2rem 0 3rem;
+    }
+
+    .hero h1{
+      letter-spacing: -0.02em;
+      line-height: 1.05;
+    }
+
+    .hero-badge{
+      display:inline-flex; align-items:center; gap:.5rem;
+      border: 1px solid var(--stroke);
+      background: rgba(255,255,255,.75);
+      padding: .45rem .75rem;
+      border-radius: 999px;
+      font-weight: 600;
+      color: var(--muted);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .premium-card{
+      border: 1px solid var(--stroke);
+      background: rgba(255,255,255,.86);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .soft-card{
+      border: 1px solid var(--stroke);
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.82);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .btn-premium{
+      border: none;
+      background: linear-gradient(135deg, var(--brand), var(--brand-2));
+      box-shadow: 0 18px 50px rgba(43,108,255,.25);
+    }
+    .btn-premium:hover{ filter: brightness(.98); transform: translateY(-1px); }
+    .btn-premium:active{ transform: translateY(0px); }
+
+    .btn-outline-premium{
+      border: 1px solid rgba(43,108,255,.28);
+      background: rgba(255,255,255,.65);
+    }
+
+    .icon-pill{
+      width: 44px; height: 44px;
+      border-radius: 14px;
+      display:flex; align-items:center; justify-content:center;
+      background: rgba(43,108,255,.10);
+      border: 1px solid rgba(43,108,255,.18);
+      color: var(--brand);
+    }
+
+    .muted{ color: var(--muted); }
+
+    .service-chip{
+      cursor:pointer;
+      user-select:none;
+      border-radius: 999px;
+      border: 1px solid var(--stroke);
+      background: rgba(255,255,255,.75);
+      padding: .55rem .8rem;
+      display:inline-flex;
+      align-items:center;
+      gap:.5rem;
+      transition: .15s ease;
+      box-shadow: 0 10px 25px rgba(15,23,42,.06);
+      font-weight: 600;
+      color: var(--ink);
+    }
+    .service-chip:hover{ transform: translateY(-1px); }
+    .service-chip.active{
+      border-color: rgba(43,108,255,.42);
+      background: rgba(43,108,255,.10);
+      color: var(--brand);
+    }
+
+    .service-item{
+      border: 1px solid var(--stroke);
+      border-radius: 18px;
+      background: rgba(255,255,255,.78);
+      padding: 1rem;
+      box-shadow: 0 14px 35px rgba(15,23,42,.06);
+      height: 100%;
+    }
+
+    .divider{
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(15,23,42,.12), transparent);
+    }
+
+    .footer{
+      border-top: 1px solid var(--stroke);
+      background: rgba(255,255,255,.65);
+      backdrop-filter: blur(10px);
+    }
+
+    .tiny{
+      font-size: .92rem;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-expand-lg sticky-top">
+    <div class="container py-2">
+      <a class="navbar-brand fw-bold d-flex align-items-center" href="#">
+        <span class="brand-dot"></span>
+        Corretor Saúde <span class="ms-2 badge text-bg-light border" style="border-color: rgba(15,23,42,.10)!important;">Premium</span>
+      </a>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div id="nav" class="collapse navbar-collapse">
+        <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
+          <li class="nav-item"><a class="nav-link" href="#servicos">Serviços</a></li>
+          <li class="nav-item"><a class="nav-link" href="#como-funciona">Como funciona</a></li>
+          <li class="nav-item"><a class="nav-link" href="#perguntas">Dúvidas</a></li>
+          <li class="nav-item ms-lg-2">
+            <a class="btn btn-sm btn-outline-premium rounded-pill px-3" href="#cotacao">
+              <i class="bi bi-shield-check me-1"></i> Simular agora
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="container">
+      <div class="row g-4 align-items-center">
+        <div class="col-lg-6">
+          <div class="hero-badge mb-3">
+            <i class="bi bi-stars"></i>
+            Atendimento humano + opções inteligentes por cidade/município
+          </div>
+
+          <h1 class="display-5 fw-bold">
+            Escolha o <span style="background: linear-gradient(135deg,var(--brand),var(--brand-2)); -webkit-background-clip:text; background-clip:text; color:transparent;">serviço</span>
+            e encontre o plano ideal no seu <span style="background: linear-gradient(135deg,var(--brand),var(--brand-2)); -webkit-background-clip:text; background-clip:text; color:transparent;">local</span>.
+          </h1>
+
+          <p class="mt-3 fs-5 muted">
+            Uma experiência premium e simples: você seleciona o que precisa (consulta, exames, internação, urgência…),
+            escolhe sua cidade/município e nós mostramos as opções disponíveis para aquela região — com clareza e sem enrolação.
+          </p>
+
+          <div class="d-flex flex-wrap gap-2 mt-4">
+            <a class="btn btn-premium text-white rounded-pill px-4 py-2" href="#cotacao">
+              <i class="bi bi-lightning-charge-fill me-1"></i> Começar em 30 segundos
+            </a>
+            <a class="btn btn-outline-premium rounded-pill px-4 py-2" href="#servicos">
+              <i class="bi bi-grid me-1"></i> Ver serviços
+            </a>
+          </div>
+
+          <div class="d-flex flex-wrap gap-3 mt-4 tiny muted">
+            <div class="d-flex align-items-center gap-2">
+              <span class="icon-pill"><i class="bi bi-check2-circle"></i></span>
+              Coberturas por região
+            </div>
+            <div class="d-flex align-items-center gap-2">
+              <span class="icon-pill"><i class="bi bi-shield-lock"></i></span>
+              Dados com privacidade
+            </div>
+            <div class="d-flex align-items-center gap-2">
+              <span class="icon-pill"><i class="bi bi-telephone"></i></span>
+              Suporte na contratação
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-6">
+          <!-- CARD DE BUSCA (DESTAQUE) -->
+          <div id="cotacao" class="premium-card p-4 p-md-5">
+            <div class="d-flex align-items-start justify-content-between gap-3 mb-3">
+              <div>
+                <h2 class="h4 fw-bold mb-1">Encontrar serviços disponíveis</h2>
+                <div class="muted">Selecione um serviço e o local. O sistema filtra automaticamente.</div>
+              </div>
+              <span class="badge rounded-pill text-bg-light border"
+                    style="border-color: rgba(15,23,42,.10)!important;">
+                <i class="bi bi-globe2 me-1"></i> Qualquer lugar
+              </span>
+            </div>
+
+            <div class="row g-3 mt-1">
+              <div class="col-12">
+                <label class="form-label fw-semibold">Serviço desejado</label>
+                <select id="serviceSelect" class="form-select form-select-lg">
+                  <option value="">Selecione...</option>
+                  <option value="consulta">Consulta e Especialistas</option>
+                  <option value="exames">Exames e Diagnóstico</option>
+                  <option value="internacao">Internação e Cirurgias</option>
+                  <option value="odontologico">Odontológico</option>
+                </select>
+              </div>
+
+              <div class="col-md-7">
+                <label class="form-label fw-semibold">Cidade / Município</label>
+                <input id="cityInput" class="form-control form-control-lg" placeholder="Ex.: Rio Branco, Cruzeiro do Sul, São Paulo..." />
+              </div>
+
+              <div class="col-md-5">
+                <label class="form-label fw-semibold">Região</label>
+                <select id="regionSelect" class="form-select form-select-lg">
+                  <option value="">Qualquer</option>
+                  <option value="norte">Norte</option>
+                  <option value="nordeste">Nordeste</option>
+                  <option value="centro-oeste">Centro-Oeste</option>
+                  <option value="sudeste">Sudeste</option>
+                  <option value="sul">Sul</option>
+                </select>
+              </div>
+
+              <div class="col-12">
+                <div class="soft-card p-3">
+                  <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
+                    <div class="d-flex align-items-center gap-2">
+                      <i class="bi bi-info-circle text-primary"></i>
+                      <span class="muted tiny">Dica: digite a cidade e escolha o serviço para ver opções por disponibilidade.</span>
+                    </div>
+                    <div class="d-flex gap-2">
+                      <button id="btnClear" type="button" class="btn btn-sm btn-outline-premium rounded-pill px-3">
+                        Limpar
+                      </button>
+                      <button id="btnSearch" type="button" class="btn btn-sm btn-premium text-white rounded-pill px-3">
+                        <i class="bi bi-search me-1"></i> Buscar
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="divider my-4"></div>
+
+            <!-- RESULTADOS -->
+            <div class="d-flex align-items-center justify-content-between mb-2">
+              <div class="fw-bold">Resultados</div>
+              <div id="resultCount" class="tiny muted">0 opções</div>
+            </div>
+
+            <div id="results" class="row g-3">
+              <!-- preenchido via JS -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- SERVIÇOS (CHIPS + CARDS) -->
+  <section id="servicos" class="py-5">
+    <div class="container">
+      <div class="text-center mb-4">
+        <div class="d-inline-flex align-items-center gap-2 hero-badge">
+          <i class="bi bi-grid-3x3-gap"></i> Serviços que prendem a atenção (e resolvem)
+        </div>
+        <h2 class="mt-3 fw-bold">Tudo o que você precisa, com clareza</h2>
+        <p class="muted mb-0">
+          Selecione um serviço e veja como a experiência fica rápida: o sistema cruza disponibilidade por local.
+        </p>
+      </div>
+
+      <div class="d-flex flex-wrap justify-content-center gap-2 mb-4">
+        <span class="service-chip" data-chip="consulta"><i class="bi bi-person-check"></i> Consulta</span>
+        <span class="service-chip" data-chip="exames"><i class="bi bi-clipboard2-pulse"></i> Exames</span>
+        <span class="service-chip" data-chip="urgencia"><i class="bi bi-ambulance"></i> Urgência</span>
+        <span class="service-chip" data-chip="internacao"><i class="bi bi-hospital"></i> Internação</span>
+        <span class="service-chip" data-chip="odontologico"><i class="bi bi-emoji-smile"></i> Odonto</span>
+        <span class="service-chip" data-chip="telemedicina"><i class="bi bi-camera-video"></i> Telemedicina</span>
+      </div>
+
+      <div class="row g-3">
+
+        <!-- Consulta -->
+        <div class="col-md-4">
+            <div class="service-item">
+            <div class="d-flex align-items-start gap-3">
+                <div class="icon-pill"><i class="bi bi-person-check"></i></div>
+                <div>
+                <div class="fw-bold">Consulta e Especialistas</div>
+                <div class="muted tiny mt-1">
+                    Encontre clínicas e especialistas disponíveis na sua região — com opções por rede e perfil.
+                </div>
+                </div>
+            </div>
+            </div>
+        </div>
+
+        <!-- Exames -->
+        <div class="col-md-4">
+            <div class="service-item">
+            <div class="d-flex align-items-start gap-3">
+                <div class="icon-pill"><i class="bi bi-clipboard2-pulse"></i></div>
+                <div>
+                <div class="fw-bold">Exames e Diagnóstico</div>
+                <div class="muted tiny mt-1">
+                    Laboratórios, imagem e check-ups: compare disponibilidade por cidade/município antes de contratar.
+                </div>
+                </div>
+            </div>
+            </div>
+        </div>
+
+        <!-- Internação -->
+        <div class="col-md-4">
+            <div class="service-item">
+            <div class="d-flex align-items-start gap-3">
+                <div class="icon-pill"><i class="bi bi-hospital"></i></div>
+                <div>
+                <div class="fw-bold">Internação e Cirurgias</div>
+                <div class="muted tiny mt-1">
+                    Rede hospitalar com foco em segurança: verifique estrutura, cobertura e credenciados por região.
+                </div>
+                </div>
+            </div>
+            </div>
+        </div>
+
+        <!-- Odontológico -->
+        <div class="col-md-4">
+            <div class="service-item">
+            <div class="d-flex align-items-start gap-3">
+                <div class="icon-pill"><i class="bi bi-emoji-smile"></i></div>
+                <div>
+                <div class="fw-bold">Odontológico</div>
+                <div class="muted tiny mt-1">
+                    Opções com boa rede e custo-benefício: compare conforme disponibilidade no município.
+                </div>
+                </div>
+            </div>
+            </div>
+        </div>
+
+        <!-- Maternidade -->
+        <div class="col-md-4">
+            <div class="service-item">
+            <div class="d-flex align-items-start gap-3">
+                <div class="icon-pill"><i class="bi bi-heart-pulse"></i></div>
+                <div>
+                <div class="fw-bold">Maternidade e Obstetrícia</div>
+                <div class="muted tiny mt-1">
+                    Cobertura para pré-natal, parto e acompanhamento materno conforme a rede disponível na sua região.
+                </div>
+                </div>
+            </div>
+            </div>
+        </div>
+
+        <!-- Saúde Mental -->
+        <div class="col-md-4">
+            <div class="service-item">
+            <div class="d-flex align-items-start gap-3">
+                <div class="icon-pill"><i class="bi bi-brain"></i></div>
+                <div>
+                <div class="fw-bold">Saúde Mental e Terapias</div>
+                <div class="muted tiny mt-1">
+                    Psicologia, psiquiatria e terapias com profissionais credenciados no seu município.
+                </div>
+                </div>
+            </div>
+            </div>
+        </div>
+
+        </div>
+
+
+    </div>
+  </section>
+
+  <!-- COMO FUNCIONA -->
+  <section id="como-funciona" class="py-5">
+    <div class="container">
+      <div class="premium-card p-4 p-md-5">
+        <div class="row g-4 align-items-center">
+          <div class="col-lg-6">
+            <h2 class="fw-bold mb-2">Como funciona</h2>
+            <p class="muted mb-4">
+              Você não precisa entender “letrinhas miúdas” antes de ver se o serviço existe no seu local.
+              Primeiro a disponibilidade. Depois a melhor escolha.
+            </p>
+
+            <div class="d-grid gap-3">
+              <div class="d-flex gap-3">
+                <div class="icon-pill"><i class="bi bi-1-circle"></i></div>
+                <div>
+                  <div class="fw-bold">Escolha o serviço</div>
+                  <div class="muted tiny">Consulta, exames, urgência, internação, odonto ou telemedicina.</div>
+                </div>
+              </div>
+
+              <div class="d-flex gap-3">
+                <div class="icon-pill"><i class="bi bi-2-circle"></i></div>
+                <div>
+                  <div class="fw-bold">Informe cidade/município</div>
+                  <div class="muted tiny">O sistema cruza com a disponibilidade local para evitar surpresas.</div>
+                </div>
+              </div>
+
+              <div class="d-flex gap-3">
+                <div class="icon-pill"><i class="bi bi-3-circle"></i></div>
+                <div>
+                  <div class="fw-bold">Compare e peça sua cotação</div>
+                  <div class="muted tiny">Você recebe orientação humana e opções transparentes.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-6">
+            <div class="soft-card p-4">
+              <div class="d-flex align-items-center justify-content-between">
+                <div class="fw-bold">O que você ganha com isso</div>
+                <span class="badge rounded-pill text-bg-light border"
+                      style="border-color: rgba(15,23,42,.10)!important;">Experiência “sem fricção”</span>
+              </div>
+              <div class="divider my-3"></div>
+
+              <ul class="list-unstyled mb-0 d-grid gap-2 tiny">
+                <li class="d-flex gap-2">
+                  <i class="bi bi-check2 text-primary"></i>
+                  <span><b>Filtro por local</b> para mostrar apenas o que realmente está disponível.</span>
+                </li>
+                <li class="d-flex gap-2">
+                  <i class="bi bi-check2 text-primary"></i>
+                  <span><b>Comparação clara</b> de opções (rede, coberturas e diferenciais).</span>
+                </li>
+                <li class="d-flex gap-2">
+                  <i class="bi bi-check2 text-primary"></i>
+                  <span><b>Atendimento humano</b> para fechar com segurança e rapidez.</span>
+                </li>
+                <li class="d-flex gap-2">
+                  <i class="bi bi-check2 text-primary"></i>
+                  <span><b>Jornada premium</b> com layout leve e foco em conversão.</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="perguntas" class="py-5">
+    <div class="container">
+      <div class="text-center mb-4">
+        <h2 class="fw-bold">Dúvidas comuns</h2>
+        <p class="muted mb-0">Respostas rápidas (sem enrolação).</p>
+      </div>
+
+      <div class="accordion premium-card p-2" id="faq">
+        <div class="accordion-item border-0 bg-transparent">
+          <h2 class="accordion-header">
+            <button class="accordion-button rounded-4" type="button" data-bs-toggle="collapse" data-bs-target="#f1">
+              Como o site sabe se o serviço está disponível na minha cidade?
+            </button>
+          </h2>
+          <div id="f1" class="accordion-collapse collapse show" data-bs-parent="#faq">
+            <div class="accordion-body muted">
+              Ele cruza o <b>serviço escolhido</b> com a <b>localidade informada</b> (cidade/município),
+              exibindo apenas opções habilitadas para aquela região. (Aqui no exemplo é um “mock”; no seu sistema real,
+              isso vem do seu banco/API.)
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-item border-0 bg-transparent">
+          <h2 class="accordion-header">
+            <button class="accordion-button collapsed rounded-4" type="button" data-bs-toggle="collapse" data-bs-target="#f2">
+              Posso pesquisar qualquer lugar?
+            </button>
+          </h2>
+          <div id="f2" class="accordion-collapse collapse" data-bs-parent="#faq">
+            <div class="accordion-body muted">
+              Sim. O fluxo é “primeiro a disponibilidade”, para você ver o que existe no local antes de avançar.
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-item border-0 bg-transparent">
+          <h2 class="accordion-header">
+            <button class="accordion-button collapsed rounded-4" type="button" data-bs-toggle="collapse" data-bs-target="#f3">
+              Vocês ajudam na contratação?
+            </button>
+          </h2>
+          <div id="f3" class="accordion-collapse collapse" data-bs-parent="#faq">
+            <div class="accordion-body muted">
+              Sim. Você pode pedir a cotação e receber orientação para escolher a opção mais adequada ao seu perfil.
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer py-4">
+    <div class="container">
+      <div class="d-flex flex-column flex-md-row align-items-center justify-content-between gap-2">
+        <div class="d-flex align-items-center gap-2">
+          <span class="brand-dot"></span>
+          <div class="fw-bold">Corretor Saúde Premium</div>
+        </div>
+        <div class="tiny muted text-center">
+          © <span id="year"></span> • Atendimento e simulação de serviços por cidade/município • Layout Premium Light
+        </div>
+        <div class="d-flex gap-2">
+          <a class="btn btn-sm btn-outline-premium rounded-pill px-3" href="#cotacao">
+            <i class="bi bi-whatsapp me-1"></i> WhatsApp
+          </a>
+          <a class="btn btn-sm btn-premium text-white rounded-pill px-3" href="#cotacao">
+            <i class="bi bi-envelope me-1"></i> Cotação
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- JS Bootstrap -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+
+	//<![CDATA[
+	    // Mock de disponibilidade: (serviço -> locais -> opções)
+	    // No real: você troca por fetch("/api/disponibilidade?servico=...&cidade=...")
+	    const MOCK = {
+	      consulta: [
+	        { local: "Rio Branco", regiao: "norte", titulo: "Rede Essencial", desc: "Consultas e especialistas com foco em acesso rápido.", destaque: "Ótimo custo-benefício" },
+	        { local: "São Paulo", regiao: "sudeste", titulo: "Rede Premium", desc: "Coberturas ampliadas e ampla rede credenciada.", destaque: "Alta rede" },
+	        { local: "Cruzeiro do Sul", regiao: "norte", titulo: "Rede Regional", desc: "Atendimento local com suporte na contratação.", destaque: "Disponível no município" },
+	      ],
+	      exames: [
+	        { local: "Rio Branco", regiao: "norte", titulo: "Check-up Inteligente", desc: "Exames laboratoriais e imagem com rede selecionada.", destaque: "Diagnóstico completo" },
+	        { local: "Belo Horizonte", regiao: "sudeste", titulo: "Exames Premium", desc: "Rede ampla para imagem e laboratórios.", destaque: "Agilidade" },
+	      ],
+	      urgencia: [
+	        { local: "São Paulo", regiao: "sudeste", titulo: "Urgência 24h", desc: "Pronto atendimento e cobertura emergencial na região.", destaque: "24h" },
+	        { local: "Curitiba", regiao: "sul", titulo: "Emergência Plus", desc: "Rede hospitalar com pronto atendimento.", destaque: "Rede hospitalar" },
+	      ],
+	      internacao: [
+	        { local: "São Paulo", regiao: "sudeste", titulo: "Hospitalar Premium", desc: "Internação e cirurgias com rede robusta.", destaque: "Estrutura completa" },
+	        { local: "Recife", regiao: "nordeste", titulo: "Hospitalar Regional", desc: "Cobertura hospitalar e suporte na contratação.", destaque: "Boa cobertura" },
+	      ],
+	      odontologico: [
+	        { local: "Rio Branco", regiao: "norte", titulo: "Odonto Essencial", desc: "Rede odontológica com foco em prevenção.", destaque: "Leve e eficiente" },
+	        { local: "Porto Alegre", regiao: "sul", titulo: "Odonto Premium", desc: "Rede ampliada e benefícios extras.", destaque: "Rede ampliada" },
+	      ],
+	      telemedicina: [
+	        { local: "Qualquer", regiao: "", titulo: "Telemedicina 24h", desc: "Atendimento online rápido, ideal para orientação e acompanhamento.", destaque: "Disponível em todo lugar" },
+	      ]
+	    };
+	
+	    const serviceSelect = document.getElementById("serviceSelect");
+	    const cityInput = document.getElementById("cityInput");
+	    const regionSelect = document.getElementById("regionSelect");
+	    const results = document.getElementById("results");
+	    const resultCount = document.getElementById("resultCount");
+	    const year = document.getElementById("year");
+	    year.textContent = new Date().getFullYear();
+	
+	    function normalize(s){
+	      return (s || "")
+	        .toString()
+	        .trim()
+	        .toLowerCase()
+	        .normalize("NFD")
+	        .replace(/[\u0300-\u036f]/g, "");
+	    }
+	
+	    function render(list){
+	      results.innerHTML = "";
+	
+	      if (!list.length){
+	        results.innerHTML = `
+	          <div class="col-12">
+	            <div class="soft-card p-4">
+	              <div class="d-flex align-items-start gap-3">
+	                <div class="icon-pill"><i class="bi bi-search"></i></div>
+	                <div>
+	                  <div class="fw-bold">Nenhuma opção encontrada</div>
+	                  <div class="muted tiny mt-1">
+	                    Tente outro serviço ou outra cidade/município. (No sistema real, isso virá da sua base.)
+	                  </div>
+	                </div>
+	              </div>
+	            </div>
+	          </div>
+	        `;
+	        resultCount.textContent = "0 opções";
+	        return;
+	      }
+	
+	      list.forEach(item => {
+	        const html = `
+	          <div class="col-md-6">
+	            <div class="soft-card p-3 h-100">
+	              <div class="d-flex align-items-start justify-content-between gap-2">
+	                <div>
+	                  <div class="fw-bold">${item.titulo}</div>
+	                  <div class="tiny muted">${item.desc}</div>
+	                </div>
+	                <span class="badge rounded-pill text-bg-light border"
+	                      style="border-color: rgba(15,23,42,.10)!important;">
+	                  <i class="bi bi-geo-alt me-1"></i> ${item.local}
+	                </span>
+	              </div>
+	
+	              <div class="divider my-3"></div>
+	
+	              <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
+	                <div class="tiny">
+	                  <i class="bi bi-stars text-primary me-1"></i>
+	                  <span class="fw-semibold">${item.destaque}</span>
+	                </div>
+	
+	                <button class="btn btn-sm btn-premium text-white rounded-pill px-3"
+	                        onclick="alert('Pedido de cotação: ${item.titulo} (${item.local})')">
+	                  <i class="bi bi-arrow-right-circle me-1"></i> Pedir cotação
+	                </button>
+	              </div>
+	            </div>
+	          </div>
+	        `;
+	        results.insertAdjacentHTML("beforeend", html);
+	      });
+	
+	      resultCount.textContent = `${list.length} opção(ões)`;
+	    }
+	
+	    function search(){
+	      const servico = serviceSelect.value;
+	      const cidade = normalize(cityInput.value);
+	      const regiao = regionSelect.value;
+	
+	      if (!servico){
+	        render([]);
+	        return;
+	      }
+	
+	      let base = MOCK[servico] || [];
+	
+	      // Regra simples: "Qualquer" sempre aparece, e o resto filtra por cidade se preenchido
+	      base = base.filter(x => {
+	        const loc = normalize(x.local);
+	        const cityOk = !cidade || loc === cidade || loc === "qualquer";
+	        const regionOk = !regiao || normalize(x.regiao) === normalize(regiao) || x.regiao === "";
+	        return cityOk && regionOk;
+	      });
+	
+	      render(base);
+	    }
+	
+	    document.getElementById("btnSearch").addEventListener("click", search);
+	    document.getElementById("btnClear").addEventListener("click", () => {
+	      serviceSelect.value = "";
+	      cityInput.value = "";
+	      regionSelect.value = "";
+	      render([]);
+	    });
+	
+	    // Chips: seleciona serviço rapidamente
+	    document.querySelectorAll(".service-chip").forEach(chip => {
+	      chip.addEventListener("click", () => {
+	        document.querySelectorAll(".service-chip").forEach(c => c.classList.remove("active"));
+	        chip.classList.add("active");
+	        serviceSelect.value = chip.getAttribute("data-chip");
+	        search();
+	        document.getElementById("cotacao").scrollIntoView({ behavior: "smooth", block: "start" });
+	      });
+	    });
+	
+	    // Inicial
+	    render([]);
+
+    //]]>
+  </script>
+</body>
+</html>

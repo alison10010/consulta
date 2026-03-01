@@ -1,0 +1,817 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Consulta Médica | Guia de Descontos com Especialistas</title>
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+
+  <style>
+    :root {
+      --brand: #2b6cff;
+      --brand-2: #7a5cff;
+      --ink: #0f172a;
+      --muted: #64748b;
+      --bg: #f8fafc;
+      --card: rgba(255, 255, 255, 0.9);
+      --stroke: rgba(15, 23, 42, 0.08);
+      --shadow-premium: 0 20px 40px -15px rgba(15, 23, 42, 0.12);
+      --radius-lg: 18px;
+      --radius-md: 12px;
+    }
+
+    body{
+      color: var(--ink);
+      background:
+        radial-gradient(1200px 600px at 10% 5%, rgba(43,108,255,.14), transparent 55%),
+        radial-gradient(1000px 520px at 90% 15%, rgba(122,92,255,.14), transparent 55%),
+        linear-gradient(180deg, #ffffff 0%, var(--bg) 100%);
+      min-height: 100vh;
+    }
+
+    .navbar{
+      backdrop-filter: blur(12px);
+      background: rgba(255, 255, 255, 0.8);
+      border-bottom: 1px solid var(--stroke);
+      padding: 0.6rem 0;
+    }
+
+    .brand-dot{
+      width: 12px; height: 12px; border-radius: 999px;
+      background: linear-gradient(135deg, var(--brand), var(--brand-2));
+      display: inline-block;
+      box-shadow: 0 10px 30px rgba(43,108,255,.35);
+      margin-right: .5rem;
+    }
+
+    .hero {
+      padding: 3.5rem 0 2.5rem;
+    }
+
+    .hero h1 {
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      font-size: 2.8rem;
+    }
+
+    .hero-badge{
+      display:inline-flex; align-items:center; gap:.5rem;
+      border: 1px solid var(--stroke);
+      background: white;
+      padding: 6px 14px;
+      border-radius: 100px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+      color: var(--brand);
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+
+    .premium-card {
+      background: var(--card);
+      border: 1px solid white;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-premium);
+      backdrop-filter: blur(8px);
+      overflow: hidden;
+    }
+
+    .soft-card {
+      background: rgba(255, 255, 255, 0.5);
+      border: 1px solid var(--stroke);
+      border-radius: var(--radius-md);
+      transition: all 0.2s ease;
+    }
+
+    .soft-card:hover {
+      border-color: rgba(43, 108, 255, 0.3);
+      background: white;
+    }
+
+    .btn-premium{
+      background: linear-gradient(135deg, var(--brand), var(--brand-2));
+      color: white;
+      font-weight: 700;
+      border: none;
+      padding: 10px 24px;
+      border-radius: 100px;
+      transition: all 0.3s ease;
+      box-shadow: 0 18px 50px rgba(43,108,255,.25);
+    }
+    .btn-premium:hover {
+      box-shadow: 0 10px 20px rgba(43, 108, 255, 0.3);
+      filter: brightness(1.06);
+      transform: translateY(-1px);
+    }
+    .btn-premium:active{ transform: translateY(0px); }
+
+    .btn-outline-premium{
+      border: 1px solid rgba(43,108,255,.28);
+      background: rgba(255,255,255,.65);
+    }
+
+    .icon-pill {
+      width: 38px; height: 38px;
+      border-radius: 10px;
+      background: rgba(43, 108, 255, 0.1);
+      color: var(--brand);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem;
+      flex: 0 0 auto;
+    }
+
+    .divider{
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--stroke), transparent);
+      margin: 1.5rem 0;
+    }
+
+    .muted{ color: var(--muted); }
+    .tiny{ font-size: .92rem; }
+
+    .service-chip {
+      padding: 8px 16px;
+      font-size: 0.9rem;
+      border-radius: 100px;
+      border: 1px solid var(--stroke);
+      background: white;
+      transition: 0.2s;
+      cursor: pointer;
+      font-weight: 600;
+      user-select:none;
+      box-shadow: 0 10px 25px rgba(15,23,42,.06);
+      display:inline-flex;
+      align-items:center;
+      gap:.5rem;
+      color: var(--ink);
+    }
+
+    .service-chip:hover,
+    .service-chip.active {
+      background: var(--brand);
+      color: white;
+      border-color: var(--brand);
+      transform: translateY(-2px);
+    }
+
+    .service-item{
+      border: 1px solid var(--stroke);
+      border-radius: 18px;
+      background: rgba(255,255,255,.78);
+      padding: 1rem;
+      box-shadow: 0 14px 35px rgba(15,23,42,.06);
+      height: 100%;
+    }
+
+    .brand-logo-inline {
+      height: 60px;
+      max-height: 60px;
+      width: auto;
+      object-fit: contain;
+      display: inline-block;
+      filter: drop-shadow(0 2px 6px rgba(0,0,0,.15));
+    }
+    @media (max-width: 576px) {
+      .brand-logo-inline {
+        height: 36px;
+        max-height: 36px;
+      }
+    }
+
+    /* Inputs */
+    .form-control, .form-select {
+      border: 1px solid rgba(15, 23, 42, 0.1);
+      border-radius: 10px;
+      font-size: 0.95rem;
+      padding: 0.6rem 0.8rem;
+    }
+    .form-control:focus, .form-select:focus {
+      border-color: var(--brand);
+      box-shadow: 0 0 0 4px rgba(43, 108, 255, 0.1);
+    }
+
+    .footer{
+      border-top: 1px solid var(--stroke);
+      background: rgba(255,255,255,.65);
+      backdrop-filter: blur(10px);
+    }
+
+    .highlight-note{
+      border: 1px solid rgba(43,108,255,.18);
+      background: rgba(43,108,255,.06);
+      border-radius: 16px;
+      padding: 12px 14px;
+    }
+    .highlight-note b{ color: var(--ink); }
+  </style>
+</head>
+
+<body>
+
+  <nav class="navbar navbar-expand-lg sticky-top bg-white border-bottom">
+    <div class="container py-2">
+      <a class="navbar-brand fw-bold d-flex align-items-center" href="#">
+        <img src="logo.png" class="brand-logo-inline" alt="Logo"/>
+      </a>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div id="nav" class="collapse navbar-collapse">
+        <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
+          <li class="nav-item">
+            <a class="nav-link" href="#como-funciona">Como funciona</a>
+          </li>
+          <li class="nav-item ms-lg-2">
+            <a class="btn btn-sm px-3" href="#servicos">
+              <i class="bi bi-ticket-perforated me-1"></i> Serviços
+            </a>
+          </li>
+        </ul>
+
+        <div class="d-flex align-items-center gap-2 ms-lg-3 mt-3 mt-lg-0">
+          <a href="/consulta/login" class="btn btn-link text-decoration-none fw-bold text-dark px-3 btn-outline-premium rounded-pill">
+            Acessar
+          </a>
+          <a href="cadastro-painel.html" class="btn btn-primary rounded-pill px-4 shadow-sm">
+            Cadastrar
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="container">
+      <div class="row g-5 align-items-start">
+        <div class="col-lg-5 py-lg-4">
+
+          <div class="hero-badge mb-3 d-inline-block">
+            <i class="bi bi-shield-check me-2"></i>Desconto garantido com guia
+          </div>
+
+          <h1 class="display-5 fw-bold">
+            Marque com <span style="background: linear-gradient(135deg,var(--brand),var(--brand-2)); -webkit-background-clip:text; background-clip:text; color:transparent;">desconto</span>
+            e economize na <span style="background: linear-gradient(135deg,var(--brand),var(--brand-2)); -webkit-background-clip:text; background-clip:text; color:transparent;">consulta</span>.
+          </h1>
+
+          <p class="mt-4 text-muted fs-6">
+            Aqui funciona como um <b>guia de descontos</b>: você escolhe o serviço, seleciona o especialista e
+            gera uma <b>guia</b> que libera um <b>desconto exclusivo</b>.
+            A consulta <b>sempre sai mais barata</b> do que ir diretamente ao local sem a guia.
+          </p>
+
+          <div class="highlight-note mt-3">
+            <div class="d-flex gap-2">
+              <div class="icon-pill"><i class="bi bi-cash-coin"></i></div>
+              <div class="tiny">
+                <b>Não é plano de saúde:</b> não tem mensalidade.
+                Você paga <b>somente quando usa</b> — e já paga com desconto.
+                <div class="muted tiny mt-1">
+                  Diferente de plano mensal, aqui o foco é: <b>qualidade</b>, <b>agilidade</b> e <b>economia</b> por guia.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row g-3 mt-3">
+            <div class="col-6">
+              <div class="d-flex align-items-center gap-2">
+                <i class="bi bi-ticket-perforated text-primary"></i>
+                <span class="small fw-semibold">Guia de Desconto</span>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="d-flex align-items-center gap-2">
+                <i class="bi bi-lightning-charge text-primary"></i>
+                <span class="small fw-semibold">Agilidade</span>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="d-flex align-items-center gap-2">
+                <i class="bi bi-award text-primary"></i>
+                <span class="small fw-semibold">Qualidade</span>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="d-flex align-items-center gap-2">
+                <i class="bi bi-geo-alt text-primary"></i>
+                <span class="small fw-semibold">De qualquer lugar</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="divider my-4"></div>
+
+          <!-- BLOCO: COLABORADOR -->
+          <div class="soft-card p-3">
+            <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
+              <div class="d-flex align-items-start gap-3">
+                <div class="icon-pill"><i class="bi bi-person-plus"></i></div>
+                <div>
+                  <div class="fw-bold">É especialista e quer participar do guia?</div>
+                  <div class="muted tiny mt-1">
+                    Cadastre sua especialidade e local. Você define seu <b>desconto por serviço</b>
+                    e aparece para pessoas da sua região.
+                  </div>
+                </div>
+              </div>
+
+              <a href="cadastro-painel.html" class="btn btn-sm btn-premium text-white rounded-pill px-3">
+                <i class="bi bi-plus-circle me-1"></i> Quero me inscrever
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-7">
+          <div id="cotacao" class="premium-card p-4">
+            <div class="d-flex align-items-start justify-content-between gap-3 mb-3">
+              <div>
+                <h2 class="h4 fw-bold mb-1">Encontrar especialistas com desconto</h2>
+                <div class="muted">
+                  Selecione um serviço e o local. O sistema filtra automaticamente os profissionais disponíveis.
+                </div>
+              </div>
+              <span class="badge rounded-pill text-bg-light border"
+                    style="border-color: rgba(15,23,42,.10)!important;">
+                <i class="bi bi-globe2 me-1"></i> Qualquer lugar
+              </span>
+            </div>
+
+            <div class="row g-3">
+              <div class="col-md-12">
+                <label class="form-label small fw-bold text-muted">Especialidade</label>
+                <select id="especialidadeSelect" class="form-select"></select>
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label small fw-bold text-muted">Estado</label>
+                <select id="stateSelect" class="form-select">
+                  <option value="" selected disabled>Carregando...</option>
+                </select>
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label small fw-bold text-muted">Município</label>
+                <select id="citySelect" class="form-select" disabled>
+                  <option value="" selected disabled>Selecione...</option>
+                </select>
+              </div>
+
+              <div class="col-12 text-end">
+                <button id="btnSearch" class="btn btn-premium w-100 py-2">
+                  <i class="bi bi-search me-2"></i> Consultar Opções
+                </button>
+              </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <span class="fw-bold small">Opções sugeridas</span>
+              <span id="resultCount" class="badge bg-light text-dark border">0 encontradas</span>
+            </div>
+
+            <div class="small muted">
+              <i class="bi bi-info-circle me-1"></i>
+              Cada especialista oferece um desconto variado ao usar a guia — mas <b>sempre sai mais barato</b> do que ir sem guia.
+            </div>
+
+            <div id="results" class="row g-2 mt-2"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- SERVIÇOS (CHIPS + CARDS) -->
+  <section id="servicos" class="py-5">
+    <div class="container">
+      <div class="text-center mb-4">
+        <h2 class="mt-3 fw-bold">Serviços com desconto na guia</h2>
+        <p class="muted mb-0">
+          Escolha o serviço, selecione o especialista e gere sua guia — a consulta fica mais barata do que ir direto.
+        </p>
+      </div>
+
+      <div class="d-flex flex-wrap justify-content-center gap-2 mb-4">
+        <div class="d-flex flex-wrap justify-content-center gap-2 mb-4">
+          <span class="service-chip" data-chip="consulta"><i class="bi bi-person-check"></i> Consulta</span>
+          <span class="service-chip" data-chip="exames"><i class="bi bi-clipboard2-pulse"></i> Exames</span>
+
+          <!-- troca aqui -->
+          <span class="service-chip" data-chip="urgencia"><i class="bi bi-heart-pulse-fill"></i> Urgência</span>
+
+          <span class="service-chip" data-chip="internacao"><i class="bi bi-hospital"></i> Internação</span>
+          <span class="service-chip" data-chip="odontologico"><i class="bi bi-emoji-smile"></i> Odonto</span>
+          <span class="service-chip" data-chip="psicologia"><i class="bi bi-chat-heart"></i> Psicologia</span>
+
+          <!-- troca aqui -->
+          <span class="service-chip" data-chip="psiquiatria"><i class="bi bi-person-hearts"></i> Psiquiatria</span>
+        </div>
+
+      </div>
+
+      <div class="row g-3">
+
+        <!-- Consulta -->
+        <div class="col-md-4">
+          <div class="service-item">
+            <div class="d-flex align-items-start gap-3">
+              <div class="icon-pill"><i class="bi bi-person-check"></i></div>
+              <div>
+                <div class="fw-bold">Consultas e Especialistas</div>
+                <div class="muted tiny mt-1">
+                  Escolha o especialista, gere a guia e pague a consulta com desconto. Atendimento ágil e de qualidade.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Exames -->
+        <div class="col-md-4">
+          <div class="service-item">
+            <div class="d-flex align-items-start gap-3">
+              <div class="icon-pill"><i class="bi bi-clipboard2-pulse"></i></div>
+              <div>
+                <div class="fw-bold">Exames e Diagnóstico</div>
+                <div class="muted tiny mt-1">
+                  Laboratórios e imagem com condições especiais ao usar a guia.
+                  Você paga o exame já com desconto — sem mensalidade.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Internação -->
+        <div class="col-md-4">
+          <div class="service-item">
+            <div class="d-flex align-items-start gap-3">
+              <div class="icon-pill"><i class="bi bi-hospital"></i></div>
+              <div>
+                <div class="fw-bold">Internação e Procedimentos</div>
+                <div class="muted tiny mt-1">
+                  Rede e profissionais com condições diferenciadas via guia (conforme disponibilidade e regras do serviço).
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Odontológico -->
+        <div class="col-md-4">
+          <div class="service-item">
+            <div class="d-flex align-items-start gap-3">
+              <div class="icon-pill"><i class="bi bi-emoji-smile"></i></div>
+              <div>
+                <div class="fw-bold">Odontológico</div>
+                <div class="muted tiny mt-1">
+                  Consultas e procedimentos odontológicos com desconto ao gerar guia no site.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Urgência -->
+        <div class="col-md-4">
+          <div class="service-item">
+            <div class="d-flex align-items-start gap-3">
+              <div class="icon-pill"><i class="bi bi-heart-pulse-fill"></i></div>
+              <div>
+                <div class="fw-bold">Urgência</div>
+                <div class="muted tiny mt-1">
+                  Direcionamento rápido para locais e profissionais com melhor custo-benefício via guia.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Psicologia -->
+        <div class="col-md-4">
+          <div class="service-item">
+            <div class="d-flex align-items-start gap-3">
+              <div class="icon-pill"><i class="bi bi-chat-heart"></i></div>
+              <div>
+                <div class="fw-bold">Consulta Psicológica</div>
+                <div class="muted tiny mt-1">
+                  Psicólogos disponíveis na sua região com desconto por guia. Você escolhe o profissional e agenda de onde estiver.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Psiquiatria -->
+        <div class="col-md-4">
+          <div class="service-item">
+            <div class="d-flex align-items-start gap-3">
+              <div class="icon-pill"><i class="bi bi-person-hearts"></i></div>
+              <div>
+                <div class="fw-bold">Psiquiatra</div>
+                <div class="muted tiny mt-1">
+                  Encontre psiquiatras com desconto ao usar a guia. Mais economia e praticidade do que marcar direto sem guia.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- COMO FUNCIONA -->
+  <section id="como-funciona" class="py-5">
+    <div class="container">
+      <div class="premium-card p-4 p-md-5">
+        <div class="row g-4 align-items-center">
+          <div class="col-lg-6">
+            <h2 class="fw-bold mb-2">Como funciona o guia de descontos</h2>
+            <p class="muted mb-4">
+              Simples e transparente: você gera a guia, usa com o especialista e paga mais barato.
+              <b>Sem mensalidade</b> e com atendimento de qualidade e agilidade.
+            </p>
+
+            <div class="d-grid gap-3">
+              <div class="d-flex gap-3">
+                <div class="icon-pill"><i class="bi bi-1-circle"></i></div>
+                <div>
+                  <div class="fw-bold">Escolha o serviço e o especialista</div>
+                  <div class="muted tiny">
+                    Consulta, exames, odonto, psicologia ou psiquiatria — você escolhe de qualquer lugar.
+                  </div>
+                </div>
+              </div>
+
+              <div class="d-flex gap-3">
+                <div class="icon-pill"><i class="bi bi-2-circle"></i></div>
+                <div>
+                  <div class="fw-bold">Gere sua guia de desconto</div>
+                  <div class="muted tiny">
+                    A guia libera um desconto exclusivo do especialista selecionado (descontos variam por profissional).
+                  </div>
+                </div>
+              </div>
+
+              <div class="d-flex gap-3">
+                <div class="icon-pill"><i class="bi bi-3-circle"></i></div>
+                <div>
+                  <div class="fw-bold">Agende e pague mais barato</div>
+                  <div class="muted tiny">
+                    Ao marcar pelo site, a consulta fica mais barata do que ir diretamente sem guia.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-6">
+            <div class="soft-card p-4">
+              <div class="d-flex align-items-center justify-content-between">
+                <div class="fw-bold">Por que vale a pena?</div>
+                <span class="badge rounded-pill text-bg-light border"
+                      style="border-color: rgba(15,23,42,.10)!important;">Economia + Agilidade</span>
+              </div>
+
+              <div class="divider my-3"></div>
+
+              <ul class="list-unstyled mb-0 d-grid gap-2 tiny">
+                <li class="d-flex gap-2">
+                  <i class="bi bi-check2 text-primary"></i>
+                  <span><b>Sem mensalidade:</b> você paga somente quando usa (consulta/exame).</span>
+                </li>
+                <li class="d-flex gap-2">
+                  <i class="bi bi-check2 text-primary"></i>
+                  <span><b>Descontos variáveis</b> por especialista — mas com guia sempre fica mais barato.</span>
+                </li>
+                <li class="d-flex gap-2">
+                  <i class="bi bi-check2 text-primary"></i>
+                  <span><b>Você escolhe de qualquer lugar</b>: gera a guia e agenda com facilidade.</span>
+                </li>
+                <li class="d-flex gap-2">
+                  <i class="bi bi-check2 text-primary"></i>
+                  <span><b>Atendimento de qualidade</b> com foco em agilidade no agendamento.</span>
+                </li>
+              </ul>
+            </div>
+
+            <div class="soft-card p-4 mt-3">
+              <div class="d-flex gap-3">
+                <div class="icon-pill"><i class="bi bi-exclamation-circle"></i></div>
+                <div class="tiny">
+                  <div class="fw-bold">Resumo rápido</div>
+                  <div class="muted mt-1">
+                    Ir diretamente ao local costuma ser mais caro.
+                    Pelo site, você <b>gera a guia</b> e garante <b>desconto</b> com o especialista selecionado.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer py-4">
+    <div class="container">
+      <div class="d-flex flex-column flex-md-row align-items-center justify-content-between gap-2">
+        <div class="d-flex align-items-center gap-2">
+          <span class="brand-dot"></span>
+          <div class="fw-bold">Consulta Médica</div>
+        </div>
+        <div class="tiny muted text-center">
+          © <span id="year"></span> • Guia de descontos por cidade/município
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- JS Bootstrap -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+
+  const API_BASE = "/consulta/api";
+  //const API_BASE = "http://localhost:8080/consulta/api";
+
+  const stateSelect = document.getElementById("stateSelect");
+  const citySelect  = document.getElementById("citySelect");
+  const btnSearch   = document.getElementById("btnSearch");
+  const espSelect   = document.getElementById("especialidadeSelect");
+
+  let COLABORADORES = [];
+  // agora vamos montar ESPECIALIDADES a partir de COLABORADORES.especialidades
+  let ESPECIALIDADES = []; // [{nome, valor}] (valor = menor valor encontrado pra aquele nome)
+
+  async function fetchJson(url){
+    const resp = await fetch(url, { headers: { "Accept": "application/json" } });
+    if (!resp.ok) throw new Error(`HTTP ${resp.status} em ${url}`);
+    return resp.json();
+  }
+
+  function getServicoSelecionado(){
+    const active = document.querySelector(".service-chip.active");
+    return (active && active.dataset && active.dataset.chip) ? active.dataset.chip : "consulta";
+  }
+
+  function setServicoSelecionado(servico){
+    document.querySelectorAll(".service-chip").forEach(ch => {
+      ch.classList.toggle("active", (ch.dataset && ch.dataset.chip) === servico);
+    });
+  }
+
+  // junta especialidades de todos colaboradores e deduplica pelo nome
+  // se tiver valores diferentes, pega o menor
+  function montarEspecialidades(){
+    const map = new Map(); // nome -> menor valor
+
+    COLABORADORES.forEach(c => {
+      (c.especialidades || []).forEach(es => {
+        if (!es || !es.nome) return;
+
+        const nome = String(es.nome).trim();
+        if (!nome) return;
+
+        const valor = Number(es.valor);
+
+        if (!map.has(nome)) {
+          map.set(nome, valor);
+          return;
+        }
+
+        const atual = Number(map.get(nome));
+        if (Number.isFinite(valor) && (!Number.isFinite(atual) || valor < atual)) {
+          map.set(nome, valor);
+        }
+      });
+    });
+
+    ESPECIALIDADES = [...map.entries()]
+      .map(([nome, valor]) => ({ nome, valor }))
+      .sort((a,b) => a.nome.localeCompare(b.nome, "pt-BR"));
+  }
+
+  function preencherEspecialidades(){
+    if (!espSelect) return;
+
+    espSelect.innerHTML = '<option value="">Qualquer especialidade</option>';
+
+    ESPECIALIDADES.forEach(es => {
+      const opt = document.createElement("option");
+      opt.value = es.nome;          // filtro por nome
+      opt.textContent = es.nome;    // só o nome no select (como você pediu)
+      opt.dataset.valor = String(es.valor ?? ""); // se quiser usar depois
+      espSelect.appendChild(opt);
+    });
+  }
+
+  function estadosDisponiveis(){
+    const set = new Set();
+    COLABORADORES.forEach(c => { if (c.estado) set.add(c.estado); });
+    return [...set].sort((a,b)=>a.localeCompare(b));
+  }
+
+  function preencherEstados(){
+    const est = estadosDisponiveis();
+    stateSelect.innerHTML = `<option value="" selected disabled>Selecione um estado...</option>`;
+    est.forEach(uf => stateSelect.insertAdjacentHTML("beforeend", `<option value="${uf}">${uf}</option>`));
+  }
+
+  function municipiosDisponiveis(uf){
+    const set = new Set();
+    COLABORADORES.forEach(c => {
+      if (c.estado === uf && c.cidade) set.add(c.cidade);
+    });
+    return [...set].sort((a,b)=>a.localeCompare(b, "pt-BR"));
+  }
+
+  function preencherMunicipios(){
+    const uf = stateSelect.value;
+
+    citySelect.innerHTML = `<option value="">Todos os municípios</option>`;
+    if (!uf){
+      citySelect.disabled = true;
+      return;
+    }
+
+    const list = municipiosDisponiveis(uf);
+    if (!list.length){
+      citySelect.disabled = true;
+      return;
+    }
+
+    list.forEach(m => citySelect.insertAdjacentHTML("beforeend", `<option value="${m}">${m}</option>`));
+    citySelect.disabled = false;
+  }
+
+  function irParaResultados(){
+    const servico = getServicoSelecionado();
+    const uf = stateSelect.value;
+    const municipio = (citySelect && !citySelect.disabled) ? (citySelect.value || "") : "";
+    const especialidade = espSelect ? (espSelect.value || "") : "";
+
+    if (!uf){
+      alert("Selecione um estado.");
+      return;
+    }
+
+    const qs = new URLSearchParams({ servico, uf });
+    if (municipio) qs.set("municipio", municipio);
+    if (especialidade) qs.set("especialidade", especialidade);
+
+    window.location.href = `resultados.html?${qs.toString()}`;
+  }
+
+  async function carregarDados(){
+    // ✅ agora só precisa dos colaboradores
+    const colaboradores = await fetchJson(`${API_BASE}/colaboradores`);
+    COLABORADORES = Array.isArray(colaboradores) ? colaboradores : [];
+
+    // ✅ monta a lista de ESPECIALIDADES a partir de colaboradores.especialidades
+    montarEspecialidades();
+
+    // ✅ preenche os selects
+    preencherEspecialidades();
+    preencherEstados();
+    preencherMunicipios();
+  }
+
+  // Chips
+  document.querySelectorAll(".service-chip").forEach(ch => {
+    ch.addEventListener("click", () => {
+      setServicoSelecionado(ch.dataset.chip || "consulta");
+    });
+  });
+
+  // default
+  setServicoSelecionado("consulta");
+
+  btnSearch.addEventListener("click", (e) => { e.preventDefault(); irParaResultados(); });
+  stateSelect.addEventListener("change", preencherMunicipios);
+
+  carregarDados().catch(err => {
+    console.error(err);
+    stateSelect.innerHTML = `<option value="" selected disabled>Erro ao carregar API</option>`;
+  });
+</script>
+
+
+</body>
+</html>

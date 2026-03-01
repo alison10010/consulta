@@ -1,0 +1,187 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    template="/view/layout/admin.xhtml">
+
+    <ui:define name="title">Agenda Profissional</ui:define>
+
+    <ui:define name="content">
+
+        <style>
+            :root {
+                --brand: #2b6cff;
+                --ink: #0f172a;
+                --bg: #f8fafc;
+                --border: rgba(15,23,42,.1);
+                --muted: #64748b;
+            }
+
+            /* Layout Principal Corrigido */
+            .agenda-container {
+                display: flex;
+                flex-direction: row; /* Garante lado a lado */
+                gap: 30px;
+                background: #fff;
+                padding: 25px;
+                border-radius: 16px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+                margin-top: 20px;
+                align-items: flex-start;
+            }
+
+            /* Coluna do Calendário (Fixa) */
+            .calendar-side {
+                flex: 0 0 320px; /* Largura fixa para o calendário não quebrar */
+                position: sticky;
+                top: 20px;
+            }
+
+            /* Coluna da Lista (Flexível) */
+            .list-side {
+                flex: 1; /* Ocupa o resto do espaço */
+                min-width: 0; /* Evita quebra de layout com nomes longos */
+            }
+
+            /* Reset de estilos do PrimeFaces Calendar */
+            .ui-datepicker-inline {
+                width: 100% !important;
+                border: 1px solid var(--border) !important;
+                padding: 10px !important;
+                border-radius: 12px !important;
+                background: #fff !important;
+            }
+
+            /* Estilo da Linha de Horário */
+            .slot-row {
+                display: flex;
+                align-items: center;
+                padding: 15px 20px;
+                background: #fff;
+                border: 1px solid var(--border);
+                border-radius: 12px;
+                margin-bottom: 10px;
+                transition: all 0.2s;
+            }
+
+            .slot-row.is-free { border-left: 5px solid var(--brand); }
+            .slot-row.is-busy { border-left: 5px solid #10b981; background: #fcfdfd; }
+
+            .slot-time { flex: 0 0 90px; font-weight: 600; font-size: 1.1rem; color: var(--ink); }
+            .slot-info { flex: 1; }
+            .slot-actions { display: flex; gap: 8px; }
+
+            /* Header da Agenda */
+            .agenda-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 10px;
+            }
+
+            /* Responsividade para Celular */
+            @media (max-width: 900px) {
+                .agenda-container { flex-direction: column; }
+                .calendar-side { flex: 1 0 auto; width: 100%; }
+            }
+            
+            .ui-button-sm { height: 32px !important; font-size: 12px !important; }
+        </style>
+
+        <div style="padding: 20px; background: var(--bg);">
+            <h:form id="frmAgenda">
+                <p:growl id="messages" showDetail="true" />
+
+                <div class="agenda-header">
+                    <div>
+                        <h2 style="margin:0; font-weight: 600; color: var(--ink);">Minha Agenda</h2>
+                        <p style="color: var(--muted); margin:0;">Gerencie seus atendimentos diários</p>
+                    </div>
+                    <p:commandButton value="Hoje" icon="pi pi-calendar" 
+                                     actionListener="#{colaboradorController.hoje}"
+                                     update="cal gridHorarios"
+                                     styleClass="ui-button-outlined ui-button-secondary" />
+                </div>
+
+                <div class="agenda-container">
+                    
+                    <div class="calendar-side">
+                        <h4 style="font-size: 0.8rem; text-transform: uppercase; color: var(--muted); font-weight: 700;">1. Selecione a Data</h4>
+                        <p:calendar id="cal" value="#{colaboradorController.dataAgenda}"
+                                    mode="inline" locale="pt_BR">
+                            <p:ajax event="dateSelect" listener="#{colaboradorController.buscarAgendaDoDia}"
+                                    update="gridHorarios" />
+                        </p:calendar>
+                    </div>
+
+                    <div class="list-side">
+                        <h4 style="font-size: 0.8rem; text-transform: uppercase; color: var(--muted); font-weight: 700;">2. Horários do Dia</h4>
+                        
+                        <h:panelGroup id="gridHorarios" layout="block">
+                            <ui:fragment rendered="#{empty colaboradorController.agendaDoDia}">
+                                <div style="padding: 40px; text-align: center; border: 2px dashed var(--border); border-radius: 12px; color: var(--muted);">
+                                    <i class="pi pi-clock" style="font-size: 2rem; opacity: 0.3;"></i>
+                                    <p class="mt-2">Nenhum horário disponível para esta data.</p>
+                                </div>
+                            </ui:fragment>
+
+                            <ui:repeat value="#{colaboradorController.agendaDoDia}" var="h" varStatus="status">
+                                <div class="slot-row #{h.disponivel ? 'is-free' : 'is-busy'}">
+                                    <div class="slot-time">#{status.index + 1}</div>
+                                    
+                                    <div class="slot-info">
+                                        <h:panelGroup rendered="#{not h.disponivel}">
+                                            <div style="font-size: 0.7rem; font-weight: 800; color: #10b981; text-transform: uppercase;">Ocupado</div>
+                                            <div style="font-weight: 700; color: var(--ink);">#{h.paciente.nome}</div>
+                                        </h:panelGroup>
+                                        
+                                        <h:panelGroup rendered="#{h.disponivel}">
+                                            <div style="font-size: 0.7rem; font-weight: 800; color: var(--brand); text-transform: uppercase;">Disponível</div>
+                                            <div style="color: var(--muted); font-size: 0.9rem;">Horário livre</div>
+                                        </h:panelGroup>
+                                    </div>
+
+                                    <div class="slot-actions">
+                                        <p:commandButton icon="pi pi-trash" value="Remover"
+                                                         rendered="#{h.disponivel}"
+                                                         actionListener="#{colaboradorController.removerHorario(h.id)}"
+                                                         update=":frmAgenda:gridHorarios :frmAgenda:messages"
+                                                         styleClass="ui-button-danger ui-button-flat ui-button-sm" />
+
+                                        <p:commandButton icon="pi pi-user" value="Ver Paciente"
+                                                         rendered="#{not h.disponivel}"
+                                                         actionListener="#{colaboradorController.abrirPaciente(h.paciente)}"
+                                                         oncomplete="PF('dlgPaciente').show()"
+                                                         update=":frmAgenda:dlgPacienteContent"
+                                                         styleClass="ui-button-secondary ui-button-outlined ui-button-sm" />
+                                    </div>
+                                </div>
+                            </ui:repeat>
+                        </h:panelGroup>
+                    </div>
+                </div>
+
+                <p:dialog id="dlgPaciente" widgetVar="dlgPaciente" modal="true" header="Ficha do Paciente" responsive="true" width="400">
+                    <h:panelGroup id="dlgPacienteContent">
+                        <ui:fragment rendered="#{not empty colaboradorController.pacienteSelecionado}">
+                            <div style="text-align: center; padding: 10px;">
+                                <i class="pi pi-user" style="font-size: 3rem; color: var(--brand);"></i>
+                                <h3 style="margin: 10px 0 0;">#{colaboradorController.pacienteSelecionado.nome}</h3>
+                                <p style="color: var(--muted);">#{colaboradorController.pacienteSelecionado.cpf}</p>
+                                <hr style="border: 0; border-top: 1px solid var(--border);"/>
+                                <p><b>Telefone:</b> #{colaboradorController.pacienteSelecionado.telefone}</p>
+                                <p><b>E-mail:</b> #{colaboradorController.pacienteSelecionado.email}</p>
+                            </div>
+                        </ui:fragment>
+                    </h:panelGroup>
+                </p:dialog>
+
+                <p:confirmDialog global="true">
+                    <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no ui-button-flat" />
+                    <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes ui-button-danger" />
+                </p:confirmDialog>
+            </h:form>
+        </div>
+    </ui:define>
+</ui:composition>

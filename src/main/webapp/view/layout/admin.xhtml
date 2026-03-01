@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="pt-BR" 
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+<h:head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" type="image/png" href="/consulta/img/fevicon.png" />
+  
+  <!-- Se seu layout já inclui Bootstrap, pode remover esses links -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"/>
+  
+  <title><ui:insert name="title"></ui:insert></title>
+
+	<style>
+	    :root{
+	      /* Light Premium */
+	      --bg0:#F7F9FC;
+	      --bg1:#EEF2F8;
+	
+	      --card: rgba(255,255,255,.78);
+	      --card2: rgba(255,255,255,.92);
+	      --border: rgba(15,23,42,.10);
+	
+	      --text: #0F172A;
+	      --muted:#5B6475;
+	
+	      --primary:#2F6BFF;
+	      --accent:#7C3AED;
+	      --cyan:#0891B2;
+	
+	      --shadow: 0 18px 55px rgba(15,23,42,.10);
+	      --shadow2: 0 10px 30px rgba(15,23,42,.08);
+	      --radius: 18px;
+	
+	      --sidebar-w: 280px;
+	      --topbar-h: 72px;
+	    }
+	
+	    *{ font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
+	
+	    body{
+	      color: var(--text);
+	      background:
+	        radial-gradient(1100px 620px at 10% 10%, rgba(47,107,255,.12), transparent 60%),
+	        radial-gradient(900px 520px at 85% 15%, rgba(124,58,237,.10), transparent 60%),
+	        radial-gradient(900px 520px at 70% 80%, rgba(8,145,178,.08), transparent 60%),
+	        linear-gradient(180deg, var(--bg0), var(--bg1));
+	      min-height: 100vh;
+	      overflow-x: hidden;
+	    }
+	
+	    /* ===== Shell ===== */
+	    .admin-shell{
+	      display: grid;
+	      grid-template-columns: var(--sidebar-w) 1fr;
+	      min-height: 100vh;
+	    }
+	
+	    /* ===== Sidebar ===== */
+	    .sidebar{
+	      position: sticky;
+	      top: 0;
+	      height: 100vh;
+	      padding: 18px 16px;
+	      border-right: 1px solid var(--border);
+	      background: rgba(255,255,255,.70);
+	      backdrop-filter: blur(12px);
+	    }
+
+	    .nav-section-title{
+	      margin: 16px 10px 8px;
+	      font-size: .78rem;
+	      font-weight: 500;
+	      letter-spacing: .08em;
+	      text-transform: uppercase;
+	      color: rgba(15,23,42,.45);
+	    }
+	
+	    .side-link{
+	      display:flex;
+	      align-items:center;
+	      gap:10px;
+	      padding: 10px 12px;
+	      border-radius: 14px;
+	      color: rgba(15,23,42,.72);
+	      text-decoration: none;
+	      font-weight: 500;
+	      transition: background .15s ease, color .15s ease, transform .15s ease;
+	    }
+	    .side-link i{ color: rgba(47,107,255,.85); }
+	    .side-link:hover{
+	      color: rgba(15,23,42,.92);
+		    border-color: rgba(15,23,42,.08);
+		    background: rgba(255,255,255,.65);
+	    }
+	    .side-link.active{
+	      background: linear-gradient(135deg, rgba(47,107,255,.14), rgba(124,58,237,.10));
+	      border: 1px solid rgba(15,23,42,.08);
+	      color: rgba(15,23,42,.92);
+	      box-shadow: 0 14px 34px rgba(15,23,42,.08);
+	    }
+	    .side-link.active i{ color: var(--primary); }
+	
+	    .side-footer{
+	      position: absolute;
+	      left: 16px;
+	      right: 16px;
+	      bottom: 16px;
+	      border-top: 1px solid rgba(15,23,42,.08);
+	      padding-top: 12px;
+	      color: rgba(15,23,42,.60);
+	      font-size: .9rem;
+	    }
+	
+	    /* ===== Content ===== */
+	    .content{
+	      min-width: 0;
+	    }
+	
+	    /* ===== Topbar ===== */
+	    .topbar{
+	      position: sticky;
+	      top: 0;
+	      z-index: 10;
+	      height: var(--topbar-h);
+	      display:flex;
+	      align-items:center;
+	      padding: 10px 18px;
+	      border-bottom: 1px solid var(--border);
+	      background: rgba(255,255,255,.72);
+	      backdrop-filter: blur(12px);
+	    }
+	
+	    .page-title{
+	      font-weight: 900;
+	      letter-spacing: -.02em;
+	      margin: 0;
+	      line-height: 1.1;
+	    }
+	
+	    .crumb{
+	      color: rgba(15,23,42,.55);
+	      font-weight: 600;
+	      font-size: .92rem;
+	    }
+	
+	    .pill{
+	      display:inline-flex;
+	      gap:.5rem;
+	      align-items:center;
+	      padding: 8px 12px;
+	      border-radius: 999px;
+	      border: 1px solid rgba(15,23,42,.10);
+	      background: rgba(255,255,255,.72);
+	      color: rgba(15,23,42,.76);
+	      font-weight: 700;
+	      font-size: .9rem;
+	    }
+	    .pill i{ color: var(--cyan); }
+	
+	    /* Mobile: offcanvas sidebar */
+	    .sidebar-toggle{
+	      display:none;
+	    }
+	
+	    /* ===== Cards / Panels ===== */
+	    .panel{
+	      border-radius: 22px;
+	      border: 1px solid rgba(15,23,42,.10);
+	      background: rgba(255,255,255,.74);
+	      box-shadow: var(--shadow2);
+	    }
+	
+	    .kpi{
+	      padding: 16px 16px;
+	      border-radius: 20px;
+	      background: linear-gradient(180deg, rgba(255,255,255,.92), rgba(255,255,255,.74));
+	      border: 1px solid rgba(15,23,42,.08);
+	      box-shadow: 0 16px 38px rgba(15,23,42,.08);
+	      height: 100%;
+	    }
+	    .kpi .label{ color: rgba(15,23,42,.58); font-weight: 700; }
+	    .kpi .value{ font-weight: 900; letter-spacing: -.02em; font-size: 1.6rem; }
+	    .kpi .hint{ color: rgba(15,23,42,.55); font-weight: 600; font-size: .92rem; }
+	    .kpi .kpi-ico{
+	      width: 46px; height: 46px;
+	      display:grid; place-items:center;
+	      border-radius: 16px;
+	      background: linear-gradient(135deg, rgba(47,107,255,.16), rgba(124,58,237,.14));
+	      border: 1px solid rgba(15,23,42,.10);
+	      box-shadow: 0 14px 30px rgba(15,23,42,.10);
+	      color: rgba(15,23,42,.9);
+	      font-size: 20px;
+	    }
+	
+	    /* Buttons */
+	    .btn-primary{
+	      border: none;
+	      color: #fff;
+	      background: linear-gradient(135deg, var(--primary), var(--accent));
+	      box-shadow: 0 14px 40px rgba(47,107,255,.18);
+	      font-weight: 800;
+	    }
+	    .btn-primary:hover{
+	      transform: translateY(-1px);
+	      box-shadow: 0 18px 55px rgba(124,58,237,.18);
+	    }
+	    .btn-soft{
+	      border: 1px solid rgba(15,23,42,.10);
+	      background: rgba(255,255,255,.72);
+	      color: rgba(15,23,42,.82);
+	      font-weight: 800;
+	    }
+	    .btn-soft:hover{
+	      background: rgba(255,255,255,.90);
+	      color: rgba(15,23,42,.92);
+	    }
+	
+	    /* Inputs */
+	    .form-control, .form-select{
+	      border-radius: 14px;
+	      border: 1px solid rgba(15,23,42,.12);
+	      background: rgba(255,255,255,.86);
+	      box-shadow: none !important;
+	    }
+	    .form-control:focus, .form-select:focus{
+	      border-color: rgba(47,107,255,.35);
+	      box-shadow: 0 0 0 .25rem rgba(47,107,255,.14) !important;
+	    }
+	
+	    /* Table */
+	    .table-wrap{
+	      border-radius: 22px;
+	      overflow: hidden;
+	      border: 1px solid rgba(15,23,42,.10);
+	      background: rgba(255,255,255,.78);
+	      box-shadow: var(--shadow2);
+	    }
+	    table.table{
+	      margin: 0;
+	    }
+	    .table thead th{
+	      background: rgba(255,255,255,.92);
+	      color: rgba(15,23,42,.70);
+	      font-weight: 900;
+	      letter-spacing: -.01em;
+	      border-bottom: 1px solid rgba(15,23,42,.10);
+	      padding: 14px 14px;
+	      white-space: nowrap;
+	    }
+	    .table tbody td{
+	      padding: 14px 14px;
+	      vertical-align: middle;
+	      color: rgba(15,23,42,.78);
+	      border-top: 1px solid rgba(15,23,42,.06);
+	    }
+	    .badge-soft{
+	      border: 1px solid rgba(15,23,42,.10);
+	      background: rgba(255,255,255,.72);
+	      color: rgba(15,23,42,.72);
+	      font-weight: 800;
+	      border-radius: 999px;
+	      padding: 6px 10px;
+	    }
+	
+	    /* Dropdown / user */
+	    .user-chip{
+	      display:flex;
+	      align-items:center;
+	      gap:10px;
+	      padding: 8px 10px;
+	      border-radius: 999px;
+	      border: 1px solid rgba(15,23,42,.10);
+	      background: rgba(255,255,255,.72);
+	      font-weight: 500;
+	      color: rgba(15,23,42,.78);
+	    }
+	    .avatar{
+	      width: 34px; height: 34px;
+	      border-radius: 999px;
+	      display:grid; place-items:center;
+	      background: linear-gradient(135deg, rgba(47,107,255,.18), rgba(124,58,237,.14));
+	      border: 1px solid rgba(15,23,42,.10);
+	      color: rgba(15,23,42,.88);
+	      font-weight: 900;
+	    }
+	
+	    /* Page padding */
+	    .page{
+	      padding: 18px 18px 28px;
+	    }
+	
+	    /* Small helpers */
+	    .muted{ color: rgba(15,23,42,.58); }
+	    .title-sm{ font-weight: 900; letter-spacing: -.02em; }
+	
+	    /* Responsive */
+	    @media (max-width: 991.98px){
+	      .admin-shell{ grid-template-columns: 1fr; }
+	      .sidebar{ display:none; }
+	      .sidebar-toggle{ display:inline-flex; }
+	    }
+	    
+	    /*ICON NO MENU*/
+	    /* BRAND CONTAINER */
+		.brand{
+			display: flex;
+			align-items: center;
+			gap: 12px;
+			padding: 10px 10px 14px;
+			border-radius: 16px;
+		}
+		
+		/* BADGE / ÍCONE */
+		.brand-badge{
+			width: 44px;
+			height: 44px;
+			display: grid;
+			place-items: center;
+			border-radius: 14px;
+			border: 1px solid rgba(15,23,42,.10);
+			background: linear-gradient(135deg, #2563eb, #7c3aed);
+			box-shadow: 0 10px 25px rgba(37,99,235,.35);
+		}
+		
+		/* ÍCONE */
+		.brand-badge i{
+			font-size: 1.35rem;   /* CONTROLE AQUI */
+			color: #fff;          /* padrão premium */
+		}
+		
+		/* TEXTO */
+		.brand-text{
+			display: flex;
+			flex-direction: column;
+			line-height: 1.15;
+		}
+		
+		.brand-title{
+			font-weight: 700;
+			font-size: 0.95rem;
+			letter-spacing: -.02em;
+		}
+		
+		.brand-sub{
+			font-size: 0.78rem;
+			color: rgba(15,23,42,.60);
+		}
+		
+		/* BOTÕES */			
+		.btn-premium {
+		    background: linear-gradient(135deg, #2b6cff, #7a5cff) !important;
+		    color: white !important;
+		    border: none !important;
+		    padding: 0.5rem 1rem;
+		    border-radius: 6px;
+		    font-weight: bold;
+		    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+		    transition: all 0.3s ease;
+		}
+		
+		.btn-premium:hover {
+		    filter: brightness(1.1);
+		}
+		
+		/* Botão cancelar (outline com cor suave combinando) */
+		.btn-outline-premium {
+		    background: transparent;
+		    border: 2px solid #7a5cff;
+		    color: #7a5cff;
+		    padding: 0.5rem 1rem;
+		    border-radius: 6px;
+		    font-weight: 500;
+		    transition: all 0.3s ease;
+		}
+		
+		.btn-outline-premium:hover {
+		    background: #f3f0ff;
+		    border-color: #2b6cff;
+		    color: #2b6cff;
+		}
+		
+		.ui-datatable-data td[role="gridcell"]:focus, .ui-datatable-data td[role="gridcell"] *:focus, .ui-datatable-data td[role="grid"] [tabindex="0"]:focus {
+		    outline: none;
+		}
+
+	  </style>
+</h:head>
+
+<h:body>
+
+	<div class="admin-shell">
+
+    <!-- ===== Sidebar (Desktop) ===== -->
+    <aside class="sidebar d-none d-lg-block">
+      <div class="brand">
+	    <div class="brand-badge">
+	      <i class="bi bi-clipboard2-pulse"></i>
+	    </div>
+	
+	    <div class="brand-text">
+	      <div class="brand-title">Consulta</div>
+	      <div class="brand-sub">Consulta Médica</div>
+	    </div>
+	  </div>
+	  
+	  
+	  <br />
+	  
+	  	<a class="side-link" href="/">
+    		<i class="bi bi-house-fill"></i> HOME 
+    	</a>
+
+	  <ui:fragment rendered="#{homeController.colaborador}" id="menuColaborador">	  
+	        
+
+	      	<div class="nav-section-title">Gestão</div>
+	      
+	      	<a class="side-link #{view.viewId eq '/view/colaborador/home.xhtml' ? 'active' : ''}" href="/consulta/colaborador/home">
+	      		<i class="bi bi-speedometer2"></i> Dashboard
+	      	</a>
+	
+	      	<a class="side-link #{view.viewId eq '/view/colaborador/perfil.xhtml' ? 'active' : ''}"
+			   href="/consulta/colaborador/perfil">
+			 <i class="bi bi-person-circle"></i> Perfil
+			</a>
+			
+			<a class="side-link #{view.viewId eq '/view/colaborador/especialidade.xhtml' ? 'active' : ''}"
+			   href="/consulta/colaborador/especialidade">
+			 <i class="bi bi-award-fill"></i> Especialidade
+			</a>
+			
+			<a class="side-link #{view.viewId eq '/view/colaborador/endereco.xhtml' ? 'active' : ''}"
+			   href="/consulta/colaborador/endereco">
+			  <i class="bi bi-geo-alt"></i> Localidade
+			</a>
+
+			<a class="side-link #{view.viewId eq '/view/colaborador/horarios.xhtml' ? 'active' : ''}"
+			   href="/consulta/colaborador/horarios">
+			   <i class="bi bi-clock"></i> Horários
+			</a>
+			
+			<a class="side-link #{view.viewId eq '/view/colaborador/agenda.xhtml' ? 'active' : ''}"
+			   href="/consulta/colaborador/agenda">
+			   <i class="bi bi-calendar-check"></i> Minha agenda
+			</a>
+
+	      	<div class="nav-section-title">Relatórios</div>
+	      	<a class="side-link #{view.viewId eq '/view/colaborador/relatorio-colaborador.xhtml' ? 'active' : ''}" href="/consulta/colaborador/relatorio"><i class="bi bi-file-earmark-bar-graph"></i> Relatórios</a>
+			
+			<div class="nav-section-title">Configurações</div>
+			<a class="side-link #{view.viewId eq '/view/colaborador/alterar-senha.xhtml' ? 'active' : ''}"
+			   href="/consulta/colaborador/alterar-senha">
+			   <i class="bi bi-lock-fill"></i> Alterar senha
+			</a>
+			
+	   </ui:fragment>
+	   
+	   <ui:fragment rendered="#{homeController.paciente}" id="menuPaciente">
+
+	      	<div class="nav-section-title">Gestão</div>
+	      
+	      	<a class="side-link #{view.viewId eq '/view/paciente/consultas.xhtml' ? 'active' : ''}" href="/consulta/paciente/consultas">
+	      		<i class="bi bi-calendar-check"></i> Minhas consultas
+	      	</a>
+	
+	      	<a class="side-link #{view.viewId eq '/view/paciente/perfil.xhtml' ? 'active' : ''}"
+			   href="/consulta/paciente/perfil">
+			 <i class="bi bi-person-circle"></i>Perfil
+			</a>
+			
+			<a class="side-link #{view.viewId eq '/view/paciente/servicos.xhtml' ? 'active' : ''}"
+			   href="/consulta/paciente/servicos">
+			   <i class="bi bi-search-heart"></i> buscar serviço
+			</a>
+			
+			<div class="nav-section-title">Configurações</div>
+			<a class="side-link #{view.viewId eq '/view/paciente/alterar-senha.xhtml' ? 'active' : ''}"
+			   href="/consulta/paciente/alterar-senha">
+			   <i class="bi bi-lock-fill"></i> Alterar senha
+			</a>
+	
+	   </ui:fragment>
+	   
+	   <ui:fragment rendered="#{homeController.admin}" id="adminColaborador">
+	   
+	   <div class="nav-section-title">Gestão</div>
+	      
+	      	<a class="side-link #{view.viewId eq '/view/admin/especialidade-analise.xhtml' ? 'active' : ''}" href="/consulta/admin/especialidade-analise">
+	      		<i class="bi bi-shield-check"></i> Documentos
+	      	</a>
+	      	
+	      	<a class="side-link #{view.viewId eq '/view/admin/relatorio-colaborador.xhtml' ? 'active' : ''}"
+			   href="/consulta/admin/relatorio-colaborador">
+			 <i class="bi bi-bar-chart-line"></i>Relatório
+			</a>
+	
+	      	<a class="side-link #{view.viewId eq '/view/admin/alterar-senha.xhtml' ? 'active' : ''}"
+			   href="/consulta/admin/alterar-senha">
+			 <i class="bi bi-lock-fill"></i> Alterar senha
+			</a>
+	   
+	   </ui:fragment>
+
+      <div class="side-footer">
+        <div class="d-flex align-items-center justify-content-between">
+          <span class="muted"></span>
+          <span class="badge-soft"><i class="bi bi-wifi me-1"></i> Online</span>
+        </div>
+      </div>
+      
+    </aside>
+    
+    
+
+    <!-- ===== Main content ===== -->
+    <main class="content">
+    
+    <!-- Topbar -->
+      <div class="topbar">
+        <button class="btn btn-soft sidebar-toggle me-2" type="button"
+                data-bs-toggle="offcanvas" data-bs-target="#offcanvasSidebar">
+          <i class="bi bi-list"></i>
+        </button>
+
+        <div class="me-auto">
+          <div class="crumb">Administração</div>
+        </div>
+
+
+
+        <div class="dropdown">
+          <button class="btn user-chip dropdown-toggle" data-bs-toggle="dropdown">
+            <span class="avatar">A</span>
+            #{homeController.primeiroNome}
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end shadow">
+            <li><hr class="dropdown-divider" /></li>
+            <li><a class="dropdown-item text-danger" href="/consulta/logout"><i class="bi bi-box-arrow-right me-2"></i> Sair</a></li>
+          </ul>
+        </div>
+      </div>
+
+      	<ui:insert name="content">
+		  Olá
+		</ui:insert>
+	
+    </main>
+  </div>
+  
+
+<!-- ===== Offcanvas Sidebar (Mobile) ===== -->
+<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasSidebar">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title fw-black" style="font-weight:900">Menu</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+  </div>
+
+  <div class="offcanvas-body">
+
+    <!-- ===== MENU COLABORADOR ===== -->
+    <ui:fragment rendered="#{homeController.colaborador}" id="menuColaboradorMobile">
+
+      <div class="nav-section-title">Gestão</div>
+
+      <a class="side-link #{view.viewId eq '/view/colaborador/home.xhtml' ? 'active' : ''}"
+         href="/consulta/home">
+        <i class="bi bi-speedometer2"></i> Dashboard
+      </a>
+
+      <a class="side-link #{view.viewId eq '/view/colaborador/perfil.xhtml' ? 'active' : ''}"
+         href="/consulta/perfil">
+        <i class="bi bi-person-circle"></i> Perfil
+      </a>
+
+      <a class="side-link #{view.viewId eq '/view/colaborador/endereco.xhtml' ? 'active' : ''}"
+         href="/consulta/endereco">
+        <i class="bi bi-geo-alt"></i> Localidade
+      </a>
+
+      <a class="side-link #{view.viewId eq '/view/colaborador/horarios.xhtml' ? 'active' : ''}"
+         href="/consulta/horarios">
+        <i class="bi bi-clock"></i> Horários
+      </a>
+
+      <a class="side-link #{view.viewId eq '/view/colaborador/agenda.xhtml' ? 'active' : ''}"
+         href="/consulta/agenda">
+        <i class="bi bi-calendar-check"></i> Minha agenda
+      </a>
+
+      <div class="nav-section-title">Relatórios</div>
+
+      <a class="side-link #{view.viewId eq '/view/painel/relatorio-periodo.xhtml' ? 'active' : ''}"
+         href="/consulta/painel/relatorio-periodo">
+        <i class="bi bi-file-earmark-bar-graph"></i> Relatórios
+      </a>
+
+    </ui:fragment>
+
+    <!-- ===== MENU PACIENTE ===== -->
+    <ui:fragment rendered="#{not homeController.colaborador}" id="menuPacienteMobile">
+
+      <div class="nav-section-title">Gestão</div>
+
+      <a class="side-link #{view.viewId eq '/view/paciente/consultas.xhtml' ? 'active' : ''}"
+         href="/consulta/paciente/consultas">
+        <i class="bi bi-calendar-check"></i> Minhas consultas
+      </a>
+
+      <a class="side-link #{view.viewId eq '/view/paciente/perfil.xhtml' ? 'active' : ''}"
+         href="/consulta/paciente/perfil">
+        <i class="bi bi-person-circle"></i> Perfil
+      </a>
+
+      <a class="side-link #{view.viewId eq '/view/paciente/servicos.xhtml' ? 'active' : ''}"
+         href="/consulta/paciente/servicos">
+        <i class="bi bi-search-heart"></i> Buscar serviço
+      </a>
+
+    </ui:fragment>
+
+  </div>
+</div>
+
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</h:body>
+</html>

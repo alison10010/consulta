@@ -1,0 +1,232 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/view/layout/admin.xhtml">
+
+    <ui:define name="title">Especialidades | Análise</ui:define>
+
+    <ui:define name="content">
+
+        <style>
+            :root{
+                --pv-bg:#f1f5f9;
+                --pv-card:#ffffff;
+                --pv-border:rgba(15,23,42,.08);
+                --pv-text:#1e293b;
+                --pv-muted:#64748b;
+                --pv-primary:#4f46e5;
+                --pv-success:#10b981;
+                --pv-danger:#ef4444;
+                --pv-radius:12px;
+            }
+
+            .page { padding: 24px 12px; background: var(--pv-bg); min-height: 100vh; }
+            .wrap { max-width: 1300px; margin: 0 auto; }
+
+            .header-section { margin-bottom: 20px; }
+            .title { font-weight: 800; color: var(--pv-text); font-size: 1.25rem; margin:0; }
+            
+            .toolbar {
+                background: white;
+                padding: 12px 20px;
+                border-radius: var(--pv-radius);
+                border: 1px solid var(--pv-border);
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 16px;
+            }
+
+            /* List Structure */
+            .list-container { display: flex; flex-direction: column; gap: 8px; }
+            
+            /* Header da Lista (Colunas) */
+            .list-header {
+                display: grid;
+                grid-template-columns: 2fr 1.5fr 1fr 1.5fr 1.2fr;
+                padding: 10px 20px;
+                font-size: 0.75rem;
+                font-weight: 700;
+                text-transform: uppercase;
+                color: var(--pv-muted);
+                letter-spacing: 0.05em;
+            }
+
+            .list-row {
+                display: grid;
+                grid-template-columns: 2fr 1.5fr 1fr 1.5fr 1.2fr;
+                align-items: center;
+                background: white;
+                padding: 12px 20px;
+                border-radius: var(--pv-radius);
+                border: 1px solid var(--pv-border);
+                transition: all 0.2s;
+            }
+            .list-row:hover { border-color: var(--pv-primary); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+
+            /* Info Groups */
+            .col-main { display: flex; flex-direction: column; }
+            .name { font-weight: 700; color: var(--pv-text); font-size: 0.95rem; }
+            .subtext { font-size: 0.8rem; color: var(--pv-muted); }
+
+            .doc-group { display: flex; gap: 6px; }
+            
+            /* Badges Custom */
+            .status-pill {
+                padding: 4px 10px;
+                border-radius: 20px;
+                font-size: 0.7rem;
+                font-weight: 800;
+                display: inline-flex;
+                align-items: center;
+                gap: 4px;
+            }
+            .st-analise { background: #eef2ff; color: #4338ca; }
+            .st-pendente { background: #fff7ed; color: #9a3412; }
+
+            .pill-btn { border-radius: 8px !important; font-size: 0.8rem !important; }
+            
+            @media (max-width: 992px) {
+                .list-header { display: none; }
+                .list-row { grid-template-columns: 1fr; gap: 12px; padding: 20px; }
+                .list-row > div { border-bottom: 1px solid #f1f5f9; padding-bottom: 8px; }
+            }
+        </style>
+
+        <div class="page">
+            <div class="wrap">
+                <h:form id="frm">
+                    <p:growl id="messages" showDetail="true" />
+
+                    <div class="header-section d-flex justify-content-between align-items-center">
+                        <div>
+                            <h3 class="title"><i class="bi bi-shield-check me-2" style="color: var(--pv-primary)"></i> Análise de Especialidades</h3>
+                            <p class="subtext">Gestão de documentos e validação de conselhos.</p>
+                        </div>
+                        <p:commandButton value="Atualizar" icon="pi pi-refresh" 
+                                         actionListener="#{administradorController.recarregarFila}"
+                                         update="lista" styleClass="ui-button-outlined ui-button-secondary pill-btn" />
+                    </div>
+
+                    <div class="toolbar">
+                        <div class="d-flex align-items-center gap-3">
+                            <span class="subtext fw-bold">Filtrar:</span>
+                            <p:selectOneButton value="#{administradorController.filtroStatus}" styleClass="ui-buttonset-small">
+                                <f:selectItem itemLabel="Em análise" itemValue="EM_ANALISE"/>
+                                <f:selectItem itemLabel="Pendentes" itemValue="PENDENTE_DOCS"/>
+                                <f:selectItem itemLabel="Todos" itemValue="TODOS"/>
+                                <p:ajax listener="#{administradorController.recarregarFila}" update="lista"/>
+                            </p:selectOneButton>
+                        </div>
+                        <div class="subtext">
+                             Total: <span class="fw-bold">#{administradorController.fila.size()}</span> itens
+                        </div>
+                    </div>
+
+                    <h:panelGroup id="lista" layout="block">
+                        <h:panelGroup rendered="#{empty administradorController.fila}">
+                            <div class="text-center p-5 bg-white border-radius-12 shadow-sm">
+                                <i class="pi pi-check-circle text-success" style="font-size: 3rem"></i>
+                                <p class="mt-3 text-muted">Tudo em dia! Nenhuma pendência encontrada.</p>
+                            </div>
+                        </h:panelGroup>
+
+                        <h:panelGroup rendered="#{not empty administradorController.fila}">
+                            <div class="list-header">
+                                <span>Profissional / Usuário</span>
+                                <span>Especialidade / Registro</span>
+                                <span>Status</span>
+                                <span>Documentos</span>
+                                <span class="text-end">Ações</span>
+                            </div>
+
+                            <div class="list-container">
+                                <ui:repeat value="#{administradorController.fila}" var="ue">
+                                    <div class="list-row">
+                                        <div class="col-main">
+                                            <span class="name">#{ue.usuario.nome}</span>
+                                            <span class="subtext">ID: #{ue.usuario.username}</span>
+                                        </div>
+
+                                        <div class="col-main">
+                                            <span class="fw-bold text-dark" style="font-size:0.85rem">#{ue.especialidade.especialidade}</span>
+                                            <span class="subtext">#{ue.conselho} - #{ue.registro}</span>
+                                        </div>
+
+                                        <div>
+                                            <span class="status-pill #{ue.status == 'PENDENTE_DOCS' ? 'st-pendente' : 'st-analise'}">
+                                                <i class="pi #{ue.status == 'PENDENTE_DOCS' ? 'pi-exclamation-triangle' : 'pi-clock'}"></i>
+                                                #{ue.status == 'EM_ANALISE' ? 'EM ANÁLISE' : 'PENDENTE'}
+                                            </span>
+                                        </div>
+
+                                        <div class="doc-group">
+                                            <p:commandButton icon="pi pi-file-pdf" title="Diploma"
+                                                             rendered="#{not empty ue.pathDiplomaEspecialidade}"                                                             
+                                                             action="#{colaboradorController.visualizarDocumentoEspecialidade(ue, 'diploma')}"
+                                                             ajax="false" onclick="target='_blank'"
+                                                             styleClass="ui-button-flat ui-button-info" />
+                                            
+                                            <p:commandButton icon="pi pi-id-card" title="Carteira"
+                                                             rendered="#{not empty ue.pathCarteiraEspecialidade}"
+                                                             action="#{colaboradorController.visualizarDocumentoEspecialidade(ue, 'carteira')}"
+                                                             ajax="false" onclick="target='_blank'"
+                                                             styleClass="ui-button-flat ui-button-info" />
+                                            
+                                            <h:panelGroup rendered="#{empty ue.pathDiplomaEspecialidade and empty ue.pathCarteiraEspecialidade}">
+                                                <span class="text-danger small fw-bold">Sem arquivos</span>
+                                            </h:panelGroup>
+                                        </div>
+
+                                        <div class="text-end d-flex gap-1 justify-content-end">
+                                            <p:commandButton icon="pi pi-check" 
+                                                             styleClass="ui-button-success ui-button-flat pill-btn"
+                                                             title="Aprovar"
+                                                             process="@this" update="@form"
+                                                             actionListener="#{administradorController.aprovar(ue)}">
+                                                <p:confirm header="Confirmar" message="Aprovar especialidade?" />
+                                            </p:commandButton>
+
+                                            <p:commandButton icon="pi pi-times-circle"
+                                                             styleClass="ui-button-danger ui-button-flat pill-btn"
+                                                             title="Recusar"
+                                                             process="@this" update="@form"
+                                                             actionListener="#{administradorController.abrirRecusa(ue)}"
+                                                             oncomplete="PF('dlgRecusa').show()" />
+                                        </div>
+                                    </div>
+                                </ui:repeat>
+                            </div>
+                        </h:panelGroup>
+                    </h:panelGroup>
+
+                    <p:dialog id="dlgRecusa" widgetVar="dlgRecusa" header="Recusar Documentação" modal="true" responsive="true" width="450" resizable="false">
+                         <h:panelGroup rendered="#{not empty administradorController.selecionado}">
+                            <div class="p-2">
+                                <p class="mb-2">Motivo da recusa para: <strong>#{administradorController.selecionado.usuario.nome}</strong></p>
+                                <div class="text-muted small mb-3">
+                                    Informe um motivo para orientar o profissional.
+                                </div>
+                                <p:inputTextarea value="#{administradorController.motivoRecusa}" rows="4" styleClass="w-100" 
+                                                 placeholder="Descreva o motivo (ex: Documento vencido)..." />
+                                <div class="mt-3 d-flex justify-content-end gap-2">
+                                    <p:commandButton value="Cancelar" onclick="PF('dlgRecusa').hide()" styleClass="ui-button-flat" />
+                                    <p:commandButton value="Confirmar Recusa" actionListener="#{administradorController.recusarSelecionado}"
+                                                     update="@form, messages" oncomplete="PF('dlgRecusa').hide()" styleClass="ui-button-danger" />
+                                </div>
+                            </div>
+                         </h:panelGroup>
+                    </p:dialog>
+
+                    <p:confirmDialog global="true" responsive="true" width="350">
+                        <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no ui-button-flat"/>
+                        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes ui-button-success" />
+                    </p:confirmDialog>
+
+                </h:form>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>

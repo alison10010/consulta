@@ -1,0 +1,157 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    template="/view/layout/admin.xhtml">
+
+    <ui:define name="title">Configurações de Perfil</ui:define>
+
+    <ui:define name="content">
+        <style>
+            :root {
+                --primary-gradient: linear-gradient(135deg, #2F6BFF, #7C3AED);
+                --input-bg: #ffffff;
+            }
+
+            .page { 
+                padding: 40px 20px; 
+                display: flex; 
+                justify-content: center;
+                min-height: 100vh;
+            }
+
+            .form-card {
+            	height: 100% !important;
+                width: 100%;
+                max-width: 800px;
+                background: #fff;
+                border: 1px solid rgba(15, 23, 42, 0.08);
+                border-radius: 20px;
+                box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+                overflow: hidden;
+            }
+
+            .card-header-custom {
+                padding: 32px 32px 20px;
+                border-bottom: 1px solid #f1f5f9;
+            }
+
+            .card-body-custom {
+                padding: 32px;
+            }
+
+            .form-label {
+                font-size: 0.875rem;
+                font-weight: 600;
+                color: #475569;
+                margin-bottom: 8px;
+                display: block;
+            }
+
+            /* Customização PrimeFaces para combinar com o CSS */
+            .ui-password input {
+                width: 100% !important;
+                border-radius: 12px !important;
+                padding: 12px 16px !important;
+                border: 1px solid #e2e8f0 !important;
+                transition: all 0.2s;
+            }
+
+            .ui-password input:focus {
+                border-color: #2F6BFF !important;
+                box-shadow: 0 0 0 4px rgba(47, 107, 255, 0.1) !important;
+                outline: none;
+            }
+
+            .btn-premium {
+                background: var(--primary-gradient) !important;
+                border: none !important;
+                color: white !important;
+                font-weight: 600 !important;
+                border-radius: 12px !important;
+                padding: 10px 24px !important;
+                transition: transform 0.2s, box-shadow 0.2s !important;
+            }
+
+            .btn-premium:hover {
+                transform: translateY(-1px);
+                box-shadow: 0 8px 20px rgba(47, 107, 255, 0.3) !important;
+            }
+
+            .icon-box {
+                width: 40px;
+                height: 40px;
+                background: rgba(47, 107, 255, 0.1);
+                border-radius: 10px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #2F6BFF;
+                margin-right: 15px;
+            }
+            
+            .fw-bold {
+			    font-weight: 600 !important;
+			}
+        </style>
+
+        <div class="page">
+            <h:form id="frm" styleClass="form-card">
+                <p:growl id="messages" showDetail="true" life="3000" />
+
+                <div class="card-header-custom d-flex align-items-center">
+                    <div class="icon-box">
+                        <i class="bi bi-shield-lock-fill fs-5"></i>
+                    </div>
+                    <div>
+                        <h4 class="mb-0 fw-bold" style="letter-spacing: -0.5px;">Segurança da Conta</h4>
+                        <p class="text-muted small mb-0">Atualize sua senha periodicamente para manter sua conta segura.</p>
+                    </div>
+                </div>
+
+                <div class="card-body-custom">
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <label class="form-label">Nova Senha</label>
+                            <p:password id="novaSenha"
+                                        value="#{colaboradorController.novaSenha}"
+                                        feedback="true"
+                                        promptLabel="Digite uma senha forte"
+                                        weakLabel="Fraca" 
+                                        goodLabel="Boa" 
+                                        strongLabel="Excelente"
+                                        toggleMask="true"
+                                        redisplay="true"
+                                        placeholder="••••••••"
+                                        required="true"
+                                        requiredMessage="A nova senha é obrigatória"/>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Confirmar Nova Senha</label>
+                            <p:password id="confirmarSenha"
+                                        value="#{colaboradorController.confirmarSenha}"
+                                        toggleMask="true"
+                                        redisplay="true"
+                                        placeholder="••••••••"
+                                        required="true"
+                                        requiredMessage="A confirmação é obrigatória"/>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center mt-5 pt-3 border-top">
+                        <span class="text-muted small">
+                            <i class="bi bi-info-circle me-1"></i> Use pelo menos 8 caracteres.
+                        </span>
+                        <p:commandButton value="Salvar Alterações"
+                                         icon="bi bi-check2-circle"
+                                         styleClass="btn-premium"
+                                         action="#{colaboradorController.alteraSenha}"
+                                         update="@form messages"/>
+                    </div>
+                </div>
+            </h:form>
+        </div>
+    </ui:define>
+</ui:composition>

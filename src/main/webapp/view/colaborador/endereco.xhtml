@@ -1,0 +1,456 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    template="/view/layout/admin.xhtml">
+
+    <ui:define name="title">Endereço</ui:define>
+
+    <ui:define name="content">
+
+        <!-- Leaflet (mapa clicável) -->
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+              integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="anonymous"/>
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+                integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="anonymous"></script>
+
+        <style>
+            .page{ padding:32px; display:flex; justify-content:center; }
+
+            .form-card{
+                width:100%;
+                max-width:1100px;
+                background:var(--card);
+                border:1px solid var(--border);
+                border-radius:var(--radius);
+                box-shadow:var(--shadow);
+                padding:28px;
+            }
+
+            .form-title{ font-weight:900; letter-spacing:-.02em; }
+
+            .form-control{
+                border-radius:14px;
+                border:1px solid rgba(15,23,42,.14);
+            }
+            .form-control:focus{
+                border-color:rgba(47,107,255,.45);
+                box-shadow:0 0 0 .25rem rgba(47,107,255,.15);
+            }
+
+            .btn-primary{
+                border:none;
+                font-weight:800;
+                border-radius:999px;
+                padding:12px 18px;
+                background:linear-gradient(135deg,var(--primary),var(--accent));
+                box-shadow:0 14px 35px rgba(47,107,255,.22);
+            }
+
+            .map-wrap{
+                border-radius:16px;
+                overflow:hidden;
+                border:1px solid rgba(0,0,0,.12);
+                background:#fff;
+            }
+            #map{ width:100%; height:360px; }
+
+            .hint{ color: rgba(15,23,42,.62); font-size: .92rem; }
+            .mini{ font-size:.86rem; color: rgba(15,23,42,.62); }
+
+            .btn-cep{
+                border-radius:999px !important;
+                font-weight:800;
+            }
+        </style>
+
+        <div class="page">
+        
+        	<p:growl id="messages" />
+
+            <h:form id="frm" styleClass="form-card">
+
+                <!-- ✅ RemoteCommand: após buscar CEP no JS, sincroniza UF/Município no backend (IBGE) -->
+                <p:remoteCommand name="rcAplicarCep"
+                    actionListener="#{colaboradorController.aplicarCep(param.uf, param.cidade, param.bairro, param.logradouro)}"
+                    process="@this"
+                    update="estado cidade bairro endereco" />
+
+                <p class="text-muted mb-4">Endereço e localização</p>
+
+                <!-- ===== ENDEREÇO ===== -->
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                    <h5 class="fw-bold mb-0">Endereço</h5>
+                    <span class="mini">Preencha o CEP e clique em Buscar. Depois, clique no mapa para ajustar o ponto exato.</span>
+                </div>
+
+                <div class="row g-3 mb-4">
+
+                    <!-- CEP + Botão -->
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">CEP</label>
+
+                        <div class="d-flex gap-2">
+                            <h:inputText id="cep"
+                                         value="#{colaboradorController.usuario.endereco.cep}"
+                                         styleClass="form-control"
+                                         placeholder="00000-000"
+                                         oninput="maskCep(this)"
+                                         onkeydown="if(event.key==='Enter'){event.preventDefault(); buscarCep();}" />
+
+                            <button type="button"
+                                    class="btn btn-outline-secondary btn-cep px-3"
+                                    onclick="buscarCep()">
+                                <i class="bi bi-search me-1"></i>
+                            </button>
+                        </div>
+
+                        <div class="mini mt-1" id="cepStatus"></div>
+                    </div>
+
+                    <div class="col-md-8">
+                        <label class="form-label fw-semibold">Endereço</label>
+                        <h:inputText id="endereco"
+                                     value="#{colaboradorController.usuario.endereco.endereco}"
+                                     styleClass="form-control"
+                                     placeholder="Rua, avenida..."
+                                     onblur="geocodeEnderecoPorCampos();"/>
+                    </div>
+
+                    <!-- ✅ Estado (select) -->
+                    <div class="col-md-2">
+                        <label class="form-label fw-semibold">Estado</label>
+
+                        <p:selectOneMenu id="estado"
+                                         value="#{colaboradorController.ufSelecionado}"
+                                         styleClass="form-select"
+                                         onchange="geocodeEnderecoPorCampos();">
+                            <f:selectItem itemLabel="UF" itemValue="" />
+                            <f:selectItems value="#{colaboradorController.estados}" />
+
+                            <p:ajax listener="#{colaboradorController.onChangeUF}"
+                                    process="@this"
+                                    update="cidade" />
+                        </p:selectOneMenu>
+                    </div>
+
+                    <!-- ✅ Município (select editável) -->
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">Cidade</label>
+
+                        <p:selectOneMenu id="cidade"
+                                         value="#{colaboradorController.municipioSelecionado}"
+                                         styleClass="form-select"
+                                         editable="true"
+                                         filter="true"
+                                         filterMatchMode="contains"
+                                         onchange="geocodeEnderecoPorCampos();">
+                            <f:selectItem itemLabel="Digite ou selecione" itemValue="" />
+                            <f:selectItems value="#{colaboradorController.municipios}"
+                                           var="m" itemLabel="#{m}" itemValue="#{m}" />
+                            <p:ajax listener="#{colaboradorController.onChangeMunicipio}"
+                                    process="@this" />
+                        </p:selectOneMenu>
+
+                        <h:panelGroup rendered="#{empty colaboradorController.municipios}">
+                            <small class="text-warning">Não carregou municípios para esse UF — você pode digitar a cidade.</small>
+                        </h:panelGroup>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="form-label fw-semibold">Bairro</label>
+                        <h:inputText id="bairro"
+                                     value="#{colaboradorController.usuario.endereco.bairro}"
+                                     styleClass="form-control"
+                                     onblur="geocodeEnderecoPorCampos();"/>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="form-label fw-semibold">Número</label>
+                        <h:inputText id="numero"
+                                     value="#{colaboradorController.usuario.endereco.numero}"
+                                     styleClass="form-control"
+                                     onblur="geocodeEnderecoPorCampos();"/>
+                    </div>
+
+                    <div class="col-12">
+                        <label class="form-label fw-semibold">Complemento</label>
+                        <h:inputText id="complemento"
+                                     value="#{colaboradorController.usuario.endereco.complemento}"
+                                     styleClass="form-control"
+                                     onblur="geocodeEnderecoPorCampos();"/>
+                    </div>
+                </div>
+
+                <!-- Hidden: coordenadas no formato "-9.974990,-67.824300" -->
+                <h:inputHidden id="coordenadasHidden"
+                               value="#{colaboradorController.usuario.endereco.coordenadas}" />
+
+                <!-- ✅ Ponto inicial (data-coord) lido pelo JS -->
+                <h:panelGroup id="coordInit"
+                              layout="block"
+                              styleClass="d-none"
+                              data-coord="#{colaboradorController.usuario.endereco.coordenadas}">
+                </h:panelGroup>
+
+                <!-- ===== MAPA ===== -->
+                <h5 class="fw-bold mb-2">Mini mapa</h5>
+                <p class="hint mb-3">
+                    Clique no mapa para marcar o local exato. Se você buscar o CEP, o mapa será centralizado automaticamente.
+                </p>
+
+                <div class="map-wrap mb-3">
+                    <div id="map"></div>
+                </div>
+
+                <div class="d-flex align-items-center justify-content-between mb-4">
+                    <div class="mini">
+                        Coordenadas: <span id="coordTextView">—</span>
+                    </div>
+
+                    <button type="button"
+                            class="btn btn-outline-secondary rounded-pill px-4"
+                            onclick="usarMinhaLocalizacao();">
+                        <i class="bi bi-geo-alt me-1"></i> Usar minha localização
+                    </button>
+                </div>
+
+                <div class="d-flex justify-content-end gap-2">
+
+                    <!-- Botão Cancelar -->
+                    <button type="reset"
+                            class="btn btn-outline-premium btn-pill"
+                            onclick="limparMarcador();">
+                        <i class="bi bi-x-lg me-2"></i>Cancelar
+                    </button>
+
+                    <!-- Botão Salvar -->
+                    <p:commandButton value="Salvar"
+                                     icon="bi bi-check-lg"
+                                     styleClass="btn-premium"
+                                     action="#{colaboradorController.salvarEndereco}"
+                                     process="@form"
+                                     update="@form"/>
+                </div>
+
+            </h:form>
+        </div>
+
+        <script>
+            //<![CDATA[
+
+            // ===== Helpers JSF & Utilitários =====
+            function elByIdSuffix(suffix){
+              // PrimeFaces editable components costumam renderizar um "_input"
+              return document.querySelector('[id$=":' + suffix + '_input"]')
+                  || document.querySelector('[id$=":' + suffix + '"]')
+                  || document.getElementById(suffix)
+                  || document.getElementById(suffix + '_input');
+            }
+            function val(suffix){ return (elByIdSuffix(suffix)?.value || '').trim(); }
+
+            function setVal(suffix, v){
+              const e = elByIdSuffix(suffix);
+              if(e){
+                e.value = (v ?? '');
+                e.dispatchEvent(new Event('input', { bubbles:true }));
+                e.dispatchEvent(new Event('change', { bubbles:true }));
+              }
+            }
+
+            function onlyDigits(s){ return (s || '').replace(/\D/g,''); }
+
+            // ===== Máscara de CEP =====
+            function maskCep(input){
+              let d = onlyDigits(input.value).slice(0,8);
+              input.value = (d.length > 5) ? (d.slice(0,5) + '-' + d.slice(5)) : d;
+            }
+
+            // ===== Leaflet Init =====
+            const DEFAULT_LAT = -9.9754;   // Rio Branco/AC
+            const DEFAULT_LNG = -67.8249;
+            let map, marker;
+
+            function parseCoordString(coord){
+              if(!coord) return null;
+              const parts = coord.split(',');
+              if(parts.length < 2) return null;
+              const lat = parseFloat((parts[0] || '').trim());
+              const lng = parseFloat((parts[1] || '').trim());
+              if(isNaN(lat) || isNaN(lng)) return null;
+              return { lat, lng };
+            }
+
+            function initMap(){
+              if(map) return;
+
+              map = L.map('map', { zoomControl:true }).setView([DEFAULT_LAT, DEFAULT_LNG], 12);
+
+              L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '&copy; OpenStreetMap'
+              }).addTo(map);
+
+              // ✅ Inicializa marcador se já existir coordenada no bean
+              const initEl = elByIdSuffix('coordInit');
+              const coordInit = initEl?.dataset?.coord || val('coordenadasHidden');
+              const parsed = parseCoordString(coordInit);
+
+              if(parsed){
+                setMarker(parsed.lat, parsed.lng, true);
+              } else {
+                updateCoordText(null, null);
+              }
+
+              map.on('click', function(e){
+                setMarker(e.latlng.lat, e.latlng.lng, false);
+              });
+
+              setTimeout(() => { map.invalidateSize(); }, 400);
+            }
+
+            function setMarker(lat, lng, moveMap){
+              if(!marker){
+                marker = L.marker([lat, lng], { draggable:true }).addTo(map);
+                marker.on('dragend', function(){
+                  const p = marker.getLatLng();
+                  setMarker(p.lat, p.lng, false);
+                });
+              } else {
+                marker.setLatLng([lat, lng]);
+              }
+
+              if(moveMap){
+                map.setView([lat, lng], 16);
+              }
+
+              // ✅ salva no hidden do JSF (é isso que o backend vai persistir)
+              const coordsString = lat.toFixed(6) + "," + lng.toFixed(6);
+              setVal('coordenadasHidden', coordsString);
+
+              updateCoordText(lat, lng);
+            }
+
+            function limparMarcador(){
+              if(marker){
+                map.removeLayer(marker);
+                marker = null;
+              }
+              setVal('coordenadasHidden', '');
+              updateCoordText(null, null);
+            }
+
+            function updateCoordText(lat, lng){
+              const el = document.getElementById('coordTextView');
+              if(el){
+                el.textContent = (lat == null || lng == null) ? '—' : (lat.toFixed(6) + ', ' + lng.toFixed(6));
+              }
+            }
+
+            // ===== Buscar CEP (ViaCEP) + Update Mapa =====
+            function setCepStatus(text, ok){
+              const el = document.getElementById('cepStatus');
+              if(!el) return;
+              el.textContent = text || '';
+              el.style.color = ok ? 'rgba(15,23,42,.62)' : '#b42318';
+            }
+
+            async function buscarCep(){
+              const cepDigits = onlyDigits(val('cep'));
+              if(cepDigits.length !== 8){
+                setCepStatus('Informe um CEP válido (8 dígitos).', false);
+                return;
+              }
+
+              setCepStatus('Buscando CEP...', true);
+
+              try{
+                const url = 'https://viacep.com.br/ws/' + cepDigits + '/json/';
+                const resp = await fetch(url);
+                const data = await resp.json();
+
+                if(data.erro){
+                  setCepStatus('CEP não encontrado.', false);
+                  return;
+                }
+
+                const uf = (data.uf || '').toUpperCase();
+                const cidade = (data.localidade || '');
+                const bairro = (data.bairro || '');
+                const logradouro = (data.logradouro || '');
+
+                // preenche campos visuais
+                setVal('endereco', logradouro);
+                setVal('bairro', bairro);
+
+                // ✅ sincroniza no backend: carrega municípios do IBGE + seleciona cidade
+                if (typeof rcAplicarCep === 'function') {
+                  rcAplicarCep([
+                    {name:'uf', value: uf},
+                    {name:'cidade', value: cidade},
+                    {name:'bairro', value: bairro},
+                    {name:'logradouro', value: logradouro}
+                  ]);
+                } else {
+                  // fallback: se remoteCommand não existir, tenta setar direto
+                  setVal('estado', uf);
+                  setVal('cidade', cidade);
+                }
+
+                setCepStatus('CEP encontrado. Localizando no mapa...', true);
+
+                setTimeout(() => geocodeEnderecoPorCampos(true), 350);
+
+              }catch(e){
+                setCepStatus('Erro ao buscar CEP.', false);
+              }
+            }
+
+            // ===== Geocoding (Nominatim) =====
+            async function geocodeEnderecoPorCampos(forceMove){
+              const endereco = val('endereco');
+              const numero   = val('numero');
+              const cidade   = val('cidade');
+              const estado   = val('estado');
+
+              const partes = [endereco, numero, cidade, estado, 'Brasil'].filter(Boolean);
+              if(partes.length < 2) return;
+
+              const q = encodeURIComponent(partes.join(', '));
+
+              try{
+                const url = 'https://nominatim.openstreetmap.org/search?format=json&q=' + q + '&limit=1';
+                const resp = await fetch(url);
+                const data = await resp.json();
+
+                if(data && data.length > 0){
+                  const lat = parseFloat(data[0].lat);
+                  const lng = parseFloat(data[0].lon);
+                  if(!isNaN(lat) && !isNaN(lng)) setMarker(lat, lng, !!forceMove);
+                }
+              }catch(e){
+                console.error('Falha no Geocode', e);
+              }
+            }
+
+            // ===== Minha Localização (GPS) =====
+            function usarMinhaLocalizacao(){
+              if(!navigator.geolocation){
+                alert('Seu navegador não suporta geolocalização.');
+                return;
+              }
+              navigator.geolocation.getCurrentPosition(
+                (pos) => setMarker(pos.coords.latitude, pos.coords.longitude, true),
+                () => alert('Não foi possível obter sua localização.'),
+                { enableHighAccuracy:true, timeout:10000 }
+              );
+            }
+
+            document.addEventListener('DOMContentLoaded', initMap);
+
+            //]]>
+        </script>
+
+    </ui:define>
+</ui:composition>

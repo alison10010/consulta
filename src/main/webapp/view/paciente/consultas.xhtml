@@ -1,0 +1,245 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    template="/view/layout/admin.xhtml">
+
+    <ui:define name="title">Minhas Consultas</ui:define>
+
+    <ui:define name="content">
+        <style>
+            :root{
+                --brand-primary:#2b6cff;
+                --text-main:#0f172a;
+                --text-muted:#64748b;
+                --bg-soft:#f8fafc;
+                --border:rgba(15,23,42,.12);
+                --shadow:0 12px 30px rgba(15,23,42,.08);
+                --radius:16px;
+            }
+
+            .page{ padding: 14px; display:flex; justify-content:center; }
+            @media (min-width: 768px){ .page{ padding: 32px; } }
+
+            .form-card{
+                width:100%; max-width:1500px; background:#fff;
+                border:1px solid var(--border); border-radius: var(--radius);
+                box-shadow: var(--shadow); padding: 16px;
+            }
+
+            .header{ display:flex; align-items:flex-start; justify-content:space-between; gap: 12px; margin-bottom: 14px; flex-wrap: wrap; }
+            .header h4{ margin:0; font-weight: 600; color: var(--text-main); }
+            
+            .badge-processing{
+                display:inline-flex; align-items:center; gap:6px; padding:5px 12px;
+                border-radius:999px; font-weight:900; font-size:11px;
+                background: #fff3cd; color: #856404; border: 1px solid #ffeeba;
+            }
+            
+            .badge-ok{
+                display:inline-flex; align-items:center; gap:6px; padding:5px 12px;
+                border-radius:999px; font-weight:900; font-size:11px;
+                background: rgba(34,197,94,.15); color: #065f46;
+            }
+
+            .pix-timer-wrapper {
+                display: flex; flex-direction: column; align-items: center; gap: 4px; margin-top: 5px;
+            }
+
+            .pix-timer {
+                font-family: 'Monaco', 'Consolas', monospace;
+                font-weight: 900; font-size: 13px; color: #dc3545;
+                background: rgba(220, 53, 69, 0.05); padding: 2px 8px; border-radius: 4px;
+            }
+
+            /* Estilos do Modal de Endereço e outros omitidos para brevidade, mantendo os originais do seu projeto */
+            .mm-wrap{ display:grid; grid-template-columns: 1.2fr .8fr; gap: 14px; }
+            .mm-card{ border:1px solid rgba(15,23,42,.10); border-radius: 16px; background: #fff; overflow:hidden; }
+            .mm-map{ height: 320px; background:#f1f5f9; position:relative; }
+            .mm-iframe{ width:100%; height:100%; border:0; }
+            @media (max-width: 900px){ .mm-wrap{ grid-template-columns: 1fr; } }
+        </style>
+
+        <div class="page">
+            <h:form id="frm" styleClass="form-card">
+                <p:growl id="messages" showDetail="true" />
+                
+                <p:poll interval="10"
+                        autoStart="#{pacienteController.temConsultaProcessando}"
+                        listener="#{pacienteController.carregarMinhasConsultas}"
+                        update=":frm:tbl"
+                        oncomplete="if (!#{pacienteController.temConsultaProcessando}) { PF('dlgPix').hide(); }" />
+
+                <div class="header">
+                    <div>
+                        <h4>Minhas Consultas</h4>
+                        <small>Gerencie seus agendamentos e pagamentos</small>
+                    </div>
+                    <p:commandButton value="Atualizar" icon="pi pi-refresh" 
+                                     actionListener="#{pacienteController.carregarMinhasConsultas}"
+                                     update="tbl messages" styleClass="ui-button-outlined" />
+                </div>
+
+                <p:dataTable id="tbl" value="#{pacienteController.minhasConsultas}" var="c"
+                             paginator="true" rows="6" paginatorPosition="bottom"
+                             styleClass="ui-datatable-minimal" responsiveLayout="scroll">
+
+                    <p:column headerText="Profissional">
+                        <h:outputText value="#{c.colaborador.nome}" styleClass="pro-name" />
+                    </p:column>
+
+                    <p:column headerText="Data/Hora" style="width:200px">
+                        <i class="pi pi-calendar" style="color:var(--text-muted); margin-right:5px"></i>
+                        <h:outputText value="#{c.vaga}" />
+                    </p:column>
+
+                    <p:column headerText="Status" style="width:180px; text-align:center">
+                        <ui:fragment rendered="#{c.status eq 'PROCESSANDO'}">
+                            <div class="pix-timer-wrapper">
+                                <span class="badge-processing">Aguardando PIX</span>
+                                <span class="pix-timer" id="timer_#{c.id}" 
+                                      data-expira="#{pacienteController.pixExpiraEpochSeconds(c)}">
+                                    --:--
+                                </span>
+                            </div>
+                        </ui:fragment>
+
+                        <ui:fragment rendered="#{c.status eq 'MARCADA'}">
+                            <span class="badge-ok"><i class="pi pi-check" /> Confirmada</span>
+                        </ui:fragment>
+
+                        <ui:fragment rendered="#{c.status eq 'CANCELADA'}">
+                            <span class="badge-processing" style="background:#f8d7da; color:#721c24;">Expirada</span>
+                        </ui:fragment>
+                    </p:column>
+
+                    <p:column headerText="Pagamento" style="width:150px; text-align:center">
+                        <p:commandButton value="Pagar PIX" icon="pi pi-qrcode"
+                                         rendered="#{c.status eq 'PROCESSANDO'}"
+                                         actionListener="#{pacienteController.abrirPagamentoPix(c.id)}"
+                                         update=":frm:pixContent" oncomplete="PF('dlgPix').show()"
+                                         styleClass="ui-button-success ui-button-sm" />
+                        <h:panelGroup rendered="#{c.status eq 'MARCADA'}">
+                            <i class="pi pi-verified" style="color:var(--brand-primary); font-size:1.2rem;"></i>
+                        </h:panelGroup>
+                    </p:column>
+
+                    <p:column headerText="Ações" style="width:200px; text-align:center">
+                        <div style="display:flex; gap:5px; justify-content:center;">
+                        	
+                        	<p:commandButton icon="pi pi-ticket" title="Ver Guia"
+			                                 styleClass="ui-button-outlined ui-button-help"
+			                                 rendered="#{c.status eq 'MARCADA'}"
+			                                 process="@this"
+			                                 actionListener="#{guiaController.abrirGuiaPorHorario(c.id)}"
+			                                 oncomplete="window.location.href='#{request.contextPath}/visualizar/guia';" />
+                        	
+                            <p:commandButton icon="pi pi-map-marker" title="Localização"
+                                             actionListener="#{pacienteController.abrirEndereco(c)}"
+                                             update=":frm:dlgEnderecoContent" oncomplete="PF('dlgEndereco').show()"
+                                             styleClass="ui-button-outlined" />
+                            
+                            <p:commandButton icon="pi pi-trash" title="Cancelar"
+                                             actionListener="#{pacienteController.cancelarConsulta(c.id)}"
+                                             update="tbl :frm:messages" styleClass="ui-button-danger ui-button-outlined">
+                                <p:confirm header="Confirmar" message="Deseja cancelar este agendamento?" icon="pi pi-exclamation-triangle" />
+                            </p:commandButton>
+                        </div>
+                    </p:column>
+                </p:dataTable>
+
+                <p:dialog widgetVar="dlgPix" header="Pagamento PIX" modal="true" width="400" responsive="true" resizable="false">
+                    <h:panelGroup id="pixContent" layout="block" style="text-align:center;">
+                        <ui:fragment rendered="#{not empty pacienteController.pagamentoAtual}">
+                            <div style="padding:15px; background:var(--bg-soft); border-radius:12px;">
+                                <p style="font-weight:bold; color:var(--brand-primary); margin-bottom:15px;">Escaneie o QR Code abaixo:</p>
+                                <img src="data:image/png;base64,#{pacienteController.pagamentoAtual.pixQrBase64}" style="width:200px; border:5px solid #fff; border-radius:8px;" />
+                                
+                                <div style="margin-top:15px; text-align:left;">
+                                    <small style="font-weight:bold; color:var(--text-muted)">Código Copia e Cola:</small>
+                                    <p:inputTextarea value="#{pacienteController.pagamentoAtual.pixCopiaECola}" readonly="true" rows="2" style="width:100%; font-family:monospace; font-size:10px; margin-top:5px;" />
+                                </div>
+                            </div>
+                            <div style="margin-top:15px; display:grid; gap:8px;">
+                                <p:commandButton value="Já paguei, verificar agora" icon="pi pi-sync" 
+                                                 actionListener="#{pacienteController.verificarPagamento(pacienteController.pagamentoAtual.horario.id)}"
+                                                 update="tbl messages" oncomplete="if(!args.validationFailed) PF('dlgPix').hide()" styleClass="ui-button-primary" />
+                                <p:commandButton value="Fechar" type="button" onclick="PF('dlgPix').hide()" styleClass="ui-button-flat" />
+                            </div>
+                        </ui:fragment>
+                    </h:panelGroup>
+                </p:dialog>
+
+                <p:dialog id="dlgEndereco" widgetVar="dlgEndereco" header="Localização" modal="true" width="850" responsive="true">
+                    <h:panelGroup id="dlgEnderecoContent" layout="block" styleClass="mm-wrap">
+                        <div class="mm-card">
+                            <div class="mm-map">
+                                <ui:fragment rendered="#{not empty pacienteController.enderecoModalObj}">
+                                    <iframe class="mm-iframe" frameborder="0" src="https://maps.google.com/maps?q=#{pacienteController.enderecoModalObj.endereco},#{pacienteController.enderecoModalObj.numero},#{pacienteController.enderecoModalObj.cidade}&amp;z=16&amp;output=embed"></iframe>
+                                </ui:fragment>
+                            </div>
+                        </div>
+                        <div style="padding:15px;">
+                            <h5 style="margin-top:0;">Endereço Detalhado</h5>
+                            <p>#{pacienteController.enderecoModalObj.endereco}, #{pacienteController.enderecoModalObj.numero}</p>
+                            <p>#{pacienteController.enderecoModalObj.bairro} - #{pacienteController.enderecoModalObj.cidade}/#{pacienteController.enderecoModalObj.estado}</p>
+                            <p:button value="Abrir no Google Maps" icon="pi pi-external-link" target="_blank"
+                                      href="https://www.google.com/maps/search/?api=1&amp;query=#{pacienteController.enderecoModalObj.endereco},#{pacienteController.enderecoModalObj.numero}" />
+                        </div>
+                    </h:panelGroup>
+                </p:dialog>
+
+                <p:confirmDialog global="true" width="350">
+                    <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no ui-button-flat"/>
+                    <p:commandButton value="Sim, Cancelar" type="button" styleClass="ui-confirmdialog-yes ui-button-danger" />
+                </p:confirmDialog>
+            </h:form>
+        </div>
+
+        <script>
+            //<![CDATA[
+            let _timerInterval = null;
+
+            function formatTime(seconds) {
+                if (seconds <= 0) return "00:00";
+                const m = Math.floor(seconds / 60);
+                const s = seconds % 60;
+                return String(m).padStart(2, '0') + ":" + String(s).padStart(2, '0');
+            }
+
+            function updateTimers() {
+                const now = Math.floor(Date.now() / 1000);
+                document.querySelectorAll('.pix-timer').forEach(el => {
+                    const exp = parseInt(el.dataset.expira);
+                    if (!exp) return;
+                    
+                    const diff = exp - now;
+                    el.textContent = formatTime(diff);
+
+                    if (diff <= 0) {
+                        el.style.color = "#999";
+                        // Se o modal estiver aberto para este ID que expirou, fecha ele.
+                        if (PF('dlgPix').isVisible()) PF('dlgPix').hide();
+                    } else if (diff < 120) {
+                        el.style.color = "#ff0000"; // Urgente: vermelho
+                    }
+                });
+            }
+
+            function initTimers() {
+                if (_timerInterval) clearInterval(_timerInterval);
+                updateTimers();
+                _timerInterval = setInterval(updateTimers, 1000);
+            }
+
+            // Garante que o timer reinicie após atualizações do AJAX do PrimeFaces
+            $(document).on('pfAjaxComplete', function() {
+                setTimeout(initTimers, 100);
+            });
+
+            window.onload = initTimers;
+            //]]>
+        </script>
+    </ui:define>
+</ui:composition>

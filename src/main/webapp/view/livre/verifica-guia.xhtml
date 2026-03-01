@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="pt-br"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Validar Guia | IFBrA</title>
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&amp;display=swap" rel="stylesheet" />
+
+  <!-- html2pdf -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+  <script>
+    function baixarGuia() {
+      const elemento = document.querySelector('.pv-card');
+
+      // ✅ esconde áreas marcadas como no-pdf
+      elemento.classList.add('gerando-pdf');
+
+      const opt = {
+        margin: 10,
+        filename: 'Guia_Agendamento.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true, logging: false, letterRendering: true },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+
+      html2pdf().set(opt).from(elemento).save().then(() => {
+        elemento.classList.remove('gerando-pdf');
+      });
+    }
+  </script>
+
+  <style>
+    :root{
+      --brand:#2b6cff;
+      --brand2:#7a5cff;
+      --ink:#0f172a;
+      --muted:#64748b;
+      --bg:#f6f8fc;
+      --radius:18px;
+      --shadow:0 18px 55px rgba(15,23,42,.10);
+      --border:rgba(15,23,42,.10);
+    }
+    body{
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color: var(--ink);
+    }
+
+    .pv-wrap{ padding: 18px 12px 28px; display:flex; justify-content:center; }
+    .pv-card{
+      width:100%;
+      max-width: 1050px;
+      background: rgba(255,255,255,.92);
+      border: 1px solid rgba(255,255,255,.9);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 16px;
+      overflow:hidden;
+    }
+    @media (min-width: 768px){ .pv-card{ padding: 22px; } }
+
+    .pv-top{
+      display:flex; gap:12px; align-items:flex-start; justify-content:space-between;
+      flex-wrap:wrap;
+      margin-bottom: 12px;
+    }
+    .pv-title{ margin:0; font-weight: 850; letter-spacing: -.02em; font-size: 18px; }
+    .pv-sub{ margin:6px 0 0; color: var(--muted); font-weight: 800; font-size: 12px; }
+
+    .pv-pill{
+      display:inline-flex; align-items:center; gap:8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(15,23,42,.10);
+      background: rgba(255,255,255,.85);
+      font-weight: 850;
+      color: rgba(15,23,42,.75);
+      white-space:nowrap;
+    }
+
+    .pv-grid{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin-top: 12px;
+    }
+    @media (min-width: 960px){ .pv-grid{ grid-template-columns: 1.2fr .8fr; } }
+
+    .pv-box{
+      border: 1px solid rgba(15,23,42,.10);
+      border-radius: 16px;
+      padding: 12px;
+      background: rgba(255,255,255,.90);
+      box-shadow: 0 14px 30px rgba(15,23,42,.06);
+    }
+
+    .pv-row{
+      display:grid;
+      grid-template-columns: 150px 1fr;
+      gap: 10px;
+      padding: 10px 0;
+      border-bottom: 1px dashed rgba(15,23,42,.10);
+    }
+    .pv-row:last-child{ border-bottom:0; }
+
+    .k{ font-size: 11px; font-weight: 800; letter-spacing:.08em; text-transform:uppercase; color: rgba(15,23,42,.45); }
+    .v{ font-size: 14px; font-weight: 700; color: rgba(15,23,42,.92); }
+
+    .pv-priceCard{
+      border: 1px solid rgba(43,108,255,.18);
+      background: linear-gradient(135deg, rgba(43,108,255,.06), rgba(122,92,255,.06));
+      border-radius: 16px;
+      padding: 12px;
+      margin-bottom: 10px;
+    }
+    .pv-priceOld{ color: rgba(15,23,42,.60); font-weight: 850; text-decoration: line-through; }
+    .pv-priceNew{
+      font-size: 26px;
+      font-weight: 950;
+      background: linear-gradient(135deg,var(--brand),var(--brand2));
+      -webkit-background-clip: text; background-clip:text;
+      color: transparent;
+    }
+    .pv-hint{ margin-top: 6px; font-size: 12px; font-weight: 900; color: rgba(15,23,42,.62); }
+
+    .pv-btns{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 12px; }
+    .pv-btns .ui-button{ border-radius: 999px !important; font-weight: 800 !important; }
+
+    .pv-muted{ color: rgba(15,23,42,.65); font-weight: 800; font-size: 12px; }
+
+    /* ✅ SOME NO PDF (html2pdf) */
+    .gerando-pdf .no-pdf{ display:none !important; }
+
+    /* PDF fallback do gradiente */
+    .gerando-pdf .pv-priceNew{
+      background:none !important;
+      color:#2b6cff !important;
+      -webkit-text-fill-color:#2b6cff !important;
+    }
+
+    /* ✅ SOME NO PRINT (Ctrl+P) */
+    @media print {
+      .no-print{ display:none !important; }
+
+      header, nav, aside, footer,
+      .sidebar, .main-sidebar, .content-header,
+      .navbar, .topbar, .menu, .breadcrumb,
+      .layout-navbar, .layout-menu, .layout-footer,
+      .ui-growl, .ui-toast, .ui-dialog, .ui-confirm-dialog {
+        display: none !important;
+      }
+      @page { margin: 12mm; }
+      html, body { background:#fff !important; color:#000 !important; }
+      .pv-wrap{ padding:0 !important; display:block !important; }
+      .pv-card{
+        max-width:none !important; width:100% !important;
+        border:1px solid #eee !important; border-radius:0 !important;
+        box-shadow:none !important; background:#fff !important;
+      }
+      .pv-btns, button, a.ui-button{ display:none !important; }
+      .pv-priceNew{ color:#000 !important; background:none !important; -webkit-text-fill-color:#000 !important; }
+    }
+  </style>
+</h:head>
+
+<h:body>
+
+  <!-- ✅ Ler parâmetro e executar ação ao abrir a página -->
+  <f:metadata>
+    <f:viewParam name="codigo" value="#{guiaController.codigoParam}" />
+    <f:viewAction action="#{guiaController.carregarPorCodigoParam}" onPostback="false" />
+  </f:metadata>
+
+  <div class="pv-wrap">
+    <h:form id="frm" styleClass="pv-card">
+
+      <!-- ✅ NÃO DEVE SAIR NO PDF/PRINT -->
+      <div class="pv-top no-pdf no-print">
+        <div>
+          <h2 class="pv-title">Validação de Guia</h2>
+          <p class="pv-sub">Abra pelo link/QR e valide pelo <b>código</b>. Se estiver válida, exiba no atendimento.</p>
+        </div>
+
+        <span class="pv-pill">
+          <i class="bi bi-shield-check"></i>
+          Código: #{empty guiaController.guiaAtual ? '-' : guiaController.guiaAtual.codigo}
+        </span>
+      </div>
+
+      <!-- ✅ NÃO DEVE SAIR NO PDF/PRINT -->
+      <div class="pv-box no-pdf no-print">
+        <div class="row g-2 align-items-end">
+          <div class="col-12 col-md-6">
+            <label class="k mb-1">Consultar outro código</label>
+            <p:inputText value="#{guiaController.codigoBusca}"
+                         placeholder="Ex.: A9K2H7ZQ..."
+                         styleClass="form-control"
+                         maxlength="20"/>
+          </div>
+          <div class="col-12 col-md-6 d-flex gap-2 flex-wrap">
+            <p:commandButton value="Buscar"
+                             icon="pi pi-search"
+                             action="#{guiaController.buscarPorCodigoDigitado}"
+                             update="@form"
+                             styleClass="ui-button-primary"/>
+
+            <p:commandButton value="Limpar"
+                             icon="pi pi-times"
+                             action="#{guiaController.limparGuia}"
+                             update="@form"
+                             styleClass="ui-button-outlined ui-button-secondary"/>
+          </div>
+        </div>
+
+        <ui:fragment rendered="#{not empty guiaController.msgErro}">
+          <div class="alert alert-danger mt-3 mb-0">
+            <i class="bi bi-exclamation-triangle"></i>
+            <b>Não foi possível validar:</b> #{guiaController.msgErro}
+          </div>
+        </ui:fragment>
+      </div>
+
+      <!-- ✅ Sem guia -->
+      <ui:fragment rendered="#{empty guiaController.guiaAtual}">
+        <div class="pv-box mt-3 text-center">
+          <i class="bi bi-info-circle" style="font-size:26px; opacity:.65;"></i>
+          <div style="margin-top:8px; font-weight:950;">Nenhuma guia carregada.</div>
+          <div class="pv-muted" style="margin-top:4px;">
+            Informe um código acima ou abra pelo link com <b>?codigo=...</b>
+          </div>
+        </div>
+      </ui:fragment>
+
+      <!-- ✅ Guia carregada -->
+      <ui:fragment rendered="#{not empty guiaController.guiaAtual}">
+        <div class="pv-grid mt-3">
+
+          <!-- Detalhes -->
+          <div class="pv-box">
+
+            <!-- Status -->
+            <ui:fragment rendered="#{guiaController.expirada}">
+              <div class="alert alert-danger">
+                <i class="bi bi-x-circle"></i>
+                Esta guia está <b>EXPIRADA</b>.
+              </div>
+            </ui:fragment>
+
+            <ui:fragment rendered="#{not guiaController.expirada}">
+              <div class="alert alert-success">
+                <i class="bi bi-check-circle"></i>
+                Guia <b>VÁLIDA</b>.
+              </div>
+            </ui:fragment>
+
+            <!-- Valores -->
+            <div class="pv-priceCard">
+              <div class="k">Valores da consulta</div>
+
+              <div style="margin-top:8px;">
+                <div class="pv-priceOld">
+                  Valor original:
+                  <h:outputText value="#{guiaController.guiaAtual.valorOriginal}">
+                    <f:convertNumber type="currency" currencySymbol="R$" locale="pt_BR"/>
+                  </h:outputText>
+                </div>
+
+                <div class="pv-priceNew">
+                  <h:outputText value="#{guiaController.guiaAtual.valorComDesconto}">
+                    <f:convertNumber type="currency" currencySymbol="R$" locale="pt_BR"/>
+                  </h:outputText>
+                </div>
+
+                <div class="pv-muted">
+                  Desconto:
+                  <h:outputText value="#{guiaController.guiaAtual.percentualDesconto}">
+                    <f:convertNumber maxFractionDigits="2" minFractionDigits="2" locale="pt_BR"/>
+                  </h:outputText>%
+                </div>
+              </div>
+
+              <div class="pv-hint">✅ O valor com desconto é pago somente na hora da consulta.</div>
+            </div>
+
+            <div class="pv-row">
+              <div class="k">Profissional</div>
+              <div class="v">#{guiaController.guiaAtual.colaborador.nome}</div>
+            </div>
+
+            <div class="pv-row">
+              <div class="k">Especialidade</div>
+              <div class="v">#{guiaController.guiaAtual.especialidade}</div>
+            </div>
+
+            <div class="pv-row">
+              <div class="k">Data / Hora</div>
+              <div class="v">
+                <h:outputText value="#{guiaController.guiaAtual.horario.data}" converter="localDateConverter" />
+                • #{guiaController.guiaAtual.horario.hora}
+              </div>
+            </div>
+
+            <div class="pv-row">
+              <div class="k">Paciente</div>
+              <div class="v">#{guiaController.guiaAtual.paciente.nome}</div>
+            </div>
+
+            <div class="pv-row">
+              <div class="k">CPF</div>
+              <div class="v">#{guiaController.guiaAtual.paciente.cpf}</div>
+            </div>
+
+            <div class="pv-row">
+              <div class="k">Validade</div>
+              <div class="v">
+                <h:outputText value="#{guiaController.guiaAtual.validade}" converter="localDateConverter" />
+              </div>
+            </div>
+
+            <div class="pv-row">
+              <div class="k">Endereço</div>
+              <div class="v">
+                #{guiaController.guiaAtual.endereco}, #{guiaController.guiaAtual.numero}<br/>
+                #{guiaController.guiaAtual.bairro} • #{guiaController.guiaAtual.cidade}-#{guiaController.guiaAtual.estado}<br/>
+                CEP: #{guiaController.guiaAtual.cep}
+              </div>
+            </div>
+
+            <div class="pv-btns">
+              <p:commandButton value="Imprimir"
+                               icon="pi pi-print"
+                               type="button"
+                               onclick="setTimeout(() => window.print(), 50);"
+                               styleClass="ui-button-outlined ui-button-secondary"/>
+
+              <p:commandButton value="Baixar PDF"
+                               icon="pi pi-file-pdf"
+                               type="button"
+                               onclick="baixarGuia();"
+                               styleClass="ui-button-primary"
+                               disabled="#{guiaController.expirada}"/>
+
+              <p:button value="Abrir no Maps"
+                        icon="pi pi-map-marker"
+                        target="_blank"
+                        styleClass="ui-button-outlined"
+                        href="https://www.google.com/maps/search/?api=1&amp;query=#{guiaController.guiaAtual.endereco}+#{guiaController.guiaAtual.numero}+#{guiaController.guiaAtual.cidade}+#{guiaController.guiaAtual.estado}"/>
+            </div>
+          </div>
+
+          <!-- QR / Link -->
+          <div class="pv-box">
+            <div class="k">QR Code de validação</div>
+
+            <div class="pv-muted mt-2">
+              Aponte a câmera e valide pelo link.
+            </div>
+
+            <div style="margin-top:12px; text-align:center;">
+              <img alt="QR Code"
+                   style="max-width: 220px; width:100%; border-radius:14px; border:1px solid rgba(15,23,42,.10);"
+                   src="https://api.qrserver.com/v1/create-qr-code/?size=240x240&amp;data=#{guiaController.guiaAtual.urlValidacao}" />
+
+              <div class="pv-muted mt-2">
+                Link:
+                <span style="word-break:break-all; font-weight:900;">
+                  #{guiaController.guiaAtual.urlValidacao}
+                </span>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </ui:fragment>
+
+    </h:form>
+  </div>
+
+</h:body>
+</html>

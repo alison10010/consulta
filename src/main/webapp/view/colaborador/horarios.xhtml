@@ -1,0 +1,214 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    template="/view/layout/admin.xhtml">
+
+    <ui:define name="title">Configuração de Agenda</ui:define>
+
+    <ui:define name="content">
+        <style>
+            .container-page {
+                padding: 40px 20px;
+                display: flex;
+                justify-content: center;
+                font-family: 'Inter', sans-serif;
+            }
+
+            .modern-form {
+                width: 100%;
+                max-width: 1100px;
+                background: #ffffff;
+                border-radius: 24px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+                padding: 40px;
+                border: 1px solid #e2e8f0;
+            }
+
+            .form-header {
+                margin-bottom: 32px;
+                border-bottom: 2px solid #f8fafc;
+                padding-bottom: 20px;
+            }
+
+            .form-header h2 { margin: 0; color: #0f172a; font-size: 1.6rem; font-weight: 600; }
+            .form-header p { margin: 5px 0 0; color: #64748b; font-size: 0.95rem; }
+
+            .form-section {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 20px;
+                margin-bottom: 30px;
+                align-items: flex-end;
+            }
+
+            .section-title {
+                width: 100%;
+                font-size: 0.85rem;
+                color: #697582;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 0.1em;
+                margin: 20px 0 10px;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+            .section-title::after { content: ""; flex: 1; height: 1px; background: #e2e8f0; }
+
+            .input-group { display: flex; flex-direction: column; gap: 8px; }
+            .col-periodo { flex: 0 0 300px; }
+            .col-dias { flex: 1; min-width: 450px; }
+            .col-time { flex: 1 1 200px; }
+
+            .input-group label { font-weight: 700; font-size: 0.88rem; color: #334155; }
+
+            /* Estilização Geral Inputs */
+            .input-group :is(.ui-inputfield, .ui-inputtext, .ui-inputnumber-input) {
+                width: 100% !important;
+                padding: 12px 14px !important;
+                border-radius: 12px !important;
+                border: 1px solid #e2e8f0 !important;
+                background: #f8fafc !important;
+                font-weight: 600;
+            }
+
+            /* Acoplamento Ícone DatePicker */
+            .input-group .ui-calendar { display: flex !important; width: 100% !important; }
+            
+            .input-group .ui-datepicker-input {
+                flex: 1 !important;
+                border-radius: 12px 0 0 12px !important;
+                border-right: none !important;
+            }
+
+            .input-group .ui-datepicker-trigger {
+                border-radius: 0 12px 12px 0 !important;
+                background: #e2e8f0 !important;
+                border: 1px solid #e2e8f0 !important;
+                width: 45px !important;
+            }
+
+            /* Dias da Semana */
+            .checkbox-horizontal .ui-selectmanycheckbox {
+                display: flex !important;
+                background: #f8fafc;
+                padding: 7px 15px;
+                border-radius: 12px;
+                border: 1px solid #e2e8f0;
+                width: 100%;
+            }
+
+            .checkbox-horizontal label {
+                font-weight: 600 !important;
+                color: #475569 !important;
+                margin-left: 5px !important;
+                white-space: nowrap;
+            }
+
+            .rules-strip {
+                width: 100%;
+                background: #fdfdfd;
+                padding: 15px 20px;
+                border-radius: 14px;
+                display: flex;
+                gap: 30px;
+                border: 1px dashed #cbd5e1;
+            }
+
+            .form-footer {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-top: 30px;
+                padding-top: 25px;
+                border-top: 1px solid #f1f5f9;
+            }
+
+            .btn-submit {
+                background: #2563eb !important;
+                color: white !important;
+                border: none !important;
+                padding: 15px 35px !important;
+                border-radius: 12px !important;
+                font-weight: 700 !important;
+                box-shadow: 0 8px 20px rgba(37, 99, 235, 0.2) !important;
+            }
+
+            @media (max-width: 900px) {
+                .col-periodo, .col-dias { flex: 1 1 100%; min-width: 0; }
+                .checkbox-horizontal .ui-selectmanycheckbox { flex-wrap: wrap !important; }
+            }
+        </style>
+
+        <div class="container-page">
+            <p:growl id="messages" showDetail="true" life="4000"/>
+
+            <h:form id="frm" styleClass="modern-form">
+                <header class="form-header">
+                    <h2>Gerenciador de Escala</h2>
+                    <p>Defina o período e os critérios para geração automática de horários.</p>
+                </header>
+
+                <div class="section-title"><i class="pi pi-calendar"></i> Planejamento de Datas</div>
+                <div class="form-section">
+                    <div class="input-group col-periodo">
+                        <label>Período Total</label>
+                        <p:datePicker selectionMode="range" value="#{colaboradorController.periodo}"
+                                      pattern="dd/MM/yyyy" showIcon="true" placeholder="Início - Fim"/>
+                    </div>
+                    
+                    <div class="input-group col-dias checkbox-horizontal">
+                        <label>Dias de Atendimento na Semana</label>
+                        <p:selectManyCheckbox value="#{colaboradorController.diasSemana}">
+                            <f:selectItem itemLabel="Seg" itemValue="MONDAY"/>
+                            <f:selectItem itemLabel="Ter" itemValue="TUESDAY"/>
+                            <f:selectItem itemLabel="Qua" itemValue="WEDNESDAY"/>
+                            <f:selectItem itemLabel="Qui" itemValue="THURSDAY"/>
+                            <f:selectItem itemLabel="Sex" itemValue="FRIDAY"/>
+                            <f:selectItem itemLabel="Sáb" itemValue="SATURDAY"/>
+                            <f:selectItem itemLabel="Dom" itemValue="SUNDAY"/>
+                        </p:selectManyCheckbox>
+                    </div>
+                </div>
+
+                <div class="section-title"><i class="pi pi-clock"></i> Grade de Horários</div>
+                <div class="form-section">
+                    <div class="input-group col-time">
+                        <label>Hora de Início</label>
+                        <p:inputMask value="#{colaboradorController.horaInicio}" mask="99:99" placeholder="08:00"/>
+                    </div>
+                    <div class="input-group col-time">
+                        <label>Hora de Término</label>
+                        <p:inputMask value="#{colaboradorController.horaFim}" mask="99:99" placeholder="18:00"/>
+                    </div>
+                    <div class="input-group col-time">
+				        <label>Máximo de Vagas/Dia</label>
+				        <p:inputNumber value="#{colaboradorController.maxVagasDia}"  minValue="1" decimalPlaces="0" placeholder="Ex: 10"/>
+				    </div>
+                </div>
+
+                <div class="section-title"><i class="pi pi-shield"></i> Critérios de Geração</div>
+                <div class="form-section">
+                    <div class="rules-strip">
+                        <p:selectBooleanCheckbox value="#{colaboradorController.excluirFds}" itemLabel="Ignorar sábados e domingos"/>
+                    </div>
+                </div>
+
+                <footer class="form-footer">
+                    <span style="color: #64748b; font-size: 0.9rem;">
+                        <i class="pi pi-info-circle" style="color: #3b82f6; margin-right: 5px;"></i>
+                        Revise os dados antes de processar a geração em massa.
+                    </span>
+
+                    <p:commandButton value="Processar e Gerar Horários"
+                                     icon="pi pi-bolt"
+                                     action="#{colaboradorController.gerarPorPeriodo}"
+                                     update="@form messages"
+                                     styleClass="btn-submit"/>
+                </footer>
+            </h:form>
+        </div>
+    </ui:define>
+</ui:composition>

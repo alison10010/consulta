@@ -1,0 +1,382 @@
+/* Fonte das Letras */
+p,label,h1,h2,h3,h4,h5{
+    font-family: 'Segoe UI' !important;
+}
+
+h5{
+	font-weight: normal;
+}
+
+.tituloForm{
+	font-size: 17.5px;
+	color: inherit;
+	font-weight: normal;
+}
+
+body .ui-widget{
+	font-family: 'Segoe UI' !important;
+}
+
+.maiuscula {
+  text-transform: uppercase !important;
+}
+
+/* Cor do body */ 
+.content-wrapper{
+	background-color: #ffffff;
+}
+
+/* Subtitulo no menu lateral */
+.subtitulo {
+    color: #FFF;
+    background-color: #517f70 !important;
+    font-size: 16px !important;
+    font-weight: 500;
+    font-family: 'Segoe UI' !important;
+}
+
+/* Tamanho das letras 14 */
+.menuFonte{
+    font-size: 14px;
+}
+
+/* Encota o subtitulo nas Laterais */
+.sidebar {
+    padding-left: 0; 
+    padding-right: 0; 
+}
+
+/* Cor do cabeçario do Head */
+.navbar-green {
+    background-color: #eeeeee;
+    box-shadow: 0 24px 64px -2px rgba(0, 0, 0, 0.02), 
+				0 6px 16px -2px rgba(0, 0, 0, 0.06),
+				0 2px 6px -2px rgba(0, 0, 0, 0.08);
+
+}
+
+/* Tamanho do menu lateral ao recuar e no aumentar ao passar o mouse */
+@media (min-width: 992px){
+	.sidebar-mini.sidebar-collapse .main-sidebar:not(.sidebar-no-expand).sidebar-focused, .sidebar-mini.sidebar-collapse .main-sidebar:not(.sidebar-no-expand):hover {
+	    width: 4.6rem !important; /* Deixa Fixo menu lateral ao recuar */
+	}	
+	.sidebar-mini.sidebar-collapse .nav-sidebar .nav-header { /* Oculta SubMenu lateral ao recuar */
+	    display: none !important;
+	}
+	
+	.sidebar-mini.sidebar-collapse  .brand-text{ /* Oculta menu lateral ao recuar */
+		display: none !important;
+	}	
+	
+	.sidebar-mini.sidebar-collapse  .logoRecuo{ /* Mostra Logo ao recuar */
+		display: block !important;
+	}	
+}
+
+
+/* Sombra junto com head */
+.main-header {
+    border-bottom: none;
+}
+
+/* Cor do Titulo no Head */
+.tituloCabecario {
+    font-size: 19px;
+    font-weight: none !important;
+    font-family: 'Segoe UI' !important;
+    color: #584949;
+}
+
+.navbar-expand .navbar-nav .nav-link {
+    padding-right: 9px;
+    padding-left: 12px;
+}
+
+/* Icone de Expandir e recuar | menu */
+.fa-bars {
+    content: "\f0c9";
+    font-size: 22px;
+    color: #296b58;
+}
+
+/* Icones no menu lateral */
+.nav-sidebar>.nav-item .nav-icon {
+    margin-left: .05rem;
+    font-size: 12px !important;
+    margin-right: .2rem;
+    text-align: center;
+    width: 20px;
+    color: #e5e5e5;
+}
+
+/* Icones no menu lateral */
+.nav-sidebar>.nav-item .nav-icon.fas{
+    font-weight: 100;    
+}
+
+/* Texto no meio verticalmente */
+.vertical {
+    vertical-align: middle;
+    display: table-cell;
+}
+
+/* Largura e cor do fundo da Div da Logo */
+.brand-link {
+    background-color: #336a58;
+    width: 99.5%;
+}
+
+/* Posição da imagem da Logo */
+.brand-link {
+    padding: 0 !important; 
+}
+
+/* Largura do menu restrito ao clicar */
+.dropdown-menu-lg {  
+      min-width: 150px;      
+}
+
+/* Cor do Menu Lateral */
+[class*=sidebar-dark-] {
+    background-color: #296b58;    
+}
+/* Cor da Fonte Menu Lateral */
+[class*=sidebar-dark-] .nav-header {
+    color: #FFF;
+}
+
+/* Altura do Head */
+.main-header{
+    min-height: 50px;
+    height: 75px;
+}
+
+/* Caixa de busca no meu - Inicio */
+[class*=sidebar-dark] .btn-sidebar, [class*=sidebar-dark] .form-control-sidebar {    
+    background-color: #FFF;
+    border: 1px solid #FFF;
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+    border-bottom-left-radius: 0;
+    color: #666;    
+    margin-top: 5px;
+    height: 35px;    
+}
+.fa-search:before {
+    content: "\f002";
+    color: #e5e5e5;
+    font-size: 13px;
+}
+.buscarMenu{
+    margin-top: 7px;
+    width: 87.5% !important;
+    margin-left: 17px;
+    margin-bottom: 7px;
+}
+[class*=sidebar-dark] .btn-sidebar:hover {
+    background-color: #FFF;
+}
+/* Icon de busca no meu - Fim */
+
+/* Remove a linha inferior da Logo*/
+[class*=sidebar-dark] .brand-link {
+    border-bottom: none;
+}
+
+.nav-sidebar .nav-item>.nav-link a:hover {
+    text-decoration: none;
+    text-decoration-line: none;
+    text-decoration-thickness: initial;
+    text-decoration-style: initial;
+    text-decoration-color: initial;
+}
+
+/* Recuo dos texto no menu laterial  */
+.nav {
+    padding-left: 2px;
+    padding-right: 2px;
+}
+
+/* Cor ao passar o mouse no menu lateral - Inicio */
+[class*=sidebar-dark-] .nav-sidebar>.nav-item:hover>.nav-link{
+    background-color: rgb(227 123 54);
+    opacity: 0.9;
+    color: #fff;    
+}
+.nav-sidebar .nav-item>.nav-link {
+    width: 100%;
+}
+/* Cor ao passar o mouse no menu lateral - Fim */
+
+/* Bordas no menu ao passar o mouse */
+.nav-pills .nav-link {
+    border-radius: 0 !important;
+}
+
+/*Larura dos Submenus ao passar mouse no menu lateral */
+.sidebar-collapse.sidebar-mini .main-sidebar:hover:not(.sidebar-no-expand) .nav-link {
+    width: calc(262px - .5rem * 2);
+}
+
+/* Logo menu lateral MOSTRAR|ESCODER - Iniio */
+.sidebar-mini .logoRecuo{
+    display: none;
+}
+
+.sidebar-mini.sidebar-collapse .main-sidebar:not(.sidebar-no-expand):hover .logoRecuo{
+    display: none;
+}
+
+/* Deixa icon de recuar livre para posicao */
+.sidebar-mini .main-sidebar .nav-link {
+    width: auto !important; 
+}
+
+/* Logo menu lateral MOSTRAR|ESCODER - Fim */
+
+/* Remove a borda do campo de pesquisa no menu lateral */
+[class*=sidebar-dark] .form-control-sidebar:focus {
+    border: none; 
+}
+
+/* Posição dos subMenus Laterais - Inicio */
+.nav-sidebar .nav-item>.nav-link {
+    position: relative;
+    padding: 8px 5px 12px 30px;
+}
+[class*=sidebar-dark-] .sidebar a {
+    color: #ffffff;
+}
+
+/* Posição dos subMenus Laterais - Fim */
+
+/* Largura do menu lateral em dimensões diferentes- Inicio */
+
+@media (min-width: 768px){
+body:not(.sidebar-mini-md):not(.sidebar-mini-xs):not(.layout-top-nav) .content-wrapper, body:not(.sidebar-mini-md):not(.sidebar-mini-xs):not(.layout-top-nav) .main-footer, body:not(.sidebar-mini-md):not(.sidebar-mini-xs):not(.layout-top-nav) .main-header {
+    margin-left: 275px;
+}
+[class*=sidebar-dark-] {
+    width: 275px;
+}
+}
+
+@media (max-width: 991.98px){
+body:not(.sidebar-mini-md):not(.sidebar-mini-xs):not(.layout-top-nav) .content-wrapper, body:not(.sidebar-mini-md):not(.sidebar-mini-xs):not(.layout-top-nav) .main-footer, body:not(.sidebar-mini-md):not(.sidebar-mini-xs):not(.layout-top-nav) .main-header {
+    margin-left: 0;
+}
+[class*=sidebar-dark-] {
+    width: 250px;
+}
+}
+
+/* Largura do menu lateral - Fim */
+
+/* COR DO BOTÃO PRIMARY */
+.btn-primary {
+    color: #fff !important;
+    background-color: #336a58 !important;
+    border-color: #336a58 !important;
+}
+
+.btn-laranja{
+	color: #fff !important;
+    background-color: #ff6600 !important;
+    border-color: #ff6600 !important;
+}
+
+.voltar {
+    color: #fff !important;
+    background-color: #767676 !important;
+    border-color: #767676 !important;
+}
+
+
+/* Remove luz das bordas dos HEADS da certidao */
+body .ui-tabs .ui-tabs-nav li.ui-tabs-header.ui-tabs-outline{
+	box-shadow: none !important;
+}
+
+.duplo{
+	display: flex;
+	justify-content: space-between;
+	margin-left: 1px;
+}
+
+/* Distancia do menu lateral do top - Fim */
+.mt-2, .my-2 {
+    margin-top: 1.5rem!important;
+}
+
+/* CALENDARIOS - INICIO  */
+
+/* BORDAS DO MES E ANO DOS CAMPOS CALENDARIOS */
+body .ui-datepicker .ui-datepicker-title select {
+    border-color: #c7c7c7;
+    border-radius: 8px;
+}
+
+/* COR DO BUTAO DOS CALENDARIOS */
+body .ui-button {
+    background: #336a58;
+    border: 1px solid #336a58;
+}
+
+/* COR DO BUTAO DOS CALENDARIOS AO PASSAR O MOUSE */
+body .ui-button.ui-state-hover {
+    background: #336a58;
+    border: 1px solid #336a58;
+}
+/* COR DO BUTAO DOS CALENDARIOS AO CLICAR */
+body .ui-button.ui-state-active {
+    background: #336a58;
+    border: 1px solid #336a58;
+}
+
+/* CALENDARIOS - FIM  */
+
+/* TAMANHO DOS CAMPOS NAS TABLES EDITAVEL  */
+.campoTable {
+    font-weight: normal !important;
+    width: 100% !important;
+}
+
+body .ui-dialog .ui-dialog-titlebar {    
+    padding: 0;
+}
+
+ui-button-text ui-c {
+    padding: 5px 10px 10px 10px;
+}
+
+/* Cor do botao Danger */
+body .ui-button.ui-button-danger.ui-button-outlined.ui-state-hover{
+	background-color: #ff0000;
+	color: #ffffff;	
+}
+
+/* Remove sombra dos campos ao clicar*/
+body .ui-inputfield.ui-state-focus{
+	box-shadow: none !important;
+}
+
+/* Botão de Menu no mobile */
+.menuMobile{
+	display: none;	
+}
+
+/* MARCA D´AGUA - INICIO */
+.watermark {
+    position: fixed;
+    bottom: 264px;
+    right: 50px;
+    opacity: 0.025;
+    pointer-events: none;
+    transform: translate(50%, 50%);
+}
+.watermark img {
+  width: 600px; /* Ajuste a largura da imagem conforme necessário */
+  height: auto; /* Ajuste a altura da imagem conforme necessário */
+}
+/* MARCA D´AGUA - FIM */

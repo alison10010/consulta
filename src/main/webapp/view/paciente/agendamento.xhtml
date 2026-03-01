@@ -1,0 +1,287 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    template="/view/layout/admin.xhtml">
+
+    <ui:define name="title">Agendar Horário</ui:define>
+
+    <ui:define name="content">
+
+        <style>
+            :root {
+                --brand: #4f46e5;
+                --brand-gradient: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+                --ink: #0f172a;
+                --bg: #f8fafc;
+                --card: rgba(255, 255, 255, 0.85);
+                --border: rgba(15, 23, 42, 0.08);
+                --muted: #64748b;
+                --radius-lg: 24px;
+                --radius-md: 16px;
+                --shadow-premium: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+            }
+
+            /* Estilo Global e Fundo Animado */
+            .svc-wrap {
+                min-height: 100vh;
+                padding: 40px 15px;
+                background-color: #f8fafc;
+                background-image: 
+                    radial-gradient(at 0% 0%, rgba(79, 70, 229, 0.05) 0px, transparent 50%),
+                    radial-gradient(at 100% 0%, rgba(124, 58, 237, 0.05) 0px, transparent 50%);
+                display: flex;
+                justify-content: center;
+                align-items: flex-start;
+            }
+
+            .premium-card {
+                width: 100%;
+                max-width: 1050px;
+                background: var(--card);
+                border-radius: var(--radius-lg);
+                box-shadow: var(--shadow-premium);
+                border: 1px solid rgba(255, 255, 255, 0.7);
+                backdrop-filter: blur(12px);
+                padding: 32px !important;
+                position: relative;
+            }
+
+            /* Header Section */
+            .header-row {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin-bottom: 32px;
+                padding-bottom: 24px;
+                border-bottom: 1px solid var(--border);
+            }
+            .profile-section { display: flex; align-items: center; gap: 18px; }
+            .avatar-circle {
+                width: 64px; height: 64px;
+                background: var(--brand-gradient);
+                color: #fff;
+                border-radius: 20px;
+                display: flex; align-items: center; justify-content: center;
+                font-size: 1.8rem;
+                box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.3);
+            }
+            .titlebox h1 { font-size: 1.5rem; font-weight: 600; color: var(--ink); margin: 0; letter-spacing: -0.025em; }
+            .titlebox p { color: var(--muted); font-size: 0.85rem; margin: 4px 0 0; font-weight: 600; }
+
+            .btn-back-modern {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                padding: 10px 20px;
+                background: #fff;
+                border: 1px solid var(--border);
+                border-radius: 12px;
+                color: var(--ink);
+                font-weight: 600;
+                text-decoration: none;
+                transition: all 0.2s;
+                font-size: 0.9rem;
+            }
+            .btn-back-modern:hover {
+                background: #f1f5f9;
+                transform: translateX(-4px);
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            }
+
+            /* Labels */
+            .step-label {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                font-weight: 700;
+                font-size: 0.85rem;
+                color: var(--brand);
+                margin-bottom: 16px;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+            }
+
+            /* ========= Centralizar números do calendário ========= */
+				.cal-premium .ui-datepicker-calendar td {
+				  padding: 6px !important;          /* espaço da célula */
+				  vertical-align: middle !important;
+				}
+				
+				.cal-premium .ui-datepicker-calendar td a,
+				.cal-premium .ui-datepicker-calendar td span {
+				  height: 44px !important;          /* tamanho do “botão” */
+				  width: 44px !important;
+				  padding: 0 !important;            /* remove o padding que derruba o número */
+				  margin: 0 auto !important;
+				
+				  display: flex !important;         /* centraliza perfeito */
+				  align-items: center !important;
+				  justify-content: center !important;
+				
+				  line-height: 1 !important;        /* evita “texto baixo” */
+				  border-radius: 12px !important;
+				  font-weight: 600 !important;
+				}
+
+            /* Horários Grid */
+            .slots-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+                gap: 12px;
+            }
+            .time-slot {
+                border: 1px solid var(--border);
+                border-radius: var(--radius-md);
+                padding: 20px 12px;
+                cursor: pointer;
+                background: #fff;
+                text-align: center;
+                transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                min-height: 80px;
+            }
+            .time-slot:hover {
+                border-color: var(--brand);
+                background: #f5f3ff;
+                transform: translateY(-4px);
+                box-shadow: 0 12px 20px -5px rgba(79, 70, 229, 0.15);
+            }
+            .time-slot .status {
+                font-size: 0.7rem;
+                font-weight: 800;
+                color: var(--brand);
+                letter-spacing: 0.02em;
+                line-height: 1.2;
+            }
+            .time-slot .icon-plus {
+                margin-top: 8px;
+                font-size: 1.2rem;
+                color: var(--brand);
+                opacity: 0.5;
+            }
+
+            /* Modal and Buttons */
+            .ui-dialog { border-radius: 20px !important; border: none !important; box-shadow: var(--shadow-premium) !important; }
+            .btn-confirm {
+                width: 100%;
+                border-radius: 14px !important;
+                padding: 12px !important;
+                background: var(--brand-gradient) !important;
+                border: none !important;
+                font-weight: 700 !important;
+                letter-spacing: 0.02em;
+                box-shadow: 0 4px 14px 0 rgba(79, 70, 229, 0.39) !important;
+            }
+
+            .empty-box {
+                padding: 48px;
+                text-align: center;
+                border: 2px dashed var(--border);
+                border-radius: var(--radius-md);
+                background: rgba(248, 250, 252, 0.5);
+                color: var(--muted);
+            }
+
+            .ui-messages-info, .ui-messages-error { border-radius: 12px !important; }
+
+            @media (max-width: 768px) {
+                .premium-card { padding: 20px !important; }
+                .header-row { flex-direction: column; align-items: flex-start; gap: 20px; }
+                .btn-back-modern { width: 100%; justify-content: center; }
+            }
+        </style>
+
+        <div class="svc-wrap">
+            <h:form id="formAgendamento" styleClass="premium-card">
+
+                <div class="header-row">
+                    <div class="profile-section">
+                        <div class="avatar-circle">
+                            <i class="pi pi-calendar-plus"></i>
+                        </div>
+                        <div class="titlebox">
+                            <h1>#{pacienteController.colaboradorSelecionado.nome}</h1>
+                            <p>Selecione uma data disponível</p>
+                        </div>
+                    </div>
+                    
+                    <a href="/consulta/paciente/servicos" class="btn-back-modern">
+                        <i class="pi pi-arrow-left"></i>
+                        <span>Voltar aos Serviços</span>
+                    </a>
+                </div>
+
+                <div class="row g-4">
+                    <div class="col-md-5">
+                        <label class="step-label">
+                            <i class="pi pi-calendar"></i> 1. Escolha a Data
+                        </label>
+                        <p:calendar value="#{pacienteController.dataSelecionada}"
+                                    mode="inline"
+                                    mindate="today"
+                                    locale="pt_BR" styleClass="cal-premium">
+                            <p:ajax event="dateSelect"
+                                    listener="#{pacienteController.buscarHorarios}"
+                                    update="gridHorarios, totalVagas" />
+                        </p:calendar>
+                    </div>
+
+                    <div class="col-md-7">
+                        <label class="step-label">
+                            <i class="pi pi-clock"></i> 2. Horários Disponíveis 
+                            <h:outputText value=" (#{pacienteController.horariosDisponiveis.size()})" id="totalVagas"
+                                          rendered="#{not empty pacienteController.horariosDisponiveis}"
+                                          style="opacity: 0.6; font-size: 0.9em; margin-left: 4px;"/>
+                        </label>
+
+                        <h:panelGroup id="gridHorarios" layout="block">
+                            <ui:fragment rendered="#{empty pacienteController.horariosDisponiveis}">
+                                <div class="empty-box">
+                                    <i class="pi pi-calendar-times" style="font-size:32px; margin-bottom:12px; display:block; opacity:0.4;"></i>
+                                    <p style="margin:0; font-weight:600;">Nenhum horário livre.</p>
+                                    <p style="margin:0; font-size: 0.85rem;">Tente selecionar outra data no calendário.</p>
+                                </div>
+                            </ui:fragment>
+
+                            <ui:fragment rendered="#{not empty pacienteController.horariosDisponiveis}">
+                                <div class="slots-grid">
+                                    <ui:repeat value="#{pacienteController.horariosDisponiveis}" var="h">
+                                        <div>
+                                            <div class="time-slot" onclick="PF('confirmDialog#{h.id}').show()">
+                                                <span class="status">DISPONÍVEL</span>
+                                                <i class="pi pi-plus-circle icon-plus"></i>
+                                            </div>
+
+                                            <p:confirmDialog widgetVar="confirmDialog#{h.id}"
+                                                             header="Confirmar Agendamento"
+                                                             message="Você deseja confirmar sua consulta para este horário?"
+                                                             appendTo="@(body)"
+                                                             responsive="true">
+                                                
+                                                <p:commandButton value="Confirmar Agendamento"
+                                                                 process="@this"
+                                                                 action="#{pacienteController.agendar(h)}"
+                                                                 update="formAgendamento messages"
+                                                                 oncomplete="PF('confirmDialog#{h.id}').hide()"
+                                                                 styleClass="btn-confirm" />
+                                            </p:confirmDialog>
+                                        </div>
+                                    </ui:repeat>
+                                </div>
+                            </ui:fragment>
+                        </h:panelGroup>
+                    </div>
+                </div>
+
+                <p:messages id="messages" closable="true" showDetail="true" style="margin-top: 24px;" />
+
+            </h:form>
+        </div>
+
+    </ui:define>
+</ui:composition>

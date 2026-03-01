@@ -1,0 +1,471 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    template="/view/layout/admin.xhtml">
+
+    <ui:define name="title">Minha Guia</ui:define>
+
+    <ui:define name="content">
+    
+    	<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+		<script>
+		    function baixarGuia() {
+		        // Seleciona o formulário ou o card
+		        const elemento = document.querySelector('.card');
+		        
+		        // Aplica classe para "arrumar" o CSS antes de gerar
+		        elemento.classList.add('gerando-pdf');
+		
+		        const opt = {
+		          margin:       10,
+		          filename:     'Guia_Agendamento.pdf',
+		          image:        { type: 'jpeg', quality: 0.98 },
+		          html2canvas:  { 
+		              scale: 2, 
+		              useCORS: true,
+		              logging: false,
+		              letterRendering: true
+		          },
+		          jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+		        };
+		
+		        // Executa a geração
+		        html2pdf().set(opt).from(elemento).save().then(() => {
+		            // Remove a classe para a tela voltar ao normal após o download
+		            elemento.classList.remove('gerando-pdf');
+		        });
+		    }
+		</script>
+
+        <style>
+
+            :root{
+              --brand:#2b6cff;
+              --brand-2:#7a5cff;
+              --ink:#0f172a;
+              --muted:#64748b;
+              --bg:#f8fafc;
+              --radius:18px;
+              --shadow:0 18px 55px rgba(15,23,42,.10);
+              --border:rgba(15,23,42,.10);
+            }
+            .wrap{
+              padding: 16px 12px 28px;
+              display:flex; justify-content:center; align-items:flex-start;
+            }
+            .card{
+              width:100%;
+              max-width: 1000px;
+              background: rgba(255,255,255,.92);
+              border: 1px solid rgba(255,255,255,.9);
+              border-radius: var(--radius);
+              box-shadow: var(--shadow);
+              padding: 16px;
+              overflow:hidden;
+            }
+            @media (min-width: 768px){ .card{ padding: 22px; } }
+
+            .top{
+              display:flex;
+              gap:12px;
+              align-items:center;
+              justify-content:space-between;
+              flex-wrap:wrap;
+              margin-bottom: 10px;
+            }
+            .title{
+              font-weight: 600;
+              margin:0;
+              color: var(--ink);
+              letter-spacing: -.02em;
+              font-size: 18px;
+            }
+            .sub{
+              margin:4px 0 0;
+              color: var(--muted);
+              font-weight: 700;
+              font-size: 12px;
+            }
+            .pill{
+              display:inline-flex;
+              align-items:center;
+              gap:8px;
+              padding: 8px 12px;
+              border-radius: 999px;
+              border: 1px solid rgba(15,23,42,.10);
+              background: rgba(255,255,255,.85);
+              font-weight: 700;
+              color: rgba(15,23,42,.75);
+            }
+
+            .grid{
+              display:grid;
+              grid-template-columns: 1fr;
+              gap: 12px;
+              margin-top: 12px;
+            }
+            @media (min-width: 900px){
+              .grid{ grid-template-columns: 1.2fr .8fr; }
+            }
+
+            .box{
+              border: 1px solid rgba(15,23,42,.10);
+              border-radius: 16px;
+              padding: 12px;
+              background: rgba(255,255,255,.88);
+              box-shadow: 0 14px 30px rgba(15,23,42,.06);
+            }
+            .row2{
+              display:grid;
+              grid-template-columns: 140px 1fr;
+              gap: 10px;
+              padding: 10px 0;
+              border-bottom: 1px dashed rgba(15,23,42,.10);
+            }
+            .row2:last-child{ border-bottom:0; }
+            .k{ font-size: 11px; font-weight: 650; letter-spacing:.08em; text-transform:uppercase; color: rgba(15,23,42,.45);}
+            .v{ font-size: 14px; font-weight: 600; color: rgba(15,23,42,.90); }
+
+            .price{
+              display:flex; flex-direction:column; gap:6px;
+            }
+            .price .old{ color: rgba(15,23,42,.55); font-weight: 800; text-decoration: line-through; }
+            .price .new{
+              font-size: 24px;
+              font-weight: 950;
+              background: linear-gradient(135deg,var(--brand),var(--brand-2));
+              -webkit-background-clip: text; background-clip:text;
+              color: transparent;
+            }
+
+            /* card de valores dentro dos detalhes */
+            .priceCard{
+              border: 1px solid rgba(43,108,255,.18);
+              background: linear-gradient(135deg, rgba(43,108,255,.06), rgba(122,92,255,.06));
+              border-radius: 16px;
+              padding: 12px;
+              margin-bottom: 10px;
+            }
+            .priceCard .hint{
+              margin-top: 6px;
+              font-size: 12px;
+              font-weight: 900;
+              color: rgba(15,23,42,.62);
+              line-height: 1.25;
+            }
+
+            .btns{
+              display:flex; gap:10px; flex-wrap:wrap; margin-top: 12px;
+            }
+            .btns .ui-button{ border-radius: 999px !important; font-weight: 700 !important; }
+
+            .payBadge{
+              display:inline-flex;
+              align-items:center;
+              gap:8px;
+              padding: 8px 10px;
+              border-radius: 14px;
+              border: 1px solid rgba(15,23,42,.10);
+              background: rgba(255,255,255,.90);
+              font-weight: 900;
+              color: rgba(15,23,42,.78);
+              font-size: 12px;
+              justify-content:center;
+            }
+            .payBadge strong{ color: rgba(15,23,42,.92); }
+            
+            /* =========================
+			   PRINT (Arruma impressão)
+			   ========================= */
+			@media print {
+			
+			  /* 1) Tira menus/topos do template (AdminLTE / layouts comuns) */
+			  header, nav, aside, footer,
+			  .sidebar, .main-sidebar, .content-header,
+			  .navbar, .topbar, .menu, .breadcrumb,
+			  .layout-navbar, .layout-menu, .layout-footer,
+			  .ui-growl, .ui-toast, .ui-dialog, .ui-confirm-dialog {
+			    display: none !important;
+			  }
+			
+			  /* 2) Página limpa (sem margens gigantes e sem fundos) */
+			  @page { margin: 12mm; }
+			  html, body {
+			    background: #fff !important;
+			    color: #000 !important;
+			  }
+			
+			  /* 3) Mostra só a guia bem central e “reta” */
+			  .wrap {
+			    padding: 0 !important;
+			    display: block !important;
+			  }
+			
+			  .card {
+			    max-width: none !important;
+			    width: 100% !important;
+			    border: 1px solid #eee !important;
+			    border-radius: 0 !important;
+			    box-shadow: none !important;
+			    background: #fff !important;
+			    padding: 12px !important;
+			  }
+			
+			  /* 4) Layout em 2 colunas na impressão (se couber) */
+			  .grid {
+			    grid-template-columns: 1.2fr .8fr !important;
+			    gap: 12px !important;
+			  }
+			
+			  /* 5) Evita quebrar caixas no meio */
+			  .box, .priceCard, .row2 {
+			    break-inside: avoid !important;
+			    page-break-inside: avoid !important;
+			  }
+			
+			  /* 6) Tira efeitos e gradientes que “somem” na impressora */
+			  .price .new {
+			    color: #000 !important;
+			    -webkit-text-fill-color: #000 !important;
+			    background: none !important;
+			  }
+			
+			  .pill, .payBadge, .priceCard {
+			    background: #fff !important;
+			    border: 1px solid #000 !important;
+			    box-shadow: none !important;
+			  }
+			
+			  /* 7) Botões não fazem sentido no papel */
+			  .btns, .ui-button, button, a.ui-button {
+			    display: none !important;
+			  }
+			  
+			  .ocultarImp{
+			  	display: none !important;
+			  }
+			
+			  /* 8) Links imprimem como texto (opcional) */
+			  a[href]:after {
+			    content: " (" attr(href) ")";
+			    font-size: 10px;
+			    color: #000;
+			    word-break: break-all;
+			  }
+			
+			  /* 9) QR um pouco maior e nítido */
+			  img[alt="QR Code"] {
+			    max-width: 180px !important;
+			    width: 240px !important;
+			    border-radius: 0 !important;
+			    border: 1px solid #000 !important;
+			  }
+			
+			  /* 10) Ajustes finos de tipografia */
+			  .title { font-size: 18px !important; color: #000 !important; }
+			  .sub, .k { color: #000 !important; }
+			  .v { color: #000 !important; }
+			}
+			
+
+			/* ESTILO ESPECIAL PARA O PDF (Evita desconfigurar) */
+			
+			/* Garante que o gradiente do preço não fique invisível no PDF */
+			.gerando-pdf .price .new {
+			    background: none !important;
+			    color: #2b6cff !important;
+			    -webkit-text-fill-color: #2b6cff !important;
+			}
+			        
+        </style>
+
+        <div class="wrap">
+            <h:form id="frmGuia" styleClass="card">
+
+                <div class="top">
+                    <div>
+                        <h2 class="title">Guia de agendamento</h2>
+                        <p class="sub ocultarImp">A consulta fica mais barata ao usar esta guia. O pagamento com desconto é feito no atendimento.</p>
+                    </div>
+
+                    <span class="pill">
+                        <i class="pi pi-ticket"></i>
+                        Código: #{guiaController.guiaAtual != null ? guiaController.guiaAtual.codigo : '-'}
+                    </span>
+                </div>
+
+                <ui:fragment rendered="#{empty guiaController.guiaAtual}">
+                    <div class="box" style="text-align:center;">
+                        <i class="pi pi-info-circle" style="font-size:24px; opacity:.6;"></i>
+                        <div style="margin-top:8px; font-weight:950;">Nenhuma guia carregada.</div>
+                        <div style="margin-top:4px; color:rgba(15,23,42,.6); font-weight:800; font-size:12px;">
+                            Gere a guia após agendar uma consulta.
+                        </div>
+                    </div>
+                </ui:fragment>
+
+                <ui:fragment rendered="#{not empty guiaController.guiaAtual}">
+
+                    <div class="grid">
+
+                        <!-- Detalhes -->
+                        <div class="box">
+                        
+                        <ui:fragment rendered="#{not guiaController.guiaAtual.horario.agendamentoPago}">
+						    <div class="alert alert-warning">
+						        <i class="pi pi-info-circle"></i>
+						        Esta consulta está <b>em processamento</b>.
+						        O status mudará para <b>Marcada</b> após o pagamento do agendamento.
+						    </div>
+						</ui:fragment>
+						
+						<ui:fragment rendered="#{guiaController.guiaAtual.horario.agendamentoPago}">
+						    <div class="alert alert-success">
+						        <i class="pi pi-check-circle"></i>
+						        <b>Marcada</b>.
+						    </div>
+						</ui:fragment>
+						                        
+
+                            <!-- ✅ VALORES (AGORA ACIMA DO PROFISSIONAL) -->
+                            <div class="priceCard">
+                                <div class="k">Valores da consulta</div>
+
+                                <div class="price" style="margin-top:8px;">
+								    <div class="old" style="text-decoration: line-through; color: #64748b;">
+								        Valor original: 
+								        <h:outputText value="#{guiaController.guiaAtual.valorOriginal}">
+								            <f:convertNumber type="currency" currencySymbol="R$" locale="pt_BR" />
+								        </h:outputText>
+								    </div>
+								
+								    <div class="new" style="color: #2b6cff; font-size: 1.2rem; font-weight: 800;">
+								        <h:outputText value="#{guiaController.guiaAtual.valorComDesconto}">
+								            <f:convertNumber type="currency" currencySymbol="R$" locale="pt_BR" />
+								        </h:outputText>
+								    </div>
+								
+								    <div style="color:rgba(15,23,42,.6); font-weight:900; font-size:12px;">
+								        Desconto: 
+								        <h:outputText value="#{guiaController.guiaAtual.percentualDesconto}">
+								            <f:convertNumber type="currency" currencySymbol="" locale="pt_BR" />
+								        </h:outputText>% 
+								    </div>
+								</div>
+
+                                <div class="hint">                                    
+                                    ✅ O valor com desconto é pago somente na hora da consulta.
+                                </div>
+                            </div>
+
+                            <!-- Agora começa Profissional -->
+                            <div class="row2">
+                                <div class="k">Profissional</div>
+                                <div class="v">#{guiaController.guiaAtual.colaborador.nome}</div>
+                            </div>
+                            
+                            <div class="row2">
+                                <div class="k">Especialidade</div>
+                                <div class="v">#{guiaController.guiaAtual.especialidade}</div>
+                            </div>
+
+                            <div class="row2">
+                                <div class="k">Data / Hora</div>
+                                <div class="v">
+                                    <h:outputText value="#{guiaController.guiaAtual.horario.data}" converter="localDateConverter" /> •
+                                    #{guiaController.guiaAtual.horario.vaga}
+                                </div>
+                            </div>
+
+                            <div class="row2">
+                                <div class="k">Paciente</div>
+                                <div class="v">#{guiaController.guiaAtual.paciente.nome}</div>
+                            </div>
+                            
+                            <div class="row2">
+                                <div class="k">CPF</div>
+                                <div class="v">#{guiaController.guiaAtual.paciente.cpf}</div>
+                            </div>
+
+                            <div class="row2">
+                                <div class="k">Validade</div>
+                                <div class="v">
+                                    <h:outputText value="#{guiaController.guiaAtual.validade}" converter="localDateConverter" />
+                                </div>
+                            </div>
+
+                            <div class="row2">
+                                <div class="k">Endereço</div>
+                                <div class="v">
+                                    #{guiaController.guiaAtual.endereco}, #{guiaController.guiaAtual.numero}
+                                    <br/>
+                                    #{guiaController.guiaAtual.bairro} • #{guiaController.guiaAtual.cidade}-#{guiaController.guiaAtual.estado}
+                                    <br/>
+                                    CEP: #{guiaController.guiaAtual.cep}
+                                </div>
+                            </div>
+
+                            <div class="btns">
+                                <p:commandButton value="Imprimir"
+						                 icon="pi pi-print"
+						                 type="button"
+						                 onclick="setTimeout(() => window.print(), 50);"
+						                 styleClass="ui-button-outlined ui-button-secondary"/>
+								<p:commandButton value="Baixar PDF"
+								                     icon="pi pi-file-pdf"
+								                     type="button"
+								                     onclick="baixarGuia();"
+								                     styleClass="ui-button-primary"/>
+
+                                <p:button value="Abrir no Maps"
+                                          icon="pi pi-map-marker"
+                                          target="_blank"
+                                          styleClass="ui-button-outlined"
+                                          href="https://www.google.com/maps/search/?api=1&amp;query=#{guiaController.guiaAtual.endereco}+#{guiaController.guiaAtual.numero}+#{guiaController.guiaAtual.cidade}+#{guiaController.guiaAtual.estado}" />
+                            </div>
+                        </div>
+
+                        <!-- QR do Agendamento -->
+                        <div class="box">
+
+                            <div class="k">Agendamento (QR Code)</div>
+
+                            <!-- ✅ Aqui mostra só o valor do agendamento -->
+                            <div style="margin-top:10px;">
+                                
+
+                                <div style="margin-top:10px; font-size:12px; font-weight:800; color:rgba(15,23,42,.65);">
+                                    O valor é pago no atendimento.
+                                </div>
+                            </div>
+
+                            <div style="margin-top:14px;" class="k">Validação</div>
+
+                            <div style="margin-top:8px; text-align:center;">
+                                <!-- ✅ QR agora carrega a URL + valor do agendamento -->
+                                <img alt="QR Code"
+                                     style="max-width: 180px; width:100%; border-radius:12px; border:1px solid rgba(15,23,42,.10);"
+                                     src="https://api.qrserver.com/v1/create-qr-code/?size=240x240&amp;data=#{guiaController.guiaAtual.urlValidacao}" />
+
+                                <div style="margin-top:8px; font-size:12px; font-weight:800; color:rgba(15,23,42,.65);">
+                                    Apresente esta guia no atendimento.
+                                </div>
+                                <div class="k">QR Code de validação</div>
+
+					            <div class="pv-muted mt-2">
+					              Aponte a câmera e valide pelo link.
+					            </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </ui:fragment>
+
+            </h:form>
+        </div>
+    </ui:define>
+</ui:composition>

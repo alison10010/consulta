@@ -1,0 +1,76 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-shadow: 0;    
+}
+
+body{
+    background: #f8f8f8 !important;
+}
+
+label{
+    /* color: #0c326f; */
+    color: #322828;
+    font-weight: 500;
+}
+
+.btn-primary {
+    color: #fff;
+    background-color: #343a40 !important;
+    border-color: #343a40 !important;
+}
+
+.cabecario{
+    background-color: #336a58;
+    padding: 10px 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'Segoe UI', sans-serif;
+}   
+
+.cabecario .logo{
+    font-size: 25px;
+    font-weight: bold;
+    margin: auto;
+    margin-left: 0;
+}
+
+.text-header{
+    color: #FFF;
+    text-align: center;
+    font-size: 2rem;
+}
+
+/* FORM CHAMADO */
+.constainer-card{
+    margin-top: 6rem;
+    margin: 0 auto;
+    max-width: 500px;
+    background: #F7F7F7;
+    box-shadow: 2px 2px 10px rgb(177 155 155 / 77%);
+    border-radius: 0.7rem;
+}
+
+.fechar{
+    display: none;
+}
+
+/* */
+
+/* CARD DE LOGIN */
+.cardLogin{
+	margin-top: 2rem !important;
+	margin-bottom: 1rem;
+	width: 400px !important;
+}
+
+@media (max-width: 700px) { /* ESTIVER NO CELL */
+    .constainer-card{
+        max-width: 85%;
+    } 
+    .logoLogin{
+		width: 27% !important;
+  		margin-top: 0rem !important;
+	}
+}
