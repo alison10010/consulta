@@ -76,7 +76,7 @@ public interface HorarioRepository extends JpaRepository<Horario, Long> {
        left join fetch h.paciente p
        where h.colaborador = :colaborador
          and h.data = :data
-       order by h.hora asc
+       order by h.dataUpdate desc
     """)
     List<Horario> listarAgendaDiaComPaciente(@Param("colaborador") Usuario colaborador,
                                             @Param("data") LocalDate data);
