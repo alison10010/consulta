@@ -109,7 +109,7 @@
                     <div class="calendar-side">
                         <h4 style="font-size: 0.8rem; text-transform: uppercase; color: var(--muted); font-weight: 700;">1. Selecione a Data</h4>
                         <p:calendar id="cal" value="#{colaboradorController.dataAgenda}"
-                                    mode="inline" locale="pt_BR">
+                                    mode="inline" locale="pt_BR" mindate="today">
                             <p:ajax event="dateSelect" listener="#{colaboradorController.buscarAgendaDoDia}"
                                     update="gridHorarios" />
                         </p:calendar>
