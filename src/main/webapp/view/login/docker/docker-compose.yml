@@ -20,8 +20,8 @@ services:
 
     environment:
       SPRING_DATASOURCE_URL: "jdbc:mysql://host.docker.internal:3306/consulta?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=America/Rio_Branco"
-      SPRING_DATASOURCE_USERNAME: "ifbr"
-      SPRING_DATASOURCE_PASSWORD: "@ifbr#Walker"
+      SPRING_DATASOURCE_USERNAME: "consulta"
+      SPRING_DATASOURCE_PASSWORD: "@consulta#Walker"
       SPRING_DATASOURCE_DRIVER_CLASS_NAME: "com.mysql.cj.jdbc.Driver"
 
       SPRING_JPA_GENERATE_DDL: "true"

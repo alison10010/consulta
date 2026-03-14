@@ -1,0 +1,76 @@
+1) Entrar na EC2
+ssh -i sua-chave.pem ubuntu@SEU_IP_OU_DNS
+
+2) Atualizar o sistema
+sudo apt update
+
+3) Instalar MySQL Server
+sudo apt -y install mysql-server
+
+
+Verificar se subiu:
+
+sudo systemctl status mysql
+
+
+Se não estiver “active (running)”:
+
+sudo systemctl enable --now mysql
+
+4) Fazer a configuração básica de segurança
+sudo mysql_secure_installation
+
+
+Sugestão de respostas (seguras):
+
+VALIDATE PASSWORD: N (você pode deixar N para não encher o saco com regras, já que vai usar senha forte)
+
+Remove anonymous users: Y
+
+Disallow root login remotely: Y
+
+Remove test database: Y
+
+Reload privilege tables: Y
+
+5) Criar banco e usuário do seu sistema (recomendado)
+
+Entre no MySQL como root (no Ubuntu, root é via “sudo”):
+
+sudo mysql
+
+
+Agora execute (troque a senha se quiser):
+
+CREATE DATABASE consulta CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
+
+CREATE USER 'consulta'@'%' IDENTIFIED BY '@consulta#Walker';
+GRANT ALL PRIVILEGES ON consulta.* TO 'consulta'@'%';
+FLUSH PRIVILEGES;
+
+EXIT;
+
+
+✅ Pronto: você tem o DB consulta e o user consulta.(User: consulta | senha: @consulta#Walker)
+
+Na EC2:
+
+sudo nano /etc/mysql/mysql.conf.d/mysqld.cnf
+
+
+Garanta que está assim:
+
+bind-address = 0.0.0.0
+
+
+Depois:
+
+sudo systemctl restart mysql
+
+
+# ==============
+SSL NO SITE
+
+sudo apt update
+sudo apt install certbot python3-certbot-apache -y
+sudo certbot --apache -d avaliiaifbr.com.br -d www.avaliiaifbr.com.br

@@ -1,0 +1,100 @@
+Cole: wls  para entrar em comando Linux local
+
+sudo mkdir -p /mnt/documentos/colaboradores
+sudo chown -R 1000:1000 /mnt/documentos
+sudo chmod -R 775 /mnt/documentos
+sudo chmod g+s /mnt/documentos /mnt/documentos/colaboradores
+
+
+#===============================================
+docker stop $(docker ps -aq)
+docker rm $(docker ps -aq)
+docker rmi $(docker images -q)
+
+🔵 1️⃣ Atualizar o sistema (SEMPRE PRIMEIRO)
+sudo apt update
+sudo apt upgrade -y
+sudo reboot
+
+
+➡️ Após o reboot, reconecte via SSH:
+
+🌐 2️⃣ Instalar e ativar Apache (PRIMEIRO SERVIÇO)
+
+Apache vai servir o site estático e fazer proxy para o WildFly.
+
+sudo apt install -y apache2
+sudo systemctl start apache2
+sudo systemctl enable apache2
+
+Verificar:
+sudo systemctl status apache2
+
+
+📂 3️⃣ Publicar site estático (HTML / CSS / JS)
+sudo rm -rf /var/www/html/*
+sudo cp -r /home/ubuntu/site/* /var/www/html/
+sudo chown -R www-data:www-data /var/www/html
+sudo chmod -R 755 /var/www/html
+sudo systemctl restart apache2
+
+🌐 9️⃣ Configurar Apache como Proxy (REMOVE CORS DEFINITIVAMENTE)
+9.1 – Ativar módulos necessários
+sudo a2enmod proxy proxy_http headers rewrite
+sudo systemctl restart apache2
+
+9.2 – Criar configuração de proxy
+sudo nano /etc/apache2/sites-available/consulta-proxy.conf
+
+<VirtualHost *:80>
+    ServerName ec2-44-211-117-179.compute-1.amazonaws.com
+
+    ProxyPreserveHost On
+
+    ProxyPass        /consulta  http://127.0.0.1:8080/consulta
+    ProxyPassReverse /consulta  http://127.0.0.1:8080/consulta
+
+    ProxyTimeout 120
+</VirtualHost>
+
+9.3 – Ativar o site
+sudo a2dissite 000-default.conf
+sudo a2ensite consulta-proxy.conf
+sudo systemctl reload apache2
+
+✅ 10️⃣ Uso correto no Front-end (SEM PORTA 8080)
+<script>
+  const API_BASE = "/consulta/api";
+</script>
+
+✔️ Site estático funcionando
+✔️ Apache pronto para proxy
+
+🐳 4️⃣ Instalar Docker (Ubuntu)
+sudo apt install -y docker.io
+sudo systemctl start docker
+sudo systemctl enable docker
+
+Adicionar usuário ao grupo docker:
+sudo usermod -aG docker ubuntu
+newgrp docker
+
+
+🧩 5️⃣ Instalar Docker Compose v2 (RECOMENDADO)
+sudo mkdir -p /usr/local/lib/docker/cli-plugins
+sudo curl -SL https://github.com/docker/compose/releases/download/v2.25.0/docker-compose-linux-x86_64 \
+  -o /usr/local/lib/docker/cli-plugins/docker-compose
+sudo chmod +x /usr/local/lib/docker/cli-plugins/docker-compose
+
+(DEVE-SE INSTALAR O MYSQL ANTES DE PROSEGUIR)
+
+🐳 6️⃣ Subir a aplicação (WildFly + Spring Boot)
+cd /home/ubuntu/docker
+docker compose up -d --build
+
+Verificar:
+docker compose ps
+docker compose logs -f
+
+
+Origem: Security Group da EC2
