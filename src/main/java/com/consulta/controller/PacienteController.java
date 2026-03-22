@@ -339,6 +339,7 @@ public class PacienteController implements Serializable {
         h.setPaciente(null);
         h.setDisponivel(true);
         h.setPixExpiraEm(null);
+        h.setStatus(StatusConsulta.PROCESSANDO);
         
         horarioRepository.save(h);
 
