@@ -342,7 +342,7 @@
                                                                  styleClass="ui-button-flat w-100"
                                                                  action="#{pacienteController.prepararOutraPessoa(h)}"
                                                                  process="@this"
-                                                                 update=":formAgendamento:dialogOutraPessoa"
+                                                                 update=":formConvidado"
                                                                  oncomplete="PF('confirmDialog#{h.id}').hide(); PF('dialogOutraPessoa').show();" />
                                             </div>
                                         </p:dialog>
@@ -353,20 +353,19 @@
                     </div>
                 </div>
 
-                <p:messages id="messages"
-                            closable="true"
-                            showDetail="true"
-                            style="margin-top: 2rem;" />
+                <p:messages id="messages" closable="true" showDetail="true" style="margin-top: 2rem;" />
 
-                <p:dialog id="dialogOutraPessoa"
-                          widgetVar="dialogOutraPessoa"
-                          header="Dados do Paciente"
-                          modal="true"
-                          draggable="false"
-                          resizable="false"
-                          width="620"
-                          appendTo="@(body)"
-                          styleClass="modal-agendamento">
+            </h:form>
+            
+            <h:form id="formConvidado">
+            	<p:dialog id="dialogOutraPessoa"
+			          widgetVar="dialogOutraPessoa"
+			          header="Dados do Paciente"
+			          modal="true"
+			          draggable="false"
+			          resizable="false"
+			          width="620"
+			          styleClass="modal-agendamento">
 
                     <div class="guest-helper">
                         Preencha os dados da pessoa que será atendida neste horário.
@@ -446,12 +445,11 @@
 
                     <div class="dialog-actions">
                         <p:commandButton value="Confirmar Agendamento"
-                                         icon="pi pi-check"
-                                         process="@this"
-                                         styleClass="btn-confirm"
-                                         action="#{pacienteController.agendar(pacienteController.horariosParaModal)}"
-                                         update="formAgendamento messages"
-                                         oncomplete="if (!args.validationFailed) PF('dialogOutraPessoa').hide();" />
+						    process="formConvidado"
+						    update=":formAgendamento messages"
+						    action="#{pacienteController.agendar(pacienteController.horariosParaModal)}"
+						    styleClass="btn-confirm"
+						    oncomplete="if (!args.validationFailed) PF('dialogOutraPessoa').hide();" />
 
                         <p:commandButton value="Cancelar"
                                          type="button"
@@ -459,8 +457,8 @@
                                          onclick="PF('dialogOutraPessoa').hide();" />
                     </div>
                 </p:dialog>
-
             </h:form>
+            
         </div>
 
     </ui:define>

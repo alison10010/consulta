@@ -82,7 +82,7 @@ public class PacienteController implements Serializable {
     private Usuario usuario = new Usuario();
     
     private boolean convidado = false;    
-    private PacienteConvidado pacienteConvidado = new PacienteConvidado();
+    private PacienteConvidado pacienteConvidado;
     private Horario horariosParaModal;
     
     private List<Horario> minhasConsultas;
@@ -184,7 +184,7 @@ public class PacienteController implements Serializable {
         // expira em 20 min
         horario.setPixExpiraEm(LocalDateTime.now(ZoneId.of("America/Rio_Branco")).plusMinutes(20));
         
-        if(convidado) {        	
+        if(convidado) {     
         	PacienteConvidado convidadoSalvo = pacienteConvidadoRepository.save(pacienteConvidado);        	
         	horario.setPacienteConvidado(convidadoSalvo);
         }else {
