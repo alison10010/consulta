@@ -330,6 +330,8 @@ public class PacienteController implements Serializable {
         if (h.getPacienteConvidado() != null) {
             PacienteConvidado convidado = h.getPacienteConvidado();
             h.setPacienteConvidado(null); // remove vínculo primeiro
+            horarioRepository.save(h);
+            
             pacienteConvidadoRepository.delete(convidado); // remove do banco
         }
 
