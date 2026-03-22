@@ -11,188 +11,245 @@
 
         <style>
             :root {
-                --brand: #4f46e5;
-                --brand-gradient: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
-                --ink: #0f172a;
-                --bg: #f8fafc;
-                --card: rgba(255, 255, 255, 0.85);
-                --border: rgba(15, 23, 42, 0.08);
-                --muted: #64748b;
-                --radius-lg: 24px;
-                --radius-md: 16px;
-                --shadow-premium: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+                --brand: #6366f1;
+                --brand-dark: #4f46e5;
+                --surface: #ffffff;
+                --bg: #f1f5f9;
+                --text-main: #1e293b;
+                --text-muted: #64748b;
+                --border: #e2e8f0;
+                --radius: 16px;
+                --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
             }
 
-            /* Estilo Global e Fundo Animado */
             .svc-wrap {
+                background: var(--bg);
                 min-height: 100vh;
-                padding: 40px 15px;
-                background-color: #f8fafc;
-                background-image: 
-                    radial-gradient(at 0% 0%, rgba(79, 70, 229, 0.05) 0px, transparent 50%),
-                    radial-gradient(at 100% 0%, rgba(124, 58, 237, 0.05) 0px, transparent 50%);
-                display: flex;
-                justify-content: center;
-                align-items: flex-start;
+                padding: 2rem 1rem;
             }
 
             .premium-card {
-                width: 100%;
-                max-width: 1050px;
-                background: var(--card);
-                border-radius: var(--radius-lg);
-                box-shadow: var(--shadow-premium);
-                border: 1px solid rgba(255, 255, 255, 0.7);
-                backdrop-filter: blur(12px);
-                padding: 32px !important;
-                position: relative;
+                max-width: 1100px;
+                margin: 0 auto;
+                background: var(--surface);
+                border-radius: var(--radius);
+                box-shadow: var(--shadow);
+                padding: 2.5rem !important;
+                border: 1px solid var(--border);
             }
 
-            /* Header Section */
             .header-row {
                 display: flex;
-                align-items: center;
                 justify-content: space-between;
-                margin-bottom: 32px;
-                padding-bottom: 24px;
+                align-items: center;
+                margin-bottom: 2rem;
+                padding-bottom: 1.5rem;
                 border-bottom: 1px solid var(--border);
+                gap: 1rem;
+                flex-wrap: wrap;
             }
-            .profile-section { display: flex; align-items: center; gap: 18px; }
-            .avatar-circle {
-                width: 64px; height: 64px;
-                background: var(--brand-gradient);
-                color: #fff;
-                border-radius: 20px;
-                display: flex; align-items: center; justify-content: center;
-                font-size: 1.8rem;
-                box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.3);
-            }
-            .titlebox h1 { font-size: 1.5rem; font-weight: 600; color: var(--ink); margin: 0; letter-spacing: -0.025em; }
-            .titlebox p { color: var(--muted); font-size: 0.85rem; margin: 4px 0 0; font-weight: 600; }
 
-            .btn-back-modern {
+            .profile-section {
                 display: flex;
                 align-items: center;
-                gap: 8px;
-                padding: 10px 20px;
+                gap: 1rem;
+            }
+
+            .avatar-circle {
+                width: 56px;
+                height: 56px;
+                background: var(--brand);
+                color: white;
+                border-radius: 14px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.5rem;
+                flex-shrink: 0;
+            }
+
+            .titlebox h1 {
+                font-size: 1.25rem;
+                font-weight: 700;
+                color: var(--text-main);
+                margin: 0;
+            }
+
+            .titlebox p {
+                font-size: 0.875rem;
+                color: var(--text-muted);
+                margin: 2px 0 0;
+            }
+
+            .cal-premium {
+                width: 100% !important;
+                border: none !important;
+            }
+
+            .cal-premium .ui-datepicker {
+                width: 100% !important;
+                border: 1px solid var(--border) !important;
+                border-radius: 12px;
+                padding: 10px;
+                box-shadow: none !important;
+            }
+
+            .cal-premium .ui-datepicker-header {
+                background: none;
+                border: none;
+                color: var(--text-main);
+            }
+
+            .slots-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+                gap: 12px;
+            }
+
+            .time-slot {
                 background: #fff;
                 border: 1px solid var(--border);
                 border-radius: 12px;
-                color: var(--ink);
-                font-weight: 600;
-                text-decoration: none;
-                transition: all 0.2s;
-                font-size: 0.9rem;
-            }
-            .btn-back-modern:hover {
-                background: #f1f5f9;
-                transform: translateX(-4px);
-                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            }
-
-            /* Labels */
-            .step-label {
-                display: flex;
-                align-items: center;
-                gap: 8px;
-                font-weight: 700;
-                font-size: 0.85rem;
-                color: var(--brand);
-                margin-bottom: 16px;
-                text-transform: uppercase;
-                letter-spacing: 0.05em;
-            }
-
-            /* ========= Centralizar números do calendário ========= */
-				.cal-premium .ui-datepicker-calendar td {
-				  padding: 6px !important;          /* espaço da célula */
-				  vertical-align: middle !important;
-				}
-				
-				.cal-premium .ui-datepicker-calendar td a,
-				.cal-premium .ui-datepicker-calendar td span {
-				  height: 44px !important;          /* tamanho do “botão” */
-				  width: 44px !important;
-				  padding: 0 !important;            /* remove o padding que derruba o número */
-				  margin: 0 auto !important;
-				
-				  display: flex !important;         /* centraliza perfeito */
-				  align-items: center !important;
-				  justify-content: center !important;
-				
-				  line-height: 1 !important;        /* evita “texto baixo” */
-				  border-radius: 12px !important;
-				  font-weight: 600 !important;
-				}
-
-            /* Horários Grid */
-            .slots-grid {
-                display: grid;
-                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-                gap: 12px;
-            }
-            .time-slot {
-                border: 1px solid var(--border);
-                border-radius: var(--radius-md);
-                padding: 20px 12px;
-                cursor: pointer;
-                background: #fff;
+                padding: 16px 8px;
                 text-align: center;
-                transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+                cursor: pointer;
+                transition: all 0.2s ease;
                 display: flex;
                 flex-direction: column;
                 align-items: center;
                 justify-content: center;
-                min-height: 80px;
-            }
-            .time-slot:hover {
-                border-color: var(--brand);
-                background: #f5f3ff;
-                transform: translateY(-4px);
-                box-shadow: 0 12px 20px -5px rgba(79, 70, 229, 0.15);
-            }
-            .time-slot .status {
-                font-size: 0.7rem;
-                font-weight: 800;
-                color: var(--brand);
-                letter-spacing: 0.02em;
-                line-height: 1.2;
-            }
-            .time-slot .icon-plus {
-                margin-top: 8px;
-                font-size: 1.2rem;
-                color: var(--brand);
-                opacity: 0.5;
+                gap: 4px;
+                min-height: 88px;
             }
 
-            /* Modal and Buttons */
-            .ui-dialog { border-radius: 20px !important; border: none !important; box-shadow: var(--shadow-premium) !important; }
+            .time-slot:hover {
+                border-color: var(--brand);
+                background: #f8faff;
+                transform: translateY(-2px);
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            }
+
+            .time-slot .time-label {
+                font-size: 1.05rem;
+                font-weight: 700;
+                color: var(--text-main);
+            }
+
+            .time-slot .status-tag {
+                font-size: 0.65rem;
+                font-weight: 700;
+                color: #10b981;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+            }
+
+            .modal-agendamento .ui-dialog-titlebar {
+                background: #fff;
+                border-bottom: 1px solid var(--border);
+                font-weight: 700;
+            }
+
+            .modal-agendamento .ui-dialog-content {
+                padding: 1.25rem;
+            }
+
             .btn-confirm {
-                width: 100%;
-                border-radius: 14px !important;
-                padding: 12px !important;
-                background: var(--brand-gradient) !important;
+                background: var(--brand) !important;
                 border: none !important;
-                font-weight: 700 !important;
-                letter-spacing: 0.02em;
-                box-shadow: 0 4px 14px 0 rgba(79, 70, 229, 0.39) !important;
+                padding: 10px 14px !important;
+                border-radius: 10px !important;
+                font-weight: 600 !important;
+            }
+
+            .btn-confirm:hover {
+                background: var(--brand-dark) !important;
             }
 
             .empty-box {
-                padding: 48px;
+                padding: 3rem;
                 text-align: center;
+                background: #f8fafc;
                 border: 2px dashed var(--border);
-                border-radius: var(--radius-md);
-                background: rgba(248, 250, 252, 0.5);
-                color: var(--muted);
+                border-radius: var(--radius);
+                color: var(--text-muted);
             }
 
-            .ui-messages-info, .ui-messages-error { border-radius: 12px !important; }
+            .step-label {
+                font-size: 0.9rem;
+                font-weight: 700;
+                color: var(--text-main);
+                margin-bottom: 1.25rem;
+                display: block;
+            }
+
+            .step-label i {
+                color: var(--brand);
+                margin-right: 8px;
+            }
+
+            .guest-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 14px;
+            }
+
+            .field-wrap {
+                display: flex;
+                flex-direction: column;
+                gap: 6px;
+            }
+
+            .field-wrap.full {
+                grid-column: 1 / -1;
+            }
+
+            .field-wrap label {
+                font-size: 0.82rem;
+                font-weight: 700;
+                color: var(--text-main);
+            }
+
+            .guest-helper {
+                color: var(--text-muted);
+                font-size: 0.85rem;
+                margin-bottom: 1rem;
+                line-height: 1.45;
+            }
+
+            .dialog-actions {
+                display: flex;
+                gap: 10px;
+                margin-top: 1.25rem;
+            }
+
+            .dialog-actions .ui-button {
+                width: 100%;
+            }
+
+            .wpp-inline {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                min-height: 42px;
+                padding-top: 6px;
+            }
 
             @media (max-width: 768px) {
-                .premium-card { padding: 20px !important; }
-                .header-row { flex-direction: column; align-items: flex-start; gap: 20px; }
-                .btn-back-modern { width: 100%; justify-content: center; }
+                .premium-card {
+                    padding: 1.25rem !important;
+                }
+
+                .guest-grid {
+                    grid-template-columns: 1fr;
+                }
+
+                .field-wrap.full {
+                    grid-column: auto;
+                }
+
+                .dialog-actions {
+                    flex-direction: column;
+                }
             }
         </style>
 
@@ -202,75 +259,93 @@
                 <div class="header-row">
                     <div class="profile-section">
                         <div class="avatar-circle">
-                            <i class="pi pi-calendar-plus"></i>
+                            <i class="pi pi-user"></i>
                         </div>
                         <div class="titlebox">
                             <h1>#{pacienteController.colaboradorSelecionado.nome}</h1>
-                            <p>Selecione uma data disponível</p>
+                            <p>Agendamento de Consulta</p>
                         </div>
                     </div>
-                    
-                    <a href="/consulta/paciente/servicos" class="btn-back-modern">
-                        <i class="pi pi-arrow-left"></i>
-                        <span>Voltar aos Serviços</span>
-                    </a>
+
+                    <p:button href="/consulta/paciente/servicos"
+                              value="Voltar"
+                              icon="pi pi-chevron-left"
+                              styleClass="ui-button-outlined ui-button-secondary"
+                              style="border-radius: 10px;" />
                 </div>
 
-                <div class="row g-4">
-                    <div class="col-md-5">
-                        <label class="step-label">
-                            <i class="pi pi-calendar"></i> 1. Escolha a Data
-                        </label>
+                <div class="row">
+                    <div class="col-md-5 mb-4">
+                        <span class="step-label">
+                            <i class="pi pi-calendar-event"></i> 1. Selecione a Data
+                        </span>
+
                         <p:calendar value="#{pacienteController.dataSelecionada}"
                                     mode="inline"
                                     mindate="today"
-                                    locale="pt_BR" styleClass="cal-premium">
+                                    locale="pt_BR"
+                                    styleClass="cal-premium">
                             <p:ajax event="dateSelect"
                                     listener="#{pacienteController.buscarHorarios}"
-                                    update="gridHorarios, totalVagas" />
+                                    update="gridHorarios totalVagas" />
                         </p:calendar>
                     </div>
 
                     <div class="col-md-7">
-                        <label class="step-label">
-                            <i class="pi pi-clock"></i> 2. Horários Disponíveis 
-                            <h:outputText value=" (#{pacienteController.horariosDisponiveis.size()})" id="totalVagas"
+                        <span class="step-label">
+                            <i class="pi pi-clock"></i> 2. Horários Disponíveis
+                            <h:outputText id="totalVagas"
+                                          value=" (#{pacienteController.horariosDisponiveis.size()})"
                                           rendered="#{not empty pacienteController.horariosDisponiveis}"
-                                          style="opacity: 0.6; font-size: 0.9em; margin-left: 4px;"/>
-                        </label>
+                                          style="font-weight: normal; color: var(--text-muted);" />
+                        </span>
 
                         <h:panelGroup id="gridHorarios" layout="block">
                             <ui:fragment rendered="#{empty pacienteController.horariosDisponiveis}">
                                 <div class="empty-box">
-                                    <i class="pi pi-calendar-times" style="font-size:32px; margin-bottom:12px; display:block; opacity:0.4;"></i>
-                                    <p style="margin:0; font-weight:600;">Nenhum horário livre.</p>
-                                    <p style="margin:0; font-size: 0.85rem;">Tente selecionar outra data no calendário.</p>
+                                    <i class="pi pi-info-circle" style="font-size: 2rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+                                    <p>Selecione uma data para visualizar os horários.</p>
                                 </div>
                             </ui:fragment>
 
                             <ui:fragment rendered="#{not empty pacienteController.horariosDisponiveis}">
                                 <div class="slots-grid">
                                     <ui:repeat value="#{pacienteController.horariosDisponiveis}" var="h">
-                                        <div>
-                                            <div class="time-slot" onclick="PF('confirmDialog#{h.id}').show()">
-                                                <span class="status">DISPONÍVEL</span>
-                                                <i class="pi pi-plus-circle icon-plus"></i>
-                                            </div>
-
-                                            <p:confirmDialog widgetVar="confirmDialog#{h.id}"
-                                                             header="Confirmar Agendamento"
-                                                             message="Você deseja confirmar sua consulta para este horário?"
-                                                             appendTo="@(body)"
-                                                             responsive="true">
-                                                
-                                                <p:commandButton value="Confirmar Agendamento"
-                                                                 process="@this"
-                                                                 action="#{pacienteController.agendar(h)}"
-                                                                 update="formAgendamento messages"
-                                                                 oncomplete="PF('confirmDialog#{h.id}').hide()"
-                                                                 styleClass="btn-confirm" />
-                                            </p:confirmDialog>
+                                        <div class="time-slot" onclick="PF('confirmDialog#{h.id}').show()">
+                                            <i class="pi pi-plus-circle icon-plus"></i>
+                                            <span class="status-tag">Livre</span>
                                         </div>
+
+                                        <p:dialog widgetVar="confirmDialog#{h.id}"
+                                                  header="Confirmar Agendamento"
+                                                  appendTo="@(body)"
+                                                  modal="true"
+                                                  draggable="false"
+                                                  resizable="false"
+                                                  width="350"
+                                                  styleClass="modal-agendamento">
+
+                                            <div style="text-align:center; padding: 1rem 0;">
+                                                <p style="color: var(--text-muted); margin-bottom: 1.5rem;">
+                                                    Para quem deseja agendar este horário?
+                                                </p>
+
+                                                <p:commandButton value="Para Mim"
+                                                                 icon="pi pi-user"
+                                                                 styleClass="btn-confirm w-100 mb-2"
+                                                                 action="#{pacienteController.agendamentoParaMim(h)}"
+                                                                 update="formAgendamento messages"
+                                                                 oncomplete="PF('confirmDialog#{h.id}').hide()" />
+
+                                                <p:commandButton value="Outra Pessoa"
+                                                                 icon="pi pi-users"
+                                                                 styleClass="ui-button-flat w-100"
+                                                                 action="#{pacienteController.prepararOutraPessoa(h)}"
+                                                                 process="@this"
+                                                                 update=":formAgendamento:dialogOutraPessoa"
+                                                                 oncomplete="PF('confirmDialog#{h.id}').hide(); PF('dialogOutraPessoa').show();" />
+                                            </div>
+                                        </p:dialog>
                                     </ui:repeat>
                                 </div>
                             </ui:fragment>
@@ -278,7 +353,112 @@
                     </div>
                 </div>
 
-                <p:messages id="messages" closable="true" showDetail="true" style="margin-top: 24px;" />
+                <p:messages id="messages"
+                            closable="true"
+                            showDetail="true"
+                            style="margin-top: 2rem;" />
+
+                <p:dialog id="dialogOutraPessoa"
+                          widgetVar="dialogOutraPessoa"
+                          header="Dados do Paciente"
+                          modal="true"
+                          draggable="false"
+                          resizable="false"
+                          width="620"
+                          appendTo="@(body)"
+                          styleClass="modal-agendamento">
+
+                    <div class="guest-helper">
+                        Preencha os dados da pessoa que será atendida neste horário.
+                    </div>
+
+                    <div class="guest-grid">
+
+                        <div class="field-wrap full">
+                            <p:outputLabel for="nomeConvidado" value="Nome" />
+                            <p:inputText id="nomeConvidado"
+                                         value="#{pacienteController.pacienteConvidado.nome}"
+                                         required="true"
+                                         requiredMessage="Informe o nome do paciente convidado."
+                                         style="width:100%" />
+                        </div>
+
+                        <div class="field-wrap">
+                            <p:outputLabel for="cpfConvidado" value="CPF" />
+                            <p:inputMask id="cpfConvidado"
+                                         mask="999.999.999-99"
+                                         value="#{pacienteController.pacienteConvidado.cpf}"
+                                         style="width:100%" />
+                        </div>
+
+                        <div class="field-wrap">
+                            <p:outputLabel for="nascimentoConvidado" value="Nascimento" />
+                            <p:inputMask id="nascimentoConvidado"
+                                         mask="99/99/9999"
+                                         value="#{pacienteController.pacienteConvidado.nascimento}"
+                                         style="width:100%" />
+                        </div>
+
+                        <div class="field-wrap">
+                            <p:outputLabel for="sexoConvidado" value="Sexo" />
+                            <p:selectOneMenu id="sexoConvidado"
+                                             value="#{pacienteController.pacienteConvidado.sexo}"
+                                             style="width:100%">
+                                <f:selectItem itemLabel="Selecione" itemValue="" />
+                                <f:selectItem itemLabel="Masculino" itemValue="M" />
+                                <f:selectItem itemLabel="Feminino" itemValue="F" />
+                            </p:selectOneMenu>
+                        </div>
+
+                        <div class="field-wrap">
+                            <p:outputLabel for="telefoneConvidado" value="Telefone" />
+                            <p:inputMask id="telefoneConvidado"
+                                         mask="(99) 9999-9999"
+                                         value="#{pacienteController.pacienteConvidado.telefone}"
+                                         style="width:100%" />
+                        </div>
+
+                        <div class="field-wrap">
+                            <p:outputLabel for="celularConvidado" value="Celular" />
+                            <p:inputMask id="celularConvidado"
+                                         mask="(99) 99999-9999"
+                                         value="#{pacienteController.pacienteConvidado.celular}"
+                                         style="width:100%" />
+                        </div>
+
+                        <div class="field-wrap full">
+                            <p:outputLabel for="emailConvidado" value="E-mail" />
+                            <p:inputText id="emailConvidado"
+                                         value="#{pacienteController.pacienteConvidado.email}"
+                                         style="width:100%" />
+                        </div>
+
+                        <div class="field-wrap full">
+                            <label>WhatsApp</label>
+                            <div class="wpp-inline">
+                                <p:selectBooleanCheckbox id="wppConvidado"
+                                                         value="#{pacienteController.pacienteConvidado.possuiWpp}" />
+                                <p:outputLabel for="wppConvidado" value="Este número também possui WhatsApp" />
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="dialog-actions">
+                        <p:commandButton value="Confirmar Agendamento"
+                                         icon="pi pi-check"
+                                         process="@this"
+                                         styleClass="btn-confirm"
+                                         action="#{pacienteController.agendar(pacienteController.horariosParaModal)}"
+                                         update="formAgendamento messages"
+                                         oncomplete="if (!args.validationFailed) PF('dialogOutraPessoa').hide();" />
+
+                        <p:commandButton value="Cancelar"
+                                         type="button"
+                                         styleClass="ui-button-secondary"
+                                         onclick="PF('dialogOutraPessoa').hide();" />
+                    </div>
+                </p:dialog>
 
             </h:form>
         </div>

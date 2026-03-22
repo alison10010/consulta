@@ -24,9 +24,11 @@ import org.springframework.web.context.annotation.SessionScope;
 import com.consulta.Enum.StatusConsulta;
 import com.consulta.model.Endereco;
 import com.consulta.model.Horario;
+import com.consulta.model.PacienteConvidado;
 import com.consulta.model.Pagamento;
 import com.consulta.model.Usuario;
 import com.consulta.repository.HorarioRepository;
+import com.consulta.repository.PacienteConvidadoRepository;
 import com.consulta.repository.PagamentoRepository;
 import com.consulta.repository.UsuarioRepository;
 import com.consulta.service.PagamentoService;
@@ -51,6 +53,8 @@ public class PacienteController implements Serializable {
     @Autowired private SimpMessagingTemplate messagingTemplate;
 
     @Autowired private UsuarioRepository usuarioRepository;
+    
+    @Autowired private PacienteConvidadoRepository pacienteConvidadoRepository;
 
     @Autowired private PasswordEncoder passwordEncoder;
     
@@ -76,6 +80,10 @@ public class PacienteController implements Serializable {
 
 
     private Usuario usuario = new Usuario();
+    
+    private boolean convidado = false;    
+    private PacienteConvidado pacienteConvidado = new PacienteConvidado();
+    private Horario horariosParaModal;
     
     private List<Horario> minhasConsultas;
     
@@ -141,6 +149,17 @@ public class PacienteController implements Serializable {
             );
         }
     }
+    
+    public void prepararOutraPessoa(Horario h){
+    	this.convidado = true;
+    	pacienteConvidado = new PacienteConvidado(); 
+    	this.horariosParaModal = h;
+    }
+    
+    public void agendamentoParaMim(Horario h){
+    	this.convidado = false;
+    	agendar(h);
+    }
 
     public void agendar(Horario h) {
         Usuario paciente = getUsuarioLogado();
@@ -165,6 +184,13 @@ public class PacienteController implements Serializable {
         // expira em 20 min
         horario.setPixExpiraEm(LocalDateTime.now(ZoneId.of("America/Rio_Branco")).plusMinutes(20));
         
+        if(convidado) {        	
+        	PacienteConvidado convidadoSalvo = pacienteConvidadoRepository.save(pacienteConvidado);        	
+        	horario.setPacienteConvidado(convidadoSalvo);
+        }else {
+        	horario.setPacienteConvidado(null);
+        }
+        
         horarioRepository.save(horario);
 
         // ✅ gera guia (controller já usa FETCH para evitar Lazy)
@@ -181,7 +207,7 @@ public class PacienteController implements Serializable {
 
         // vai pra guia
         Redirecionar.irParaURL("paciente/consultas");
-    }   
+    }
     
     // ===== PAGAMENTO =====
     public Pagamento getPagamentoModal() {
@@ -300,8 +326,18 @@ public class PacienteController implements Serializable {
         Horario h = horarioRepository.findByIdAndPaciente(horarioId, p)
                 .orElseThrow(() -> new RuntimeException("Consulta não encontrada."));
 
+        //  Se tiver convidado, remove ele
+        if (h.getPacienteConvidado() != null) {
+            PacienteConvidado convidado = h.getPacienteConvidado();
+            h.setPacienteConvidado(null); // remove vínculo primeiro
+            pacienteConvidadoRepository.delete(convidado); // remove do banco
+        }
+
+        // limpa paciente normal
         h.setPaciente(null);
         h.setDisponivel(true);
+        h.setPixExpiraEm(null);
+        
         horarioRepository.save(h);
 
         carregarMinhasConsultas();
