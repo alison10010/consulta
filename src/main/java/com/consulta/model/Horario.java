@@ -68,7 +68,7 @@ public class Horario implements Serializable {
     private Usuario paciente;
     
     // PACIENTE NAO CADASTRADO - pode ser null quando estiver livre
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "convidado_id")
     private PacienteConvidado pacienteConvidado;
     

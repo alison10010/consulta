@@ -97,6 +97,9 @@ public interface HorarioRepository extends JpaRepository<Horario, Long> {
     int deletarHorarioLivreDoColaborador(@Param("id") Long id,
                                          @Param("colaborador") Usuario colaborador);
     
+    // LIMIT DE BAGAS POR DIA
+    long countByColaboradorAndData(Usuario colaborador, LocalDate data);
+    
     
  // ====== PARA GERAR GUIA: traz colaborador + endereco + paciente carregados ======
     @Query("""

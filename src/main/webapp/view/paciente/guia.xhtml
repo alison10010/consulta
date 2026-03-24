@@ -378,16 +378,44 @@
                                     #{guiaController.guiaAtual.horario.vaga}
                                 </div>
                             </div>
-
-                            <div class="row2">
-                                <div class="k">Paciente</div>
-                                <div class="v">#{guiaController.guiaAtual.paciente.nome}</div>
-                            </div>
                             
-                            <div class="row2">
-                                <div class="k">CPF</div>
-                                <div class="v">#{guiaController.guiaAtual.paciente.cpf}</div>
-                            </div>
+                            <ui:fragment rendered="#{not empty guiaController.guiaAtual.horario.pacienteConvidado}">
+
+	                            <div class="row2">
+	                                <div class="k">Paciente</div>
+	                                <div class="v">#{guiaController.guiaAtual.horario.pacienteConvidado.nome}</div>
+	                            </div>
+	                            
+	                            <div class="row2">
+	                                <div class="k">CPF</div>
+	                                <div class="v">#{guiaController.guiaAtual.horario.pacienteConvidado.cpf}</div>
+	                            </div>
+	                            
+	                            <div class="row2">
+	                                <div class="k">Nascimento</div>
+	                                <div class="v">#{guiaController.guiaAtual.horario.pacienteConvidado.nascimento}</div>
+	                            </div>
+                            
+                            </ui:fragment>
+                            
+                            <ui:fragment rendered="#{empty guiaController.guiaAtual.horario.pacienteConvidado}">
+
+	                            <div class="row2">
+	                                <div class="k">Paciente</div>
+	                                <div class="v">#{guiaController.guiaAtual.paciente.nome}</div>
+	                            </div>
+	                            
+	                            <div class="row2">
+	                                <div class="k">CPF</div>
+	                                <div class="v">#{guiaController.guiaAtual.horario.paciente.cpf}</div>
+	                            </div>
+	                            
+	                            <div class="row2">
+	                                <div class="k">Nascimento</div>
+	                                <div class="v">#{guiaController.guiaAtual.horario.paciente.nascimento}</div>
+	                            </div>
+                            
+                            </ui:fragment>
 
                             <div class="row2">
                                 <div class="k">Validade</div>

@@ -43,7 +43,6 @@
                 margin: 0 auto;
             }
 
-            /* --- ESTILOS DO CARD (EXEMPLO 1) --- */
             .professional-card {
                 background: white;
                 border: 1px solid var(--stroke);
@@ -54,58 +53,189 @@
                 flex-direction: column;
                 transition: transform 0.2s;
             }
-            .professional-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-soft); }
-            
-            .prof-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1rem; }
-            
+
+            .professional-card:hover {
+                transform: translateY(-4px);
+                box-shadow: var(--shadow-soft);
+            }
+
+            .prof-header {
+                display: flex;
+                align-items: flex-start;
+                justify-content: space-between;
+                margin-bottom: 1rem;
+            }
+
             .avatar-placeholder {
-                width: 48px; height: 48px; background: #e2e8f0; border-radius: 50%;
-                display: flex; align-items: center; justify-content: center; color: #94a3b8; font-size: 1.5rem;
+                width: 48px;
+                height: 48px;
+                background: #e2e8f0;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #94a3b8;
+                font-size: 1.5rem;
             }
 
             .location-tag {
-                background: #f1f5f9; color: #475569; font-size: 0.7rem; font-weight: 700;
-                padding: 4px 10px; border-radius: 100px; text-transform: uppercase;
+                background: #f1f5f9;
+                color: #475569;
+                font-size: 0.7rem;
+                font-weight: 700;
+                padding: 4px 10px;
+                border-radius: 100px;
+                text-transform: uppercase;
             }
 
-            /* --- AGENDA E CHIPS --- */
-            .horarios-container { background: #f8fafc; border-radius: 8px; margin-top: 10px; padding: 10px; border: 1px solid #e2e8f0; }
-            .day-card { background: white; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 5px; overflow: hidden; }
-            .day-head { 
-                width: 100%; padding: 8px 12px; border: none; background: none; display: flex; 
-                justify-content: space-between; align-items: center; font-size: 0.75rem; font-weight: 600;
-            }
-            .day-body { display: none; padding: 10px; border-top: 1px solid #f1f5f9; background: #fafafa; }
-            .day-card.open .day-body { display: block; }
-            .horas-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
-            .hora-chip { 
-                background: white; border: 1px solid #cbd5e1; padding: 4px; border-radius: 4px; 
-                text-align: center; font-size: 0.7rem; font-weight: 600; color: var(--brand);
+            .horarios-container {
+                background: #f8fafc;
+                border-radius: 10px;
+                margin-top: 10px;
+                padding: 10px;
+                border: 1px solid #e2e8f0;
             }
 
-            /* --- BOTÕES --- */
+            .day-card {
+                background: white;
+                border: 1px solid #e2e8f0;
+                border-radius: 8px;
+                margin-bottom: 8px;
+                overflow: hidden;
+            }
+
+            .day-head {
+                width: 100%;
+                padding: 10px 12px;
+                border: none;
+                background: none;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                gap: 10px;
+                font-size: 0.78rem;
+                font-weight: 700;
+                color: var(--ink);
+                text-align: left;
+            }
+
+            .day-head .meta {
+                color: var(--muted);
+                font-size: 0.72rem;
+                font-weight: 700;
+                white-space: nowrap;
+            }
+
+            .day-body {
+                display: none;
+                padding: 12px;
+                border-top: 1px solid #f1f5f9;
+                background: #fafafa;
+            }
+
+            .day-card.open .day-body {
+                display: block;
+            }
+
+            .mini-pill-wrap {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+
+            .mini-pill {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                background: #fff;
+                border: 1px solid #dbeafe;
+                color: #1e3a8a;
+                padding: 6px 10px;
+                border-radius: 999px;
+                font-size: 0.72rem;
+                font-weight: 700;
+            }
+
+            .agenda-help {
+                margin-top: 10px;
+                font-size: 0.72rem;
+                color: var(--muted);
+                line-height: 1.4;
+            }
+
             .btn-primary-modern {
-                background: var(--brand); color: white; border: none; padding: 10px;
-                border-radius: 8px; font-weight: 700; transition: opacity 0.2s;
+                background: var(--brand);
+                color: white;
+                border: none;
+                padding: 10px;
+                border-radius: 8px;
+                font-weight: 700;
+                transition: opacity 0.2s;
             }
+
+            .btn-primary-modern:hover {
+                opacity: .92;
+                color: #fff;
+            }
+
             .btn-action-outline {
-                background: transparent; border: 1px solid var(--brand); color: var(--brand);
-                padding: 8px; border-radius: 8px; font-weight: 600; font-size: 0.8rem;
+                background: transparent;
+                border: 1px solid var(--brand);
+                color: var(--brand);
+                padding: 8px;
+                border-radius: 8px;
+                font-weight: 600;
+                font-size: 0.8rem;
             }
+
             .btn-premium {
                 background: linear-gradient(135deg, var(--brand), var(--brand-2));
-                color: #fff !important; font-weight: 700; border: none; padding: 10px 24px;
-                border-radius: 100px; box-shadow: 0 12px 30px rgba(43, 108, 255, .25);
-                display: flex; align-items: center; justify-content: center; text-decoration: none;
+                color: #fff !important;
+                font-weight: 700;
+                border: none;
+                padding: 10px 24px;
+                border-radius: 100px;
+                box-shadow: 0 12px 30px rgba(43, 108, 255, .25);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                text-decoration: none;
             }
-            .divider { height: 1px; background: rgba(15, 23, 42, .12); margin: 1.5rem 0; }
-            
-            .btn:hover {
-			    color: #FFF;
-			    background-color: var(--brand);
-			    border-color: var(--bs-btn-hover-border-color);
-			}
 
+            .divider {
+                height: 1px;
+                background: rgba(15, 23, 42, .12);
+                margin: 1.5rem 0;
+            }
+
+            .btn:hover {
+                color: #FFF;
+                background-color: var(--brand);
+                border-color: var(--brand);
+            }
+
+            @media (max-width: 768px) {
+                .svc-wrap {
+                    padding: 1rem .75rem;
+                }
+
+                .premium-card {
+                    padding: 1rem !important;
+                }
+
+                .professional-card {
+                    padding: 1rem;
+                }
+
+                .day-head {
+                    flex-direction: column;
+                    align-items: flex-start;
+                }
+
+                .day-head .meta {
+                    white-space: normal;
+                }
+            }
         </style>
 
         <div class="svc-wrap">
@@ -139,7 +269,10 @@
                     <button id="btnSearch" type="button" class="btn-premium flex-fill">
                         <i class="bi bi-search me-2"></i>Pesquisar
                     </button>
-                    <button type="button" class="btn btn-outline-secondary rounded-pill px-4" onclick="window.location.reload();">Limpar</button>
+                    <button type="button" class="btn btn-outline-secondary rounded-pill px-4"
+                            onclick="window.location.reload();">
+                        Limpar
+                    </button>
                 </div>
 
                 <div class="divider"></div>
@@ -160,8 +293,9 @@
 
         <script type="text/javascript">
         //<![CDATA[
-        (function(){
+        (function () {
             var API_BASE = "/consulta/api";
+
             var espSelect = document.getElementById("especialidadeSelect");
             var stateSelect = document.getElementById("stateSelect");
             var citySelect = document.getElementById("citySelect");
@@ -171,161 +305,326 @@
             var results = document.getElementById("results");
 
             var COLABORADORES = [];
-            var ESPECIALIDADES = [];
 
-            // UTILS
-            function esc(s){ return s == null ? "" : String(s).replace(/[&<>"']/g, function(m){ return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[m]; }); }
-            function normalize(s){ return (s || "").toString().trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""); }
-            function formatMoeda(v){ var n = Number(v); if (!isFinite(n)) return ""; return n.toLocaleString("pt-BR",{style:"currency",currency:"BRL"}); }
-            function formatDataBR(iso){ if (!iso) return ""; var p = String(iso).split("-"); return (p.length===3) ? (p[2]+"/"+p[1]+"/"+p[0]) : iso; }
-            async function fetchJson(url){ var r = await fetch(url, { headers: { "Accept": "application/json" }}); if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); }
-
-            // AGENDA
-            function renderAgenda(itens){
-                if(!Array.isArray(itens) || !itens.length) return '<div class="text-center small text-muted p-2">Sem horários para os próximos dias.</div>';
-                var map = new Map();
-                itens.forEach(function(h){ if (!h || !h.data) return; if(!map.has(h.data)) map.set(h.data, []); map.get(h.data).push(h); });
-                var html = "";
-                map.forEach(function(horas, data){
-                    horas.sort((a,b) => String(a.hora||"").localeCompare(String(b.hora||"")));
-                    var chips = horas.map(h => '<span class="hora-chip">' + esc(h.hora) + '</span>').join("");
-                    html += '<div class="day-card"><button type="button" class="day-head"><span>' + esc(formatDataBR(data)) + '</span><span class="meta text-muted">' + horas.length + ' slots <i class="bi bi-chevron-down ms-1"></i></span></button><div class="day-body"><div class="horas-grid">' + chips + '</div></div></div>';
+            function esc(s) {
+                return s == null ? "" : String(s).replace(/[&<>"']/g, function (m) {
+                    return {
+                        "&": "&amp;",
+                        "<": "&lt;",
+                        ">": "&gt;",
+                        "\"": "&quot;",
+                        "'": "&#039;"
+                    }[m];
                 });
+            }
+
+            function normalize(s) {
+                return (s || "")
+                    .toString()
+                    .trim()
+                    .toLowerCase()
+                    .normalize("NFD")
+                    .replace(/[\u0300-\u036f]/g, "");
+            }
+
+            function formatMoeda(v) {
+                var n = Number(v);
+                if (!isFinite(n)) return "";
+                try {
+                    return n.toLocaleString("pt-BR", {
+                        style: "currency",
+                        currency: "BRL"
+                    });
+                } catch (e) {
+                    return "R$ " + n.toFixed(2).replace(".", ",");
+                }
+            }
+
+            function formatDataBR(iso) {
+                if (!iso) return "";
+                var p = String(iso).split("-");
+                return (p.length === 3) ? (p[2] + "/" + p[1] + "/" + p[0]) : iso;
+            }
+
+            async function fetchJson(url) {
+                var r = await fetch(url, {
+                    headers: { "Accept": "application/json" }
+                });
+                if (!r.ok) throw new Error("HTTP " + r.status);
+                return r.json();
+            }
+
+            function renderAgenda(itens) {
+                if (!Array.isArray(itens) || !itens.length) {
+                    return '<div class="text-center small text-muted p-2">Sem disponibilidade</div>';
+                }
+
+                itens = itens.slice().sort(function (a, b) {
+                    return String((a && a.data) || "").localeCompare(String((b && b.data) || ""));
+                });
+
+                var html = "";
+
+                itens.forEach(function (x) {
+                    if (!x || !x.data) return;
+
+                    var data = x.data;
+                    var vagas = Number(x.vagas || 0);
+                    var janela = x.janela || "—";
+
+                    html += ''
+                        + '<div class="day-card">'
+                        + '  <button type="button" class="day-head">'
+                        + '    <span>' + esc(formatDataBR(data)) + '</span>'
+                        + '    <span class="meta">'
+                        +         esc(vagas) + ' vagas • ' + esc(janela)
+                        + '      <i class="bi bi-chevron-down ms-1"></i>'
+                        + '    </span>'
+                        + '  </button>'
+                        + '  <div class="day-body">'
+                        + '    <div class="mini-pill-wrap">'
+                        + '      <span class="mini-pill"><i class="bi bi-people-fill"></i> ' + esc(vagas) + ' vagas disponíveis</span>'
+                        + '      <span class="mini-pill"><i class="bi bi-clock-fill"></i> ' + esc(janela) + '</span>'
+                        + '    </div>'
+                        + '    <div class="agenda-help">'
+                        + '      Para agendar, selecione a especialidade e clique em <b>Agendar Consulta</b>.'
+                        + '    </div>'
+                        + '  </div>'
+                        + '</div>';
+                });
+
                 return html;
             }
 
-            window.__toggleHorarios = async function(colabId){
+            window.__toggleHorarios = async function (colabId) {
                 var el = document.getElementById("horarios_" + colabId);
                 if (!el) return;
-                if (el.style.display === "block"){ el.style.display = "none"; return; }
+
+                if (el.style.display === "block") {
+                    el.style.display = "none";
+                    return;
+                }
+
                 el.style.display = "block";
-                if (!el.dataset.loaded){
+
+                if (!el.dataset.loaded) {
                     el.dataset.loaded = "1";
                     el.innerHTML = '<div class="text-center py-2"><div class="spinner-border spinner-border-sm text-primary"></div></div>';
-                    try{
+
+                    try {
                         var dados = await fetchJson(API_BASE + "/colaboradores/" + colabId + "/horarios-disponiveis");
                         el.innerHTML = renderAgenda(dados);
-                        el.querySelectorAll(".day-head").forEach(h => {
-                            h.onclick = function(){ this.closest(".day-card").classList.toggle("open"); };
-                        });
-                    } catch(err){ el.innerHTML = '<div class="text-center small text-danger">Erro ao carregar agenda.</div>'; }
+
+                        var heads = el.querySelectorAll(".day-head");
+                        for (var i = 0; i < heads.length; i++) {
+                            heads[i].onclick = function () {
+                                var card = this.closest(".day-card");
+                                if (card) card.classList.toggle("open");
+                            };
+                        }
+                    } catch (err) {
+                        console.error(err);
+                        el.innerHTML = '<div class="text-center small text-danger">Erro ao carregar disponibilidade</div>';
+                    }
                 }
             };
 
-            // CARD RENDERER
             function cardColaborador(c, espFiltro) {
-			    var espParaEnviar = (c.especialidades || []).find(es => normalize(es.nome) === normalize(espFiltro));
-			    var horariosId = "horarios_" + c.id;
-			    
-			    // Montagem do endereço completo
-			    var enderecoCompleto = [c.endereco, c.numero, c.bairro].filter(Boolean).join(", ");
-			    var cidadeEstado = [c.cidade, c.estado].filter(Boolean).join(" - ");
-			
-			    var servicesHtml = (c.especialidades || []).map(function(es) {
-			        var isSelected = espFiltro && normalize(es.nome) === normalize(espFiltro);
-			        return ''
-			            + '<div class="service-item flex-column align-items-start gap-1 py-2" style="border-bottom: 1px solid #f1f5f9;">'
-			            + '  <div class="' + (isSelected ? 'fw-bold text-primary' : 'fw-semibold text-dark') + '" style="font-size:0.8rem;">' + esc(es.nome) + '</div>'
-			            + '  <div class="d-flex w-100 justify-content-between align-items-center">'
-			            + '    <span class="text-muted" style="font-size:0.7rem;">Particular: <strong>' + formatMoeda(es.valor) + '</strong></span>'
-			            + '    <span class="badge" style="font-size:0.65rem; background-color: #dcfce7; color: #166534; border: 1px solid #bbf7d0;">COM GUIA: <strong>' + formatMoeda(es.valorComGuia) + '</strong></span>'
-			            + '  </div>'
-			            + '</div>';
-			    }).join("");
-			
-			    return ''
-			        + '<div class="col-md-6 col-lg-4">'
-			        + '  <div class="professional-card">'
-			        + '    <div class="prof-header">'
-			        + '      <div class="avatar-placeholder"><i class="bi bi-person-fill"></i></div>'
-			        + '      <span class="location-tag">' + esc(cidadeEstado) +  '</span>'
-			        + '    </div>'
-			        + '    <h3 class="h6 fw-bold mb-0">' + esc(c.nome || "Profissional") + '</h3>'
-			        + '    <div class="flex-grow-1 my-2">'
-			        + '      <div class="fw-bold mb-2" style="font-size:0.65rem;color:#94a3b8;text-transform:uppercase; letter-spacing:0.5px;">Especialidade e Valores</div>'
-			        +        (servicesHtml || '<div class="small text-muted">Sem especialidades</div>')
-			        + '      <div class="mt-3 p-2 rounded-3" style="background-color: #fefce8; border: 1px dashed #fef08a;">'
-			        + '        <p class="mb-0 text-center" style="font-size: 0.65rem; color: #854d0e; font-weight: 600;">'
-			        + '          <i class="bi bi-cash me-1"></i> O valor da consulta é pago diretamente ao médico.'
-			        + '        </p>'
-			        + '        <p class="mb-0 text-center" style="font-size: 0.65rem; color: #854d0e; font-weight: 800;">'
-			        + '          <i class="bi bi-ticket-perforated me-1"></i> Valor da Guia: R$ 20,00'
-			        + '        </p>'
-			        + '      </div>'
-			        + '    </div>'
-			        + '    <div class="mt-auto">'
-			        + '      <button class="btn btn-action-outline w-100 mb-2" type="button" onclick="window.__toggleHorarios(' + c.id + ')">'
-			        + '        <i class="bi bi-calendar3 me-2"></i>Ver Horários Disponíveis'
-			        + '      </button>'
-			        + '      <div id="' + horariosId + '" style="display:none;" class="horarios-container"></div>'
-			        +        (espParaEnviar 
-			                   ? '<form action="/consulta/paciente/agendamento" method="POST" class="m-0 w-100 mt-2">'
-         		    + '                 <input type="hidden" name="id" value="' + esc(c.id) + '">'
-                    + '        			<input type="hidden" name="especialidade" value="' + esc(espParaEnviar.nome) + '">'
-                    + '        			<input type="hidden" name="valor" value="' + esc(espParaEnviar.valor) + '">'
-                    + '        			<input type="hidden" name="valorComGuia" value="' + esc(espParaEnviar.valorComGuia) + '">'
-			        + '  			<button type="submit" class="btn btn-primary-modern w-100">Agendar Consulta</button>'
-			                   + '</form>'
-			                   : '<div class="alert alert-warning py-2 mt-2 mb-0 text-center" style="font-size:0.7rem; border-radius: 8px;">Selecione especialidade para agendar</div>'
-			                 )
-			        + '    </div>'
-			        + '  </div>'
-			        + '</div>';
-			}
+                var espParaEnviar = null;
 
-            // FILTER LOGIC
-            function montarEspecialidades(){
-                var map = new Map();
-                COLABORADORES.forEach(c => { (c.especialidades || []).forEach(es => { if(es && es.nome) map.set(es.nome.trim(), true); }); });
-                ESPECIALIDADES = Array.from(map.keys()).sort((a,b) => a.localeCompare(b, "pt-BR"));
+                if (espFiltro) {
+                    espParaEnviar = (c.especialidades || []).find(function (es) {
+                        return normalize(es && es.nome) === normalize(espFiltro);
+                    }) || null;
+                }
+
+                var horariosId = "horarios_" + c.id;
+                var cidadeEstado = [c.cidade, c.estado].filter(Boolean).join(" - ");
+
+                var servicesHtml = (c.especialidades || []).map(function (es) {
+                    if (!es || !es.nome) return "";
+
+                    var isSelected = espFiltro && normalize(es.nome) === normalize(espFiltro);
+                    var vNormal = (es.valor != null) ? formatMoeda(es.valor) : "—";
+                    var vGuia = (es.valorComGuia != null) ? formatMoeda(es.valorComGuia) : "—";
+                    var infoRegistro = (es.conselho && es.registro)
+                        ? esc(es.conselho) + " - " + esc(es.registro)
+                        : "";
+
+                    return ''
+                        + '<div class="service-item flex-column align-items-start gap-1 py-2" style="border-bottom: 1px solid #f1f5f9;">'
+                        + '  <div class="d-flex justify-content-between align-items-start w-100 gap-2">'
+                        + '    <div class="' + (isSelected ? 'fw-bold text-primary' : 'fw-semibold text-dark') + '" style="font-size:0.8rem;">'
+                        +         esc(es.nome)
+                        + '    </div>'
+                        + '    <span class="badge text-secondary border" style="font-size:0.6rem; background: #f8fafc;">'
+                        +         infoRegistro
+                        + '    </span>'
+                        + '  </div>'
+                        + '  <div class="d-flex w-100 justify-content-between align-items-center">'
+                        + '    <span class="text-muted" style="font-size:0.7rem;">Particular: <strong>' + esc(vNormal) + '</strong></span>'
+                        + '    <span class="badge" style="font-size:0.65rem; background-color:#dcfce7; color:#166534; border:1px solid #bbf7d0;">'
+                        + '      COM GUIA: <strong>' + esc(vGuia) + '</strong>'
+                        + '    </span>'
+                        + '  </div>'
+                        + '</div>';
+                }).join("");
+
+                return ''
+                    + '<div class="col-md-6 col-lg-4">'
+                    + '  <div class="professional-card">'
+                    + '    <div class="prof-header">'
+                    + '      <div class="avatar-placeholder"><i class="bi bi-person-fill"></i></div>'
+                    + '      <span class="location-tag">' + esc(cidadeEstado || "—") + '</span>'
+                    + '    </div>'
+                    + '    <h3 class="h6 fw-bold mb-1">' + esc(c.nome || "Profissional") + '</h3>'
+                    + '    <div class="flex-grow-1 my-2">'
+                    + '      <div class="fw-bold mb-2" style="font-size:0.65rem;color:#94a3b8;text-transform:uppercase; letter-spacing:0.5px;">Especialidade e Valores</div>'
+                    +        (servicesHtml || '<div class="small text-muted">Sem especialidades</div>')
+                    + '      <div class="mt-3 p-2 rounded-3" style="background-color:#fefce8; border:1px dashed #fef08a;">'
+                    + '        <p class="mb-0 text-center" style="font-size:0.65rem; color:#854d0e; font-weight:600;">'
+                    + '          <i class="bi bi-cash me-1"></i> O valor da consulta é pago diretamente ao médico.'
+                    + '        </p>'
+                    + '        <p class="mb-0 text-center" style="font-size:0.65rem; color:#854d0e; font-weight:800;">'
+                    + '          <i class="bi bi-ticket-perforated me-1"></i> Valor da Guia: R$ 20,00'
+                    + '        </p>'
+                    + '      </div>'
+                    + '    </div>'
+                    + '    <div class="mt-auto">'
+                    + '      <button class="btn btn-action-outline w-100 mb-2" type="button" onclick="window.__toggleHorarios(' + Number(c.id) + ')">'
+                    + '        <i class="bi bi-calendar3 me-2"></i>Ver Horários Disponíveis'
+                    + '      </button>'
+                    + '      <div id="' + horariosId + '" style="display:none;" class="horarios-container"></div>'
+                    +      (
+                                espParaEnviar
+                                ? '<form action="/consulta/paciente/agendamento" method="POST" class="m-0 w-100 mt-2">'
+                                    + '<input type="hidden" name="id" value="' + esc(c.id) + '"/>'
+                                    + '<input type="hidden" name="especialidade" value="' + esc(espParaEnviar.nome) + '"/>'
+                                    + '<input type="hidden" name="valor" value="' + esc(espParaEnviar.valor) + '"/>'
+                                    + '<input type="hidden" name="valorComGuia" value="' + esc(espParaEnviar.valorComGuia) + '"/>'
+                                    + '<button type="submit" class="btn btn-primary-modern w-100">Agendar Consulta</button>'
+                                  + '</form>'
+                                : '<div class="alert alert-warning py-2 mt-2 mb-0 text-center" style="font-size:0.7rem; border-radius:8px;">Selecione especialidade para agendar</div>'
+                            )
+                    + '    </div>'
+                    + '  </div>'
+                    + '</div>';
             }
 
-            function preencherEspecialidades(){
-                espSelect.innerHTML = '<option value="">Qualquer especialidade</option>' + ESPECIALIDADES.map(e => '<option value="' + esc(e) + '">' + esc(e) + '</option>').join("");
-            }
-
-            function preencherEstados(){
+            function preencherEspecialidades(especialidadeSel) {
                 var set = new Set();
-                COLABORADORES.forEach(c => { if(c.estado) set.add(c.estado); });
-                stateSelect.innerHTML = '<option value="">Estado</option>' + Array.from(set).sort().map(uf => '<option value="' + esc(uf) + '">' + esc(uf) + '</option>').join("");
+
+                COLABORADORES.forEach(function (c) {
+                    (c.especialidades || []).forEach(function (es) {
+                        if (es && es.nome) set.add(String(es.nome));
+                    });
+                });
+
+                var esps = Array.from(set).sort(function (a, b) {
+                    return String(a).localeCompare(String(b), "pt-BR");
+                });
+
+                espSelect.innerHTML = '<option value="">Qualquer especialidade</option>'
+                    + esps.map(function (e) {
+                        var sel = (especialidadeSel && normalize(e) === normalize(especialidadeSel)) ? ' selected="selected"' : '';
+                        return '<option value="' + esc(e) + '"' + sel + '>' + esc(e) + '</option>';
+                    }).join("");
             }
 
-            function preencherMunicipios(){
-                var uf = stateSelect.value;
+            function preencherEstados(ufSel) {
                 var set = new Set();
-                COLABORADORES.forEach(c => { if(uf && c.estado === uf && c.cidade) set.add(c.cidade); });
+
+                COLABORADORES.forEach(function (c) {
+                    if (c.estado) set.add(String(c.estado));
+                });
+
+                var ufs = Array.from(set).sort();
+
+                stateSelect.innerHTML = '<option value="">Estado</option>'
+                    + ufs.map(function (uf) {
+                        var sel = (ufSel && uf === ufSel) ? ' selected="selected"' : '';
+                        return '<option value="' + esc(uf) + '"' + sel + '>' + esc(uf) + '</option>';
+                    }).join("");
+            }
+
+            function preencherMunicipios(uf, cidadeSel) {
                 citySelect.innerHTML = '<option value="">Cidade</option>';
                 citySelect.disabled = !uf;
-                Array.from(set).sort().forEach(m => { var opt = document.createElement("option"); opt.value = m; opt.textContent = m; citySelect.appendChild(opt); });
+
+                if (!uf) return;
+
+                var set = new Set();
+
+                COLABORADORES.forEach(function (c) {
+                    if (c.estado === uf && c.cidade) set.add(String(c.cidade));
+                });
+
+                var cidades = Array.from(set).sort(function (a, b) {
+                    return String(a).localeCompare(String(b), "pt-BR");
+                });
+
+                citySelect.innerHTML = '<option value="">Cidade</option>'
+                    + cidades.map(function (cid) {
+                        var sel = (cidadeSel && cid === cidadeSel) ? ' selected="selected"' : '';
+                        return '<option value="' + esc(cid) + '"' + sel + '>' + esc(cid) + '</option>';
+                    }).join("");
             }
 
-            function filtrar(){
-                var uf = stateSelect.value || "";
-                var municipio = citySelect.value || "";
-                var esp = espSelect.value || "";
-                if (!esp) { alert("Por favor, selecione uma Especialidade."); return; }
-                var filtrados = COLABORADORES.filter(function(c){
-                    if (uf && c.estado !== uf) return false;
-                    if (municipio && c.cidade !== municipio) return false;
-                    return (c.especialidades || []).some(es => normalize(es.nome) === normalize(esp));
+            function atualizarBadge(esp, uf, cid) {
+                var parts = [];
+                if (esp) parts.push(esp);
+                if (uf) parts.push(uf);
+                if (cid) parts.push(cid);
+
+                badgeResumo.innerHTML = '<i class="bi bi-check-circle"></i> ' + (parts.length ? parts.map(esc).join(" • ") : "Geral");
+            }
+
+            function filtrarERenderizar() {
+                var esp = (espSelect && espSelect.value) ? espSelect.value : "";
+                var uf = (stateSelect && stateSelect.value) ? stateSelect.value : "";
+                var cid = (!citySelect.disabled && citySelect.value) ? citySelect.value : "";
+
+                if (!esp) {
+                    alert("Por favor, selecione uma Especialidade.");
+                    return;
+                }
+
+                var filtrados = COLABORADORES.filter(function (c) {
+                    var matchEsp = !esp || (c.especialidades || []).some(function (e) {
+                        return normalize(e && e.nome) === normalize(esp);
+                    });
+                    var matchUf = !uf || c.estado === uf;
+                    var matchCid = !cid || c.cidade === cid;
+                    return matchEsp && matchUf && matchCid;
                 });
-                results.innerHTML = filtrados.length ? filtrados.map(c => cardColaborador(c, esp)).join("") : '<div class="col-12 text-center py-5">Nenhum profissional encontrado para os filtros selecionados.</div>';
-                resultCount.textContent = filtrados.length;
-                badgeResumo.innerHTML = '<i class="bi bi-check-circle"></i> ' + [esp, uf, municipio].filter(Boolean).join(" • ");
+
+                results.innerHTML = filtrados.length
+                    ? filtrados.map(function (c) { return cardColaborador(c, esp); }).join("")
+                    : '<div class="col-12 text-center py-5">Nenhum profissional encontrado para os filtros selecionados.</div>';
+
+                resultCount.textContent = String(filtrados.length);
+                atualizarBadge(esp, uf, cid);
             }
 
             async function init() {
                 try {
                     var colaboradores = await fetchJson(API_BASE + "/colaboradores");
                     COLABORADORES = Array.isArray(colaboradores) ? colaboradores : [];
-                    montarEspecialidades();
+
                     preencherEspecialidades();
                     preencherEstados();
-                } catch (e) { results.innerHTML = '<div class="col-12 text-center p-4">Erro ao carregar dados da API.</div>'; }
+                } catch (err) {
+                    console.error(err);
+                    results.innerHTML = '<div class="col-12 text-center p-4">Erro ao carregar dados da API.</div>';
+                }
             }
 
-            btnSearch.addEventListener("click", filtrar);
-            stateSelect.addEventListener("change", preencherMunicipios);
+            btnSearch.addEventListener("click", filtrarERenderizar);
+
+            stateSelect.addEventListener("change", function () {
+                preencherMunicipios(stateSelect.value, "");
+            });
+
             init();
         })();
         //]]>
