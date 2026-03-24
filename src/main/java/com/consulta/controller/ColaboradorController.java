@@ -415,7 +415,7 @@ public class ColaboradorController implements Serializable {
         syncEnderecoParaSelects();
 
         Mensagens.info("Endereço atualizado com sucesso!", "");
-        Redirecionar.irParaURL("endereco");
+        Redirecionar.irParaURL("colaborador/endereco");
     }
 
     // ===== Municipios =====
