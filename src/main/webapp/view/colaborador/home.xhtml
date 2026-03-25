@@ -48,7 +48,7 @@
             }
 
             .pl-wrap{
-              padding:18px 14px;              
+              padding:18px 14px;
               border-radius:22px;
             }
 
@@ -98,7 +98,7 @@
               color:#fff !important;
               font-weight:600 !important;
               border-radius:999px !important;
-              padding:.2rem .9rem !important;
+              padding:.55rem 1rem !important;
               box-shadow:0 16px 34px rgba(43,108,255,.18);
             }
 
@@ -390,6 +390,7 @@
               justify-content:center;
               align-items:center;
               gap:8px;
+              flex-wrap:wrap;
             }
 
             .custom-modal.ui-dialog{
@@ -595,6 +596,127 @@
               font-weight:600 !important;
             }
 
+            /* Modal novo */
+            .patient-modal-shell{
+              padding:18px;
+              background:linear-gradient(180deg, #f8fbff 0%, #ffffff 100%);
+            }
+
+            .patient-modal-card{
+              border:1px solid rgba(15,23,42,.08);
+              border-radius:22px;
+              background:#fff;
+              overflow:hidden;
+              box-shadow:0 18px 40px rgba(15,23,42,.08);
+            }
+
+            .patient-top{
+              padding:26px 22px 20px;
+              text-align:center;
+              background:
+                radial-gradient(circle at top right, rgba(122,92,255,.12), transparent 35%),
+                radial-gradient(circle at top left, rgba(43,108,255,.12), transparent 35%),
+                linear-gradient(180deg, #fcfdff 0%, #f8fbff 100%);
+              border-bottom:1px solid rgba(15,23,42,.06);
+            }
+
+            .patient-top .patient-avatar{
+              margin:0 auto 14px;
+            }
+
+            .patient-subtitle{
+              font-size:13px;
+              color:var(--muted);
+              margin-top:6px;
+              line-height:1.45;
+            }
+
+            .patient-status{
+              margin-top:14px;
+              display:inline-flex;
+              align-items:center;
+              gap:8px;
+              padding:8px 14px;
+              border-radius:999px;
+              background:rgba(43,108,255,.08);
+              color:var(--brand);
+              font-size:12px;
+              font-weight:600;
+              border:1px solid rgba(43,108,255,.12);
+            }
+
+            .patient-body{
+              padding:22px;
+            }
+
+            .patient-section-title{
+              font-size:12px;
+              font-weight:600;
+              letter-spacing:.10em;
+              text-transform:uppercase;
+              color:var(--brand);
+              margin-bottom:16px;
+            }
+
+            .patient-grid{
+              display:grid;
+              grid-template-columns:repeat(2, minmax(0,1fr));
+              gap:14px;
+            }
+
+            .patient-info-card{
+              border:1px solid rgba(15,23,42,.08);
+              border-radius:18px;
+              padding:16px;
+              background:linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
+              min-width:0;
+            }
+
+            .patient-info-card.full{
+              grid-column:1 / -1;
+            }
+
+            .patient-info-top{
+              display:flex;
+              align-items:center;
+              gap:10px;
+              margin-bottom:10px;
+            }
+
+            .patient-info-icon{
+              width:38px;
+              height:38px;
+              border-radius:12px;
+              display:flex;
+              align-items:center;
+              justify-content:center;
+              background:rgba(43,108,255,.09);
+              color:var(--brand);
+              border:1px solid rgba(43,108,255,.12);
+              flex:0 0 auto;
+            }
+
+            .patient-info-label{
+              font-size:11px;
+              font-weight:600;
+              color:var(--muted);
+              text-transform:uppercase;
+              letter-spacing:.08em;
+              line-height:1.3;
+            }
+
+            .patient-info-value{
+              font-size:15px;
+              font-weight:600;
+              color:var(--ink);
+              word-break:break-word;
+              line-height:1.5;
+            }
+
+            .opacity-50{
+              opacity:.5;
+            }
+
             @media (max-width: 1100px){
               .hero-strip{
                 grid-template-columns:1fr;
@@ -723,6 +845,30 @@
               .info-value{
                 font-size:13px !important;
               }
+
+              .patient-modal-shell{
+                padding:10px;
+              }
+
+              .patient-top{
+                padding:20px 16px 16px;
+              }
+
+              .patient-body{
+                padding:16px;
+              }
+
+              .patient-grid{
+                grid-template-columns:1fr;
+              }
+
+              .patient-info-card.full{
+                grid-column:auto;
+              }
+
+              .patient-info-value{
+                font-size:13px;
+              }
             }
         </style>
 
@@ -830,7 +976,7 @@
                                         <div>
                                             <div class="box-title" style="margin:0 0 8px 0;">
                                                 <i class="pi pi-clock"></i> Horários do Dia
-                                            </div>                                            
+                                            </div>
                                         </div>
 
                                         <div class="summary-chip">
@@ -907,7 +1053,7 @@
                                                                      title="Ver Ficha do Paciente"
                                                                      styleClass="rounded-button ui-button-info ui-button-flat"
                                                                      process="@this"
-                                                                     rendered="#{not h.disponivel and h.paciente != null}"
+                                                                     rendered="#{not h.disponivel and (h.paciente != null or h.pacienteConvidado != null)}"
                                                                      actionListener="#{colaboradorController.abrirPaciente(h.paciente, h)}"
                                                                      update=":frmLista:dlgPacienteContent"
                                                                      oncomplete="PF('dlgPaciente').show()" />
@@ -925,62 +1071,90 @@
                                   header="Ficha do Paciente"
                                   modal="true"
                                   responsive="true"
-                                  width="500"
+                                  width="560"
+                                  appendTo="@(body)"
+                                  closable="true"
+                                  resizable="false"
+                                  fitViewport="true"
                                   styleClass="custom-modal">
 
                             <h:panelGroup id="dlgPacienteContent" layout="block">
-                                <ui:fragment rendered="#{not empty colaboradorController.pacienteSelecionado}">
-                                    <div class="info-card">
-                                        <div class="patient-header">
-                                            <div class="patient-avatar">
-                                                <i class="pi pi-user"></i>
+                                <ui:fragment rendered="#{not empty colaboradorController.pacienteSelecionado or not empty colaboradorController.pacienteConvidadoModal}">
+                                    <div class="patient-modal-shell">
+                                        <div class="patient-modal-card">
+
+                                            <div class="patient-top">
+                                                <div class="patient-avatar">
+                                                    <i class="pi #{not empty colaboradorController.pacienteConvidadoModal ? 'pi-user-plus' : 'pi-user'}"></i>
+                                                </div>
+
+                                                <h3 class="patient-name">
+                                                    #{not empty colaboradorController.pacienteConvidadoModal ? colaboradorController.pacienteConvidadoModal.nome : colaboradorController.pacienteSelecionado.nome}
+                                                </h3>
+
+                                                <div class="patient-subtitle">
+                                                    Informações completas do paciente selecionado
+                                                </div>
+
+                                                <span class="patient-status">
+                                                    <i class="pi #{not empty colaboradorController.pacienteConvidadoModal ? 'pi-users' : 'pi-check-circle'}"></i>
+                                                    #{not empty colaboradorController.pacienteConvidadoModal ? 'Paciente Convidado' : 'Paciente cadastrado'}
+                                                </span>
                                             </div>
 
-                                            <h3 class="patient-name">#{colaboradorController.pacienteSelecionado.nome}</h3>
+                                            <div class="patient-body">
+                                                <div class="patient-section-title">Dados do paciente</div>
 
-                                            <div style="margin-top:10px;">
-                                                <span class="badge badge-free">Paciente Ativo</span>
+                                                <div class="patient-grid">
+
+                                                    <div class="patient-info-card full">
+                                                        <div class="patient-info-top">
+                                                            <div class="patient-info-icon">
+                                                                <i class="pi pi-id-card"></i>
+                                                            </div>
+                                                            <div class="patient-info-label">Documento (CPF)</div>
+                                                        </div>
+                                                        <div class="patient-info-value">
+                                                            #{not empty colaboradorController.pacienteConvidadoModal ? colaboradorController.pacienteConvidadoModal.cpf : colaboradorController.pacienteSelecionado.cpf}
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="patient-info-card">
+                                                        <div class="patient-info-top">
+                                                            <div class="patient-info-icon">
+                                                                <i class="pi pi-phone"></i>
+                                                            </div>
+                                                            <div class="patient-info-label">Telefone</div>
+                                                        </div>
+                                                        <div class="patient-info-value">
+                                                            #{not empty colaboradorController.pacienteConvidadoModal ? colaboradorController.pacienteConvidadoModal.celular : colaboradorController.pacienteSelecionado.celular}
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="patient-info-card">
+                                                        <div class="patient-info-top">
+                                                            <div class="patient-info-icon">
+                                                                <i class="pi pi-envelope"></i>
+                                                            </div>
+                                                            <div class="patient-info-label">E-mail</div>
+                                                        </div>
+                                                        <div class="patient-info-value" style="font-size:0.85rem;">
+                                                            #{not empty colaboradorController.pacienteConvidadoModal ? colaboradorController.pacienteConvidadoModal.email : colaboradorController.pacienteSelecionado.email}
+                                                        </div>
+                                                    </div>
+
+                                                </div>
                                             </div>
+
+                                            <div class="dialog-actions">
+                                                <p:commandButton value="Fechar"
+                                                                 type="button"
+                                                                 icon="pi pi-times"
+                                                                 onclick="PF('dlgPaciente').hide()"
+                                                                 styleClass="ui-button-outlined ui-button-secondary" />
+                                            </div>
+
                                         </div>
-
-                                        <div class="info-row">
-                                            <div class="info-icon"><i class="pi pi-id-card"></i></div>
-                                            <div>
-                                                <span class="info-label">CPF</span>
-                                                <span class="info-value">#{colaboradorController.pacienteSelecionado.cpf}</span>
-                                            </div>
-                                        </div>
-
-                                        <div class="info-row">
-                                            <div class="info-icon"><i class="pi pi-calendar"></i></div>
-                                            <div>
-                                                <span class="info-label">Data de Nascimento</span>
-                                                <span class="info-value">#{colaboradorController.pacienteSelecionado.nascimento}</span>
-                                            </div>
-                                        </div>
-
-                                        <div class="info-row">
-                                            <div class="info-icon"><i class="pi pi-envelope"></i></div>
-                                            <div>
-                                                <span class="info-label">E-mail de Contato</span>
-                                                <span class="info-value">#{colaboradorController.pacienteSelecionado.email}</span>
-                                            </div>
-                                        </div>
-
-                                        <div class="info-row">
-                                            <div class="info-icon"><i class="pi pi-phone"></i></div>
-                                            <div>
-                                                <span class="info-label">WhatsApp / Telefone</span>
-                                                <span class="info-value">#{colaboradorController.pacienteSelecionado.telefone}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="dialog-actions">
-                                        <p:commandButton value="Fechar"
-                                                         type="button"
-                                                         onclick="PF('dlgPaciente').hide()"
-                                                         styleClass="ui-button-flat ui-button-plain" />
                                     </div>
                                 </ui:fragment>
                             </h:panelGroup>
