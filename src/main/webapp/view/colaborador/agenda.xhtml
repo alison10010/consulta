@@ -12,174 +12,301 @@
         <style>
             :root {
                 --brand: #2b6cff;
+                --brand-dark: #1d4ed8;
+                --brand-soft: #eff6ff;
                 --ink: #0f172a;
                 --bg: #f8fafc;
-                --border: rgba(15,23,42,.1);
+                --border: rgba(15,23,42,.08);
                 --muted: #64748b;
+                --success: #10b981;
+                --danger: #ef4444;
+                --white: #ffffff;
+                --shadow-sm: 0 4px 12px rgba(15, 23, 42, 0.04);
+                --shadow-md: 0 20px 45px rgba(15, 23, 42, 0.1);
+                --radius-lg: 18px;
+                --radius-md: 12px;
             }
 
-            /* Layout Principal Corrigido */
+            body { background-color: var(--bg); }
+
+            /* Container Principal */
+            .agenda-wrapper {
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 20px;
+            }
+
             .agenda-container {
                 display: flex;
-                flex-direction: row; /* Garante lado a lado */
-                gap: 30px;
-                background: #fff;
-                padding: 25px;
-                border-radius: 16px;
-                box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+                flex-direction: row;
+                gap: 24px;
                 margin-top: 20px;
                 align-items: flex-start;
             }
 
-            /* Coluna do Calendário (Fixa) */
+            /* Lateral Esquerda (Calendário) */
             .calendar-side {
-                flex: 0 0 320px; /* Largura fixa para o calendário não quebrar */
+                flex: 0 0 340px;
+                background: var(--white);
+                padding: 20px;
+                border-radius: var(--radius-lg);
+                border: 1px solid var(--border);
+                box-shadow: var(--shadow-sm);
                 position: sticky;
                 top: 20px;
             }
 
-            /* Coluna da Lista (Flexível) */
-            .list-side {
-                flex: 1; /* Ocupa o resto do espaço */
-                min-width: 0; /* Evita quebra de layout com nomes longos */
-            }
-
-            /* Reset de estilos do PrimeFaces Calendar */
-            .ui-datepicker-inline {
+            /* Customização do PrimeFaces Calendar Inline */
+            .calendar-side .ui-datepicker-inline {
                 width: 100% !important;
-                border: 1px solid var(--border) !important;
-                padding: 10px !important;
-                border-radius: 12px !important;
-                background: #fff !important;
+                border: none !important;
+                padding: 0 !important;
+                font-family: inherit !important;
+            }
+            .ui-datepicker-header { background: transparent !important; border: none !important; color: var(--ink) !important; }
+            .ui-state-active { background: var(--brand) !important; color: white !important; border-radius: 50%; }
+
+            /* Lista de Horários */
+            .list-side {
+                flex: 1;
+                min-width: 0;
             }
 
-            /* Estilo da Linha de Horário */
+            .section-label {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                font-size: 0.75rem;
+                text-transform: uppercase;
+                color: var(--muted);
+                font-weight: 600;
+                margin-bottom: 15px;
+                letter-spacing: 0.05em;
+            }
+
+            /* Cards de Horário */
             .slot-row {
                 display: flex;
                 align-items: center;
-                padding: 15px 20px;
-                background: #fff;
+                padding: 16px;
+                background: var(--white);
                 border: 1px solid var(--border);
-                border-radius: 12px;
-                margin-bottom: 10px;
-                transition: all 0.2s;
+                border-radius: var(--radius-md);
+                margin-bottom: 12px;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                gap: 16px;
             }
 
-            .slot-row.is-free { border-left: 5px solid var(--brand); }
-            .slot-row.is-busy { border-left: 5px solid #10b981; background: #fcfdfd; }
+            .slot-row:hover {
+                border-color: var(--brand);
+                transform: translateX(4px);
+                box-shadow: var(--shadow-sm);
+            }
 
-            .slot-time { flex: 0 0 90px; font-weight: 600; font-size: 1.1rem; color: var(--ink); }
-            .slot-info { flex: 1; }
-            .slot-actions { display: flex; gap: 8px; }
+            .slot-row.is-free { border-left: 4px solid #e2e8f0; }
+            .slot-row.is-busy { border-left: 4px solid var(--success); }
 
-            /* Header da Agenda */
-            .agenda-header {
+            .slot-time {
+                flex: 0 0 65px;
+                height: 65px;
                 display: flex;
-                justify-content: space-between;
+                flex-direction: column;
                 align-items: center;
-                margin-bottom: 10px;
-            }
-
-            /* Responsividade para Celular */
-            @media (max-width: 900px) {
-                .agenda-container { flex-direction: column; }
-                .calendar-side { flex: 1 0 auto; width: 100%; }
+                justify-content: center;
+                background: var(--bg);
+                border-radius: var(--radius-md);
+                color: var(--ink);
+                font-weight: 600;
+                font-size: 1.1rem;
             }
             
-            .ui-button-sm { height: 32px !important; font-size: 12px !important; }
+            .slot-time small { font-size: 0.65rem; color: var(--muted); text-transform: uppercase; }
+
+            .slot-info { flex: 1; }
+            
+            .badge-status {
+                display: inline-block;
+                padding: 2px 8px;
+                border-radius: 6px;
+                font-size: 0.65rem;
+                font-weight: 600;
+                text-transform: uppercase;
+                margin-bottom: 4px;
+            }
+            .badge-free { background: var(--brand-soft); color: var(--brand); }
+            .badge-busy { background: #ecfdf5; color: var(--success); }
+
+            /* Empty State */
+            .empty-state {
+                padding: 60px 20px;
+                text-align: center;
+                background: var(--white);
+                border: 2px dashed #e2e8f0;
+                border-radius: var(--radius-lg);
+            }
+
+            /* Modal Estilizado */
+            .dlg-paciente-custom.ui-dialog { border-radius: var(--radius-lg) !important; border: none !important; }
+            .dlg-paciente-custom .ui-dialog-titlebar { background: var(--white) !important; color: var(--ink) !important; border-bottom: 1px solid var(--border) !important; }
+            
+            .patient-modal-card { overflow: hidden; border-radius: var(--radius-md); }
+            .patient-header-combined {
+                padding: 30px 20px;
+                text-align: center;
+                background: linear-gradient(to bottom, var(--brand-soft), #fff);
+            }
+
+            @media (max-width: 992px) {
+                .agenda-container { flex-direction: column; }
+                .calendar-side { flex: 1; width: 100%; position: relative; top: 0; }
+            }
         </style>
 
-        <div style="padding: 20px; background: var(--bg);">
+        <div class="agenda-wrapper">
             <h:form id="frmAgenda">
                 <p:growl id="messages" showDetail="true" />
 
-                <div class="agenda-header">
+                <div class="agenda-header" style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 25px;">
                     <div>
-                        <h2 style="margin:0; font-weight: 600; color: var(--ink);">Minha Agenda</h2>
-                        <p style="color: var(--muted); margin:0;">Gerencie seus atendimentos diários</p>
+                        <h2 style="margin:0; font-size: 1.8rem; font-weight: 600; color: var(--ink);">Agenda</h2>
+                        <p style="color: var(--muted); margin:0;">Organize seus compromissos e pacientes</p>
                     </div>
-                    <p:commandButton value="Hoje" icon="pi pi-calendar" 
+
+                    <p:commandButton value="Hoje"
+                                     icon="pi pi-calendar-plus"
                                      actionListener="#{colaboradorController.hoje}"
                                      update="cal gridHorarios"
-                                     styleClass="ui-button-outlined ui-button-secondary" />
+                                     styleClass="ui-button-raised ui-button-primary" />
                 </div>
 
                 <div class="agenda-container">
-                    
-                    <div class="calendar-side">
-                        <h4 style="font-size: 0.8rem; text-transform: uppercase; color: var(--muted); font-weight: 700;">1. Selecione a Data</h4>
-                        <p:calendar id="cal" value="#{colaboradorController.dataAgenda}"
-                                    mode="inline" locale="pt_BR" mindate="today">
-                            <p:ajax event="dateSelect" listener="#{colaboradorController.buscarAgendaDoDia}"
+                    <aside class="calendar-side">
+                        <span class="section-label"><i class="pi pi-calendar" /> Data de Atendimento</span>
+                        <p:calendar id="cal"
+                                    value="#{colaboradorController.dataAgenda}"
+                                    mode="inline"
+                                    locale="pt_BR"
+                                    mindate="today">
+                            <p:ajax event="dateSelect"
+                                    listener="#{colaboradorController.buscarAgendaDoDia}"
                                     update="gridHorarios" />
                         </p:calendar>
-                    </div>
+                    </aside>
 
-                    <div class="list-side">
-                        <h4 style="font-size: 0.8rem; text-transform: uppercase; color: var(--muted); font-weight: 700;">2. Horários do Dia</h4>
-                        
+                    <main class="list-side">
+                        <span class="section-label"><i class="pi pi-list" /> Horários Disponíveis</span>
+
                         <h:panelGroup id="gridHorarios" layout="block">
                             <ui:fragment rendered="#{empty colaboradorController.agendaDoDia}">
-                                <div style="padding: 40px; text-align: center; border: 2px dashed var(--border); border-radius: 12px; color: var(--muted);">
-                                    <i class="pi pi-clock" style="font-size: 2rem; opacity: 0.3;"></i>
-                                    <p class="mt-2">Nenhum horário disponível para esta data.</p>
+                                <div class="empty-state">
+                                    <i class="pi pi-calendar-times" style="font-size: 3rem; color: #cbd5e1; margin-bottom: 15px;"></i>
+                                    <h3 style="color: var(--ink); margin:0;">Tudo calmo por aqui</h3>
+                                    <p style="color: var(--muted);">Não existem horários configurados para esta data.</p>
                                 </div>
                             </ui:fragment>
 
                             <ui:repeat value="#{colaboradorController.agendaDoDia}" var="h" varStatus="status">
                                 <div class="slot-row #{h.disponivel ? 'is-free' : 'is-busy'}">
-                                    <div class="slot-time">#{status.index + 1}</div>
-                                    
+                                    <div class="slot-time">
+                                        <small>Ordem</small>
+                                        #{status.index + 1}
+                                    </div>
+
                                     <div class="slot-info">
                                         <h:panelGroup rendered="#{not h.disponivel}">
-                                            <div style="font-size: 0.7rem; font-weight: 800; color: #10b981; text-transform: uppercase;">Ocupado</div>
-                                            <div style="font-weight: 700; color: var(--ink);">#{h.paciente.nome}</div>
+                                            <span class="badge-status badge-busy">Ocupado</span>
+                                            <div style="font-weight: 600; color: var(--ink); font-size: 1.1rem;">
+                                                #{h.paciente.nome}
+                                            </div>
                                         </h:panelGroup>
-                                        
+
                                         <h:panelGroup rendered="#{h.disponivel}">
-                                            <div style="font-size: 0.7rem; font-weight: 800; color: var(--brand); text-transform: uppercase;">Disponível</div>
-                                            <div style="color: var(--muted); font-size: 0.9rem;">Horário livre</div>
+                                            <span class="badge-status badge-free">Disponível</span>
+                                            <div style="color: var(--muted); font-size: 0.95rem;">
+                                                Aguardando agendamento
+                                            </div>
                                         </h:panelGroup>
                                     </div>
 
                                     <div class="slot-actions">
-                                        <p:commandButton icon="pi pi-trash" value="Remover"
+                                        <p:commandButton icon="pi pi-user-edit"
+                                                         value="Ver Ficha"
+                                                         rendered="#{not h.disponivel}"
+                                                         actionListener="#{colaboradorController.abrirPaciente(h.paciente, h)}"
+                                                         oncomplete="PF('dlgPaciente').show()"
+                                                         update=":frmAgenda:dlgPacienteContent"
+                                                         styleClass="ui-button-outlined ui-button-secondary ui-button-sm" />
+
+                                        <p:commandButton icon="pi pi-trash"
                                                          rendered="#{h.disponivel}"
                                                          actionListener="#{colaboradorController.removerHorario(h.id)}"
                                                          update=":frmAgenda:gridHorarios :frmAgenda:messages"
-                                                         styleClass="ui-button-danger ui-button-flat ui-button-sm" />
-
-                                        <p:commandButton icon="pi pi-user" value="Ver Paciente"
-                                                         rendered="#{not h.disponivel}"
-                                                         actionListener="#{colaboradorController.abrirPaciente(h.paciente)}"
-                                                         oncomplete="PF('dlgPaciente').show()"
-                                                         update=":frmAgenda:dlgPacienteContent"
-                                                         styleClass="ui-button-secondary ui-button-outlined ui-button-sm" />
+                                                         styleClass="ui-button-danger ui-button-flat ui-button-sm">
+                                            <p:confirm header="Confirmar" message="Remover este horário da agenda?" icon="pi pi-exclamation-triangle" />
+                                        </p:commandButton>
                                     </div>
                                 </div>
                             </ui:repeat>
                         </h:panelGroup>
-                    </div>
+                    </main>
                 </div>
 
-                <p:dialog id="dlgPaciente" widgetVar="dlgPaciente" modal="true" header="Ficha do Paciente" responsive="true" width="400">
-                    <h:panelGroup id="dlgPacienteContent">
-                        <ui:fragment rendered="#{not empty colaboradorController.pacienteSelecionado}">
-                            <div style="text-align: center; padding: 10px;">
-                                <i class="pi pi-user" style="font-size: 3rem; color: var(--brand);"></i>
-                                <h3 style="margin: 10px 0 0;">#{colaboradorController.pacienteSelecionado.nome}</h3>
-                                <p style="color: var(--muted);">#{colaboradorController.pacienteSelecionado.cpf}</p>
-                                <hr style="border: 0; border-top: 1px solid var(--border);"/>
-                                <p><b>Telefone:</b> #{colaboradorController.pacienteSelecionado.telefone}</p>
-                                <p><b>E-mail:</b> #{colaboradorController.pacienteSelecionado.email}</p>
+                <p:dialog id="dlgPaciente"
+                          widgetVar="dlgPaciente"
+                          modal="true"
+                          responsive="true"
+                          width="480"
+                          header="Informações do Atendimento"
+                          styleClass="dlg-paciente-custom"
+                          appendTo="@(body)"
+                          closable="true"
+                          resizable="false">
+
+                    <h:panelGroup id="dlgPacienteContent" layout="block" class="patient-modal-card">
+                        <ui:fragment rendered="#{not empty colaboradorController.pacienteSelecionado or not empty colaboradorController.pacienteConvidadoModal}">
+                            
+                            <div class="patient-header-combined">
+                                <div class="patient-avatar" style="width:70px; height:70px; background: var(--brand); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; color: white; box-shadow: 0 10px 20px rgba(43,108,255,0.2);">
+                                    <i class="pi #{not empty colaboradorController.pacienteConvidadoModal ? 'pi-user-plus' : 'pi-user'}" style="font-size: 1.5rem;"></i>
+                                </div>
+                                <h3 style="margin:0; color: var(--ink);">
+                                    #{not empty colaboradorController.pacienteConvidadoModal ? colaboradorController.pacienteConvidadoModal.nome : colaboradorController.pacienteSelecionado.nome}
+                                </h3>
+                                <span class="patient-badge" style="margin-top:10px;">
+                                    #{not empty colaboradorController.pacienteConvidadoModal ? 'Paciente Convidado' : 'Paciente da Base'}
+                                </span>
+                            </div>
+
+                            <div style="padding: 20px;">
+                                <div class="patient-info-grid">
+                                    <div class="patient-info-card full" style="margin-bottom: 12px;">
+                                        <div class="patient-info-label">Documento (CPF)</div>
+                                        <div class="patient-info-value">#{not empty colaboradorController.pacienteConvidadoModal ? colaboradorController.pacienteConvidadoModal.cpf : colaboradorController.pacienteSelecionado.cpf}</div>
+                                    </div>
+                                    
+                                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                                        <div class="patient-info-card">
+                                            <div class="patient-info-label">Telefone</div>
+                                            <div class="patient-info-value">#{not empty colaboradorController.pacienteConvidadoModal ? colaboradorController.pacienteConvidadoModal.telefone : colaboradorController.pacienteSelecionado.telefone}</div>
+                                        </div>
+                                        <div class="patient-info-card">
+                                            <div class="patient-info-label">E-mail</div>
+                                            <div class="patient-info-value" style="font-size: 0.8rem;">#{not empty colaboradorController.pacienteConvidadoModal ? colaboradorController.pacienteConvidadoModal.email : colaboradorController.pacienteSelecionado.email}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="patient-actions-footer" style="background: #f8fafc; padding: 15px 20px; text-align: right; border-top: 1px solid var(--border);">
+                                <p:commandButton value="Fechar" type="button" onclick="PF('dlgPaciente').hide()" styleClass="ui-button-flat ui-button-secondary" />
                             </div>
                         </ui:fragment>
                     </h:panelGroup>
                 </p:dialog>
 
-                <p:confirmDialog global="true">
-                    <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no ui-button-flat" />
-                    <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes ui-button-danger" />
+                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" responsive="true" width="350">
+                    <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no ui-button-flat"/>
+                    <p:commandButton value="Sim, Remover" type="button" styleClass="ui-confirmdialog-yes ui-button-danger" />
                 </p:confirmDialog>
             </h:form>
         </div>

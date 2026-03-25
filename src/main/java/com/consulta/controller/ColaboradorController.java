@@ -28,10 +28,12 @@ import org.springframework.web.context.annotation.SessionScope;
 import com.consulta.model.Endereco;
 import com.consulta.model.Especialidade;
 import com.consulta.model.Horario;
+import com.consulta.model.PacienteConvidado;
 import com.consulta.model.Usuario;
 import com.consulta.model.UsuarioEspecialidade;
 import com.consulta.repository.EspecialidadeRepository;
 import com.consulta.repository.HorarioRepository;
+import com.consulta.repository.PacienteConvidadoRepository;
 import com.consulta.repository.UsuarioEspecialidadeRepository;
 import com.consulta.repository.UsuarioRepository;
 import com.consulta.service.FileStorageService;
@@ -67,6 +69,8 @@ public class ColaboradorController implements Serializable {
     @Autowired private HorarioRepository horarioRepository;
 
     @Autowired private EspecialidadeRepository especialidadeRepository; 
+    
+    @Autowired private PacienteConvidadoRepository pacienteConvidadoRepository;
     
     @Autowired private PasswordEncoder passwordEncoder;
     
@@ -110,9 +114,10 @@ public class ColaboradorController implements Serializable {
     private String conselho;
     private String registro;
     private UsuarioEspecialidade usuarioEspecialidade;
-    
-    
+        
     private Integer maxVagasDia = 10;
+    
+    private PacienteConvidado pacienteConvidadoModal; 
 
     private List<UsuarioEspecialidade> especialidadesDoUsuario = new ArrayList<>();
 
@@ -618,8 +623,13 @@ public class ColaboradorController implements Serializable {
         return pacienteSelecionado;
     }
 
-    public void abrirPaciente(Usuario p) {
-        this.pacienteSelecionado = p;
+    public void abrirPaciente(Usuario p, Horario h) {
+        this.pacienteSelecionado = p;        
+        if(h.getPacienteConvidado() != null) {
+        	this.pacienteConvidadoModal = pacienteConvidadoRepository.findById(h.getPacienteConvidado().getId()).orElse(null);
+        }else {
+        	this.pacienteConvidadoModal = null;
+        }
     }
 
     public void removerHorario(Long horarioId) {

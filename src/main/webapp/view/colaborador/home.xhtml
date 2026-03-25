@@ -908,7 +908,7 @@
                                                                      styleClass="rounded-button ui-button-info ui-button-flat"
                                                                      process="@this"
                                                                      rendered="#{not h.disponivel and h.paciente != null}"
-                                                                     actionListener="#{colaboradorController.abrirPaciente(h.paciente)}"
+                                                                     actionListener="#{colaboradorController.abrirPaciente(h.paciente, h)}"
                                                                      update=":frmLista:dlgPacienteContent"
                                                                      oncomplete="PF('dlgPaciente').show()" />
                                                 </div>
