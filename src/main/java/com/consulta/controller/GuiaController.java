@@ -69,13 +69,6 @@ public class GuiaController implements Serializable {
             throw new IllegalStateException("Este horário não pertence ao paciente logado.");
         }
 
-        // se já existe guia para este horário, abre com FETCH
-        guiaRepository.findByHorarioId(horarioId).ifPresent(existing -> {
-            guiaAtual = guiaRepository.buscarGuiaFetch(existing.getId()).orElse(existing);
-        });
-
-        if (guiaAtual != null) return;
-
         Usuario colaborador = h.getColaborador();
         Endereco e = (colaborador != null) ? colaborador.getEndereco() : null;
 
@@ -119,7 +112,7 @@ public class GuiaController implements Serializable {
         Guia salva = guiaRepository.save(guia);
 
         // ✅ Recarrega com FETCH (pra guia.xhtml ler colaborador/paciente/horario sem Lazy)
-        guiaAtual = guiaRepository.buscarGuiaFetch(salva.getId()).orElse(salva);
+        guiaRepository.buscarGuiaFetch(salva.getId()).orElse(salva);
     }
 
     public void abrirGuiaPorCodigo(String codigo) {

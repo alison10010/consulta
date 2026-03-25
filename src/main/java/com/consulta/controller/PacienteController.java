@@ -27,6 +27,7 @@ import com.consulta.model.Horario;
 import com.consulta.model.PacienteConvidado;
 import com.consulta.model.Pagamento;
 import com.consulta.model.Usuario;
+import com.consulta.repository.GuiaRepository;
 import com.consulta.repository.HorarioRepository;
 import com.consulta.repository.PacienteConvidadoRepository;
 import com.consulta.repository.PagamentoRepository;
@@ -55,6 +56,8 @@ public class PacienteController implements Serializable {
     @Autowired private UsuarioRepository usuarioRepository;
     
     @Autowired private PacienteConvidadoRepository pacienteConvidadoRepository;
+    
+    @Autowired private GuiaRepository guiaRepository;
 
     @Autowired private PasswordEncoder passwordEncoder;
     
@@ -174,6 +177,8 @@ public class PacienteController implements Serializable {
             buscarHorarios();
             return;
         }
+        
+        System.out.println("ID HORARIO:"+h.getId());
 
         horario.setPaciente(paciente);
         horario.setDisponivel(false);
@@ -332,7 +337,7 @@ public class PacienteController implements Serializable {
             h.setPacienteConvidado(null); // remove vínculo primeiro
             horarioRepository.save(h);
             
-            pacienteConvidadoRepository.delete(convidado); // remove do banco
+            pacienteConvidadoRepository.delete(convidado); // remove do banco            
         }
 
         // limpa paciente normal
@@ -342,6 +347,8 @@ public class PacienteController implements Serializable {
         h.setStatus(StatusConsulta.PROCESSANDO);
         
         horarioRepository.save(h);
+        
+        guiaRepository.deleteByHorarioId(h.getId());
 
         carregarMinhasConsultas();
         Mensagens.info("Cancelado!", "Sua consulta foi cancelada.");

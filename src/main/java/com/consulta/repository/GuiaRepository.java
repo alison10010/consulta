@@ -11,6 +11,8 @@ import org.springframework.data.repository.query.Param;
 import com.consulta.model.Guia;
 import com.consulta.model.Usuario;
 
+import jakarta.transaction.Transactional;
+
 public interface GuiaRepository extends JpaRepository<Guia, Long> {
 
     Optional<Guia> findByCodigo(String codigo);
@@ -58,6 +60,10 @@ public interface GuiaRepository extends JpaRepository<Guia, Long> {
 	                                     @Param("ini") LocalDateTime ini,
 	                                     @Param("fim") LocalDateTime fim,
 	                                     @Param("status") Guia.StatusGuia status);
+    
+    
+    @Transactional
+    void deleteByHorarioId(Long horarioId);
 }
 
 
