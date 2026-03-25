@@ -58,8 +58,6 @@ public class GuiaController implements Serializable {
         guiaAtual = null;
     }
 
-
-    /** Chame isso logo após o agendamento ser salvo */
     public void gerarGuiaDoAgendamento(Long horarioId, String esp, BigDecimal valor, BigDecimal valorComGuia) {
         Usuario paciente = getUsuarioLogadoEntity();
 
