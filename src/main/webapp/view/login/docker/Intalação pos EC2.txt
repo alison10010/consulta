@@ -47,7 +47,7 @@ sudo systemctl restart apache2
 sudo nano /etc/apache2/sites-available/consulta-proxy.conf
 
 <VirtualHost *:80>
-    ServerName ec2-44-211-117-179.compute-1.amazonaws.com
+    ServerName ec2-13-59-94-20.us-east-2.compute.amazonaws.com
 
     ProxyPreserveHost On
 
