@@ -187,6 +187,7 @@
     }
 
     .btn-primary-modern:hover {
+      color: white;
       box-shadow: 0 10px 20px rgba(43, 108, 255, 0.2);
       filter: brightness(1.1);
       transform: translateY(-1px);
@@ -234,7 +235,7 @@
         <a href="index.html" class="btn btn-link text-decoration-none fw-bold text-dark px-3 rounded-pill btn-nav-hover">
           Home
         </a>
-        <a href="/consulta/login" class="btn btn-link text-decoration-none fw-bold text-dark px-3 rounded-pill btn-nav-hover">
+        <a href="/consulta/" class="btn btn-link text-decoration-none fw-bold text-dark px-3 rounded-pill btn-nav-hover">
           Acessar
         </a>
         <a href="cadastro-painel.html" class="btn btn-primary rounded-pill px-4 shadow-sm fw-bold">
@@ -484,11 +485,17 @@
       + '        <i class="bi bi-calendar3 me-2"></i>Disponibilidade'
       + '      </button>'
       + '      <div id="' + horariosId + '" style="display:none;" class="horarios-container"></div>'
-      + '      ' + (
+      +      (
               espParaEnviar
-                ? '<a href="/consulta/login" class="btn btn-primary-modern w-100 mt-2">Agendar</a>'
-                : '<div class="alert alert-warning py-2 px-3 mt-2 mb-0 border-0 text-center" style="font-size:0.7rem; background:#fff7ed; color:#9a3412;">Selecione especialidade para agendar</div>'
-            )
+              ? '<form action="/consulta/paciente/agendamento" method="POST" class="m-0 w-100 mt-2">'
+                  + '<input type="hidden" name="id" value="' + esc(c.id) + '"/>'
+                  + '<input type="hidden" name="especialidade" value="' + esc(espParaEnviar.nome) + '"/>'
+                  + '<input type="hidden" name="valor" value="' + esc(espParaEnviar.valor) + '"/>'
+                  + '<input type="hidden" name="valorComGuia" value="' + esc(espParaEnviar.valorComGuia) + '"/>'
+                  + '<button type="submit" class="btn btn-primary-modern w-100">Agendar Consulta</button>'
+                + '</form>'
+              : '<div class="alert alert-warning py-2 mt-2 mb-0 text-center" style="font-size:0.7rem; border-radius:8px;">Selecione especialidade para agendar</div>'
+          )
       + '    </div>'
       + '  </div>'
       + '</div>';
