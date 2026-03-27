@@ -82,7 +82,7 @@ public class HomeController implements Serializable {
 		if(paciente) {
 			colaborador = false;
 			admin = false;
-			URL = "paciente/consultas";
+			URL = "paciente/servicos";
 		}
 		
 		if(admin) {

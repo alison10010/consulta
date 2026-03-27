@@ -143,7 +143,7 @@ public class PacienteController implements Serializable {
     public void buscarHorarios() {
     	if (colaboradorSelecionado != null && dataSelecionada != null) {
 
-            LocalTime agora = LocalTime.now();
+            LocalTime agora = LocalTime.MIN;
 
             horariosDisponiveis = horarioRepository.buscarHorariosValidos(
                     colaboradorSelecionado,
