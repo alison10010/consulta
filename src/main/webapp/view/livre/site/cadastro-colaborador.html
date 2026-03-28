@@ -176,15 +176,7 @@
       </a>
 
       <div class="d-flex align-items-center gap-2">
-        <a href="index.html" class="btn btn-link text-decoration-none fw-bold text-dark px-3 rounded-pill btn-nav-hover">
-          Home
-        </a>
-        <a href="/consulta/" class="btn btn-link text-decoration-none fw-bold text-dark px-3 rounded-pill btn-nav-hover">
-          Acessar
-        </a>
-        <a href="cadastro-painel.html" class="btn btn-primary rounded-pill px-4 shadow-sm fw-bold">
-          Cadastrar
-        </a>
+        <div id="menuUsuario"></div>
       </div>
     </div>
 </nav>
@@ -575,6 +567,56 @@
       }
     }
 </script>
+
+<script>
+
+  async function carregarMenuUsuario() {
+	  try {
+	    const resp = await fetch("/consulta/api/usuario/logado");
+	    const data = await resp.json();
+
+	    const container = document.getElementById("menuUsuario");
+
+	    if (data.logado) {
+	    	  // ✅ LOGADO
+	    	  container.innerHTML = `
+	    	    <div class="d-flex align-items-center gap-2 ms-lg-3 mt-3 mt-lg-0">
+	    		  <a href="index.html" class="btn btn-link text-decoration-none fw-bold px-3 rounded-pill btn-nav-hover d-flex align-items-center gap-2">
+	    	        <i class="bi bi-house-door"></i> Home
+	    	      </a>
+	    	      <a href="/consulta/" class="btn btn-link text-decoration-none px-3 btn-outline-premium btn-nav-hover rounded-pill d-inline-flex align-items-center gap-2">
+	    	        <i class="bi bi-calendar-check-fill"></i> Minhas Consultas
+	    	      </a>
+	    	      <a href="/consulta/logout" class="btn btn-primary rounded-pill px-4 shadow-sm d-inline-flex align-items-center gap-2">
+	    	        <i class="bi bi-box-arrow-right"></i> Deslogar
+	    	      </a>
+	    	    </div>
+	    	  `;
+	    	} else {
+	    	  // ❌ NÃO LOGADO
+	    	  container.innerHTML = `
+	    	    <div class="d-flex align-items-center gap-2 ms-lg-3 mt-3 mt-lg-0">
+	    		  <a href="index.html" class="btn btn-link text-decoration-none fw-bold px-3 rounded-pill btn-nav-hover d-flex align-items-center gap-2">
+	    	        <i class="bi bi-house-door"></i> Home
+	    	      </a>
+	    	      <a href="/consulta/" class="btn btn-link text-decoration-none fw-bold px-3 btn-outline-premium btn-nav-hover rounded-pill d-inline-flex align-items-center gap-2">
+	    	        <i class="bi bi-person-fill-lock"></i> Acessar
+	    	      </a>
+	    	      <a href="cadastro-painel.html" class="btn btn-primary rounded-pill px-4 shadow-sm d-inline-flex align-items-center gap-2">
+	    	        <i class="bi bi-person-plus-fill"></i> Cadastrar
+	    	      </a>
+	    	    </div>
+	    	  `;
+	    	}
+
+	  } catch (e) {
+	    console.error("Erro ao verificar login:", e);
+	  }
+	}
+
+  carregarMenuUsuario();
+  	
+  </script>
 
 </body>
 </html>

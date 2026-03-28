@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.consulta.controller.HomeController;
 import com.consulta.model.Horario;
 import com.consulta.record.ApiColaboradoresDTO;
 import com.consulta.repository.HorarioRepository;
@@ -36,6 +38,8 @@ public class ApiColaboradorRest implements Serializable {
 	@Autowired UsuarioEspecialidadeRepository usuarioEspecialidadeRepository;	
 	
 	@Autowired private HorarioRepository horarioRepository;
+	
+	@Autowired HomeController homeController;
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -118,8 +122,11 @@ public class ApiColaboradorRest implements Serializable {
 	    return ResponseEntity.ok(lista);
 	}
 
-
-
-
+	@GetMapping("/usuario/logado")
+	public Map<String, Object> logado() {
+	    Map<String, Object> resp = new HashMap<>();
+	    resp.put("logado", homeController.logado());
+	    return resp;
+	}
 
 }

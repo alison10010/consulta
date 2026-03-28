@@ -115,6 +115,10 @@
       border: 1px solid rgba(43,108,255,.28);
       background: rgba(255,255,255,.65);
     }
+    
+    .btn-outline-premium:hover{
+      border: 1px solid rgba(43,108,255,.28);
+    }
 
     .icon-pill {
       width: 38px; height: 38px;
@@ -236,14 +240,8 @@
           </li>
         </ul>
 
-        <div class="d-flex align-items-center gap-2 ms-lg-3 mt-3 mt-lg-0">
-          <a href="/consulta/" class="btn btn-link text-decoration-none fw-bold text-dark px-3 btn-outline-premium rounded-pill">
-            Acessar
-          </a>
-          <a href="cadastro-painel.html" class="btn btn-primary rounded-pill px-4 shadow-sm">
-            Cadastrar
-          </a>
-        </div>
+        <div id="menuUsuario"></div>
+        
       </div>
     </div>
   </nav>
@@ -780,6 +778,44 @@
     window.location.href = `resultados.html?${qs.toString()}`;
   }
 
+  async function carregarMenuUsuario() {
+	  try {
+	    const resp = await fetch("/consulta/api/usuario/logado");
+	    const data = await resp.json();
+
+	    const container = document.getElementById("menuUsuario");
+
+	    if (data.logado) {
+	    	  // ✅ LOGADO
+	    	  container.innerHTML = `
+	    	    <div class="d-flex align-items-center gap-2 ms-lg-3 mt-3 mt-lg-0">
+	    	      <a href="/consulta/" class="btn btn-link text-decoration-none px-3 btn-outline-premium btn-nav-hover rounded-pill d-inline-flex align-items-center gap-2">
+	    	        <i class="bi bi-calendar-check-fill"></i> Minhas Consultas
+	    	      </a>
+	    	      <a href="/consulta/logout" class="btn btn-primary rounded-pill px-4 shadow-sm d-inline-flex align-items-center gap-2">
+	    	        <i class="bi bi-box-arrow-right"></i> Deslogar
+	    	      </a>
+	    	    </div>
+	    	  `;
+	    	} else {
+	    	  // ❌ NÃO LOGADO
+	    	  container.innerHTML = `
+	    	    <div class="d-flex align-items-center gap-2 ms-lg-3 mt-3 mt-lg-0">
+	    	      <a href="/consulta/" class="btn btn-link text-decoration-none fw-bold px-3 btn-outline-premium btn-nav-hover rounded-pill d-inline-flex align-items-center gap-2">
+	    	        <i class="bi bi-person-fill-lock"></i> Acessar
+	    	      </a>
+	    	      <a href="cadastro-painel.html" class="btn btn-primary rounded-pill px-4 shadow-sm d-inline-flex align-items-center gap-2">
+	    	        <i class="bi bi-person-plus-fill"></i> Cadastrar
+	    	      </a>
+	    	    </div>
+	    	  `;
+	    	}
+
+	  } catch (e) {
+	    console.error("Erro ao verificar login:", e);
+	  }
+	}
+
   async function carregarDados(){
     // ✅ agora só precisa dos colaboradores
     const colaboradores = await fetchJson(`${API_BASE}/colaboradores`);
@@ -787,6 +823,8 @@
 
     // ✅ monta a lista de ESPECIALIDADES a partir de colaboradores.especialidades
     montarEspecialidades();
+
+    carregarMenuUsuario();
 
     // ✅ preenche os selects
     preencherEspecialidades();
@@ -811,6 +849,8 @@
     console.error(err);
     stateSelect.innerHTML = `<option value="" selected disabled>Erro ao carregar API</option>`;
   });
+
+  
 </script>
 
 

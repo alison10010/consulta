@@ -127,4 +127,8 @@ public class HomeController implements Serializable {
     public String resetPassword() {
         return "livre/recuperacao-senha";
     }
+	
+	public boolean logado() {
+	    return usuarioLogado != null;
+	}
 }
