@@ -76,6 +76,7 @@ public class ResponseController {
             usuario.setNascimento(dto.nascimento());
             usuario.setSexo(dto.sexo());
             usuario.setTelefone(dto.telefone());
+            usuario.setCelular(dto.telefone());
             usuario.setAcesso(dto.acesso());
             usuario.setTermoAceite(dto.termoAceite());
             usuario.setConselho(dto.conselho());
@@ -229,7 +230,8 @@ public class ResponseController {
 	        usuario.setEmail(usuarioDTO.email());
 	        usuario.setUsername(usuarioDTO.username());
 	        usuario.setAcesso("NORMAL");
-	   
+	        usuario.setCelular(usuarioDTO.telefone());
+	        
 	        usuario.setCpf(usuarioDTO.cpf());         
 	        usuario.setSexo(usuarioDTO.sexo());        
 	        usuario.setNascimento(usuarioDTO.nascimento()); 
