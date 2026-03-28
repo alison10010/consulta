@@ -208,7 +208,7 @@ public class PacienteController implements Serializable {
         // cria checkout do PIX (R$20)
         pagamentoService.gerarPix(h.getId(), new BigDecimal("0.50"));
 
-        Mensagens.info("Sucesso!", "Horário agendado para " + horario.getHora());
+        Mensagens.info("Sucesso!", "Horário agendado.");
 
         // vai pra guia
         Redirecionar.irParaURL("paciente/consultas");
