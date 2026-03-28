@@ -12,7 +12,7 @@ import com.github.benmanes.caffeine.cache.Caffeine;
 public class RateLimitService {
 
     // 6 requisições permitidas por 60 segundos (1 minuto)
-    private static final int MAX_REQUESTS = 6;
+    private static final int MAX_REQUESTS = 15;
     private static final int TIME_WINDOW_SECONDS = 60;
     
     // O Cache: Chave = IP (String), Valor = Contador (AtomicInteger)
