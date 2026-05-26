@@ -79,8 +79,6 @@ public class ResponseController {
             usuario.setCelular(dto.telefone());
             usuario.setAcesso(dto.acesso());
             usuario.setTermoAceite(dto.termoAceite());
-            usuario.setConselho(dto.conselho());
-            usuario.setRegistro(dto.registro());
             
             usuario.setPossuiWpp(false);
             

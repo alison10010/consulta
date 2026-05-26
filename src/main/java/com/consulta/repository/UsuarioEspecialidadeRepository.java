@@ -16,6 +16,8 @@ public interface UsuarioEspecialidadeRepository extends JpaRepository<UsuarioEsp
 	  
 	  List<UsuarioEspecialidade> findByUsuarioIdAndStatusNotIgnoreCase(Long usuarioId, String status);
 	  
+	  List<UsuarioEspecialidade> findByUsuarioIdAndStatusIgnoreCase(Long usuarioId, String status);
+	  
 	  // ====== ADMIN: FILA DE ANÁLISE ======
 	  List<UsuarioEspecialidade> findByStatusInOrderByCreatedAtDesc(List<String> status);
 	  

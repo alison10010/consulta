@@ -53,7 +53,7 @@ public class ApiColaboradorRest implements Serializable {
 	            var e = u.getEndereco();
 
 	            var especialidades = usuarioEspecialidadeRepository
-	                .findByUsuarioIdAndStatusNotIgnoreCase(u.getId(), "INATIVO")
+	                .findByUsuarioIdAndStatusIgnoreCase(u.getId(), "APROVADO")
 	                .stream()
 	                .map(ue -> Map.<String, Object>of(
 	                    "nome", ue.getEspecialidade().getEspecialidade(),

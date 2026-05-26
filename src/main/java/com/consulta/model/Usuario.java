@@ -87,12 +87,6 @@ public class Usuario implements Serializable {
 	)
 	private Set<Especialidade> especialidades = new HashSet<>();
 	
-	@Column(name = "conselho")
-    private String conselho; // CRM, CRP, etc.
-	
-	@Column(name = "registro_profissional")
-    private String registro;
-	
 	@OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_endereco", referencedColumnName = "id")
     private Endereco endereco;  

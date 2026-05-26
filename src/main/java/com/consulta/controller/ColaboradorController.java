@@ -8,6 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.time.DayOfWeek;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -478,7 +479,6 @@ public class ColaboradorController implements Serializable {
     }
 
     // ======================= GERAR HORÁRIOS =======================
- // ======================= GERAR HORÁRIOS =======================
     public void gerarPorPeriodo() {
 
         Usuario colaborador = getUsuarioLogado();
@@ -490,11 +490,6 @@ public class ColaboradorController implements Serializable {
 
         if (periodo == null || periodo.size() < 2 || periodo.get(0) == null || periodo.get(1) == null) {
             Mensagens.aviso("Selecione um período (data inicial e final).", "");
-            return;
-        }
-
-        if (intervalo == null || intervalo < 5) {
-            Mensagens.aviso("Intervalo inválido.", "");
             return;
         }
 
@@ -510,6 +505,7 @@ public class ColaboradorController implements Serializable {
 
         String hIniStr = trimToNull(horaInicio);
         String hFimStr = trimToNull(horaFim);
+
         if (hIniStr == null || hFimStr == null) {
             Mensagens.aviso("Preencha hora inicial e hora final.", "");
             return;
@@ -517,6 +513,7 @@ public class ColaboradorController implements Serializable {
 
         LocalDate ini = periodo.get(0);
         LocalDate fim = periodo.get(1);
+
         if (fim.isBefore(ini)) {
             LocalDate tmp = ini;
             ini = fim;
@@ -525,6 +522,7 @@ public class ColaboradorController implements Serializable {
 
         LocalTime hIni;
         LocalTime hFim;
+
         try {
             hIni = LocalTime.parse(hIniStr);
             hFim = LocalTime.parse(hFimStr);
@@ -547,7 +545,7 @@ public class ColaboradorController implements Serializable {
         while (!d.isAfter(fim)) {
 
             DayOfWeek dow = d.getDayOfWeek();
-            boolean ehFds = (dow == DayOfWeek.SATURDAY || dow == DayOfWeek.SUNDAY);
+            boolean ehFds = dow == DayOfWeek.SATURDAY || dow == DayOfWeek.SUNDAY;
 
             if (Boolean.TRUE.equals(excluirFds) && ehFds) {
                 d = d.plusDays(1);
@@ -559,28 +557,44 @@ public class ColaboradorController implements Serializable {
                 continue;
             }
 
-            // ✅ verifica quantos já existem no dia
             long totalNoDia = horarioRepository.countByColaboradorAndData(colaborador, d);
 
-            // ✅ se já atingiu ou passou o limite, não gera mais nada para esse dia
             if (totalNoDia >= maxVagasDia) {
                 d = d.plusDays(1);
                 continue;
             }
 
-            LocalTime t = hIni;
             int vagasNoDia = (int) totalNoDia;
 
-            while (t.isBefore(hFim)) {
+            List<LocalTime> horariosDoDia = new ArrayList<>();
 
-                // ✅ se já atingiu o limite considerando os que já existiam
+            if (maxVagasDia == 1) {
+                horariosDoDia.add(hFim);
+            } else {
+                long totalSegundos = Duration.between(hIni, hFim).getSeconds();
+                long passoSegundos = totalSegundos / (maxVagasDia - 1);
+
+                for (int i = 0; i < maxVagasDia; i++) {
+
+                    LocalTime horario;
+
+                    if (i == maxVagasDia - 1) {
+                        horario = hFim;
+                    } else {
+                        horario = hIni.plusSeconds(passoSegundos * i);
+                    }
+
+                    horariosDoDia.add(horario);
+                }
+            }
+
+            for (LocalTime t : horariosDoDia) {
+
                 if (vagasNoDia >= maxVagasDia) {
                     break;
                 }
 
-                // ✅ não duplica horário exato
                 if (horarioRepository.existsByColaboradorAndDataAndHora(colaborador, d, t)) {
-                    t = t.plusMinutes(intervalo);
                     continue;
                 }
 
@@ -593,10 +607,9 @@ public class ColaboradorController implements Serializable {
                 h.setVaga(janelaStr);
 
                 horarioRepository.save(h);
+
                 gerados++;
                 vagasNoDia++;
-
-                t = t.plusMinutes(intervalo);
             }
 
             d = d.plusDays(1);
