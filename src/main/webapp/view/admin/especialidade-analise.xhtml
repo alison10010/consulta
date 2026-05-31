@@ -163,17 +163,30 @@
                                         </div>
 
                                         <div class="doc-group">
-                                            <p:commandButton icon="pi pi-file-pdf" title="Diploma"
+
+                                            <p:commandButton icon="pi pi-file-pdf" title="Diploma Frente"
                                                              rendered="#{not empty ue.pathDiplomaEspecialidade}"                                                             
                                                              action="#{colaboradorController.visualizarDocumentoEspecialidade(ue, 'diploma')}"
                                                              ajax="false" onclick="target='_blank'"
                                                              styleClass="ui-button-flat ui-button-info" />
+                                                             
+											<p:commandButton icon="pi pi-file-pdf" title="Diploma Verso"
+                                                             rendered="#{not empty ue.pathDiplomaEspecialidade}"                                                             
+                                                             action="#{colaboradorController.visualizarDocumentoEspecialidade(ue, 'diploma_verso')}"
+                                                             ajax="false" onclick="target='_blank'"
+                                                             styleClass="ui-button-flat ui-button-info" />                                                             
                                             
-                                            <p:commandButton icon="pi pi-id-card" title="Carteira"
+                                            <p:commandButton icon="pi pi-id-card" title="Carteira Frente"
                                                              rendered="#{not empty ue.pathCarteiraEspecialidade}"
                                                              action="#{colaboradorController.visualizarDocumentoEspecialidade(ue, 'carteira')}"
                                                              ajax="false" onclick="target='_blank'"
-                                                             styleClass="ui-button-flat ui-button-info" />
+                                                             styleClass="ui-button-flat ui-button-info" />                                                             
+                                                             
+                                            <p:commandButton icon="pi pi-id-card" title="Carteira Verso"
+                                                             rendered="#{not empty ue.pathCarteiraEspecialidade}"
+                                                             action="#{colaboradorController.visualizarDocumentoEspecialidade(ue, 'carteira_verso')}"
+                                                             ajax="false" onclick="target='_blank'"
+                                                             styleClass="ui-button-flat ui-button-info" />                 
                                             
                                             <h:panelGroup rendered="#{empty ue.pathDiplomaEspecialidade and empty ue.pathCarteiraEspecialidade}">
                                                 <span class="text-danger small fw-bold">Sem arquivos</span>

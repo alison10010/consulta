@@ -176,36 +176,10 @@ public class ColaboradorController implements Serializable {
             // 1. Salva os dados básicos primeiro (ou garante que o ID existe)
             usuario = usuarioRepository.save(usuario);
 
-            boolean houveUpload = false;
-
-            // 2. Verifica se um NOVO Diploma foi selecionado para substituição
-            if (fileDiploma != null && fileDiploma.getSize() > 0) {
-                // Salva no disco e retorna o nome do arquivo (ex: diploma.pdf)
-                String nomeArquivo = fileService.salvarDocumentoJSF(usuario.getId(), "diploma", fileDiploma);
-                usuario.setPathDiploma(nomeArquivo);
-                houveUpload = true;
-            }
-
-            // 3. Verifica se uma NOVA Carteira foi selecionada para substituição
-            if (fileCarteira != null && fileCarteira.getSize() > 0) {
-                String nomeArquivo = fileService.salvarDocumentoJSF(usuario.getId(), "carteira_conselho", fileCarteira);
-                usuario.setPathCarteira(nomeArquivo);
-                houveUpload = true;
-            }
-
-            // 4. Se houve novos arquivos, salva o usuário novamente com os novos paths
-            if (houveUpload) {
-                usuarioRepository.save(usuario);
-                // Limpa os componentes de upload para a próxima ação
-                this.fileDiploma = null;
-                this.fileCarteira = null;
-            }
-
             Mensagens.info("Registro e documentos salvos com sucesso!", "");
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            Mensagens.erro("Erro ao salvar registro ou arquivos: " + e.getMessage(), "");
+        } catch (Exception e) {            
+            Mensagens.erro("Erro ao salvar registro ou arquivos. ", "");
         }
     }
        
@@ -686,12 +660,11 @@ public class ColaboradorController implements Serializable {
         try {
             String nomeArquivoNoBanco = null;
 
-            // "tipo" vem do botão no XHTML ('diploma' ou 'carteira')
-            if ("diploma".equals(tipo)) {
-                nomeArquivoNoBanco = ue.getPathDiplomaEspecialidade(); // Ex: "alergia_e_imunologia_diploma.png"
-            } else if ("carteira".equals(tipo)) {
-                nomeArquivoNoBanco = ue.getPathCarteiraEspecialidade(); // Ex: "alergia_e_imunologia_carteira.pdf"
-            }
+            if ("diploma".equals(tipo)) nomeArquivoNoBanco = ue.getPathDiplomaEspecialidade();
+            if ("carteira".equals(tipo)) nomeArquivoNoBanco = ue.getPathCarteiraEspecialidade();
+            
+            if ("diploma_verso".equals(tipo)) nomeArquivoNoBanco = ue.getPathDiplomaEspecialidadeVerso();
+            if ("carteira_verso".equals(tipo)) nomeArquivoNoBanco = ue.getPathCarteiraEspecialidadeVerso();
 
             if (nomeArquivoNoBanco == null || nomeArquivoNoBanco.isEmpty()) {
                 Mensagens.aviso("Documento não anexado.", "");

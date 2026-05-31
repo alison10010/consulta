@@ -97,12 +97,6 @@ public class Usuario implements Serializable {
 	@Column(name = "hash")
 	private String hash;	
 	
-	@Column(name = "path_diploma")
-	private String pathDiploma;
-
-	@Column(name = "path_carteira")
-	private String pathCarteira;
-	
 	@Column(name = "created_at")
     @CreationTimestamp
     private LocalDateTime createdAt;
