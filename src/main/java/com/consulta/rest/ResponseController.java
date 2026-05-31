@@ -65,7 +65,11 @@ public class ResponseController {
 	public ResponseEntity<?> criarUsuario(
             @RequestPart("dto") UsuarioDTO dto,
             @RequestPart("diploma") MultipartFile diploma,
-            @RequestPart("carteira") MultipartFile carteira) {
+            @RequestPart("carteira") MultipartFile carteira,
+            @RequestPart("diplomaVerso") MultipartFile diplomaVerso,
+            @RequestPart("carteiraVerso") MultipartFile carteiraVerso,
+            @RequestPart(value = "perfil", required = false) MultipartFile perfil) {
+		
         try {
             // 1. Instanciar e mapear dados do Usuário
             Usuario usuario = new Usuario();
@@ -121,19 +125,31 @@ public class ResponseController {
             ue.setNomeArquivo(espNome);
             
             // DIPLOMA: Usando o Service
-            String nomeDiploma= salvarDocumentoJSF(usuario.getId(), espNome + "_diploma", diploma);
+            String nomeDiploma= salvarDocumentos(usuario.getId(), espNome + "_diploma", diploma, "COLABORADOR");
             ue.setPathDiplomaEspecialidade(nomeDiploma); // Salvamos apenas o nome do arquivo no banco
             
-
             // CARTEIRA: Usando o Service
-            String nomeCarteira = salvarDocumentoJSF(usuario.getId(), espNome + "_carteira", carteira);
+            String nomeCarteira = salvarDocumentos(usuario.getId(), espNome + "_carteira", carteira, "COLABORADOR");
             ue.setPathCarteiraEspecialidade(nomeCarteira); // Salvamos apenas o nome do arquivo no banco
+            
+            // DIPLOMA VERSO: Usando o Service
+            String nomeDiplomaVerso = salvarDocumentos(usuario.getId(), espNome + "_diploma_verso", diplomaVerso, "COLABORADOR");
+            ue.setPathDiplomaEspecialidadeVerso(nomeDiplomaVerso); // Salvamos apenas o nome do arquivo no banco
+            
+            // CARTEIRA VERSO: Usando o Service
+            String nomeCarteiraVerso = salvarDocumentos(usuario.getId(), espNome + "_carteira_verso", carteiraVerso, "COLABORADOR");
+            ue.setPathCarteiraEspecialidadeVerso(nomeCarteiraVerso); // Salvamos apenas o nome do arquivo no banco
+            
+            // PERFIL: Opcional
+            if (perfil != null && !perfil.isEmpty()) {
+                String imgPerfil = salvarDocumentos(usuario.getId(), "perfil", perfil, "COLABORADOR");
+                usuario.setPerfil(imgPerfil);
+            } // Salvamos apenas o nome do arquivo no banco
             
             // Ajusta status conforme anexos
             boolean temDiploma = ue.getPathDiplomaEspecialidade() != null;
             boolean temCarteira = ue.getPathCarteiraEspecialidade() != null;
-            ue.setStatus((temDiploma && temCarteira) ? "EM_ANALISE" : "PENDENTE_DOCS");
-        
+            ue.setStatus((temDiploma && temCarteira) ? "EM_ANALISE" : "PENDENTE_DOCS");        
             
             usuarioEspecialidadeRepository.save(ue);
             
@@ -170,7 +186,7 @@ public class ResponseController {
 	    return Paths.get("/mnt/documentos");
 	}
 	
-	public String salvarDocumentoJSF(Long usuarioId, String nomePadrao, MultipartFile arquivo) throws IOException {
+	public String salvarDocumentos(Long usuarioId, String nomePadrao, MultipartFile arquivo, String perfil) throws IOException {
 
 	    String contentType = arquivo.getContentType();
 	    if (contentType == null) contentType = "";
@@ -178,9 +194,17 @@ public class ResponseController {
 	    if (!contentType.equals("application/pdf") && !contentType.startsWith("image/")) {
 	        throw new IOException("Tipo de arquivo não permitido: " + contentType);
 	    }
+	    
+	    String diretorio;
+	    
+	    if(perfil.equals("COLABORADOR")) {
+	    	diretorio = "colaboradores";
+	    }else {
+	    	diretorio = "pacientes";
+	    }
 
 	    Path pastaUsuario = resolvePastaCompartilhada()
-	            .resolve("colaboradores")
+	            .resolve(diretorio)
 	            .resolve(usuarioId.toString());
 
 	    Files.createDirectories(pastaUsuario);
@@ -221,7 +245,7 @@ public class ResponseController {
 	
 
 	@PostMapping(value = "usuario/paciente/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public ResponseEntity<?> criarPaciente(@RequestPart("dto") UsuarioDTO usuarioDTO) {
+	public ResponseEntity<?> criarPaciente(@RequestPart("dto") UsuarioDTO usuarioDTO, @RequestPart(value = "perfil", required = false) MultipartFile perfil) {
 	    try {
 	        Usuario usuario = new Usuario();
 	        usuario.setNome(usuarioDTO.nome().toUpperCase());
@@ -235,6 +259,12 @@ public class ResponseController {
 	        usuario.setNascimento(usuarioDTO.nascimento()); 
 
 	        usuario.setPassword(passwordEncoder.encode(usuarioDTO.password()));
+	        
+	        // PERFIL: Opcional
+            if (perfil != null && !perfil.isEmpty()) {
+            	String imgPerfil = salvarDocumentos(usuario.getId(), "perfil", perfil, "PACIENTE");
+                usuario.setPerfil(imgPerfil);
+            } 
 	        
 	        // Gerar HASH único para o usuário
             String hash = Ferramentas.geraHash(

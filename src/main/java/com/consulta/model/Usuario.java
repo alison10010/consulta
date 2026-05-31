@@ -37,6 +37,9 @@ public class Usuario implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+	@Column(name = "perfil")
+	private String perfil;
+	
 	@Column(name = "nome")
 	private String nome;
 	

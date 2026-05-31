@@ -54,6 +54,12 @@ public class UsuarioEspecialidade implements Serializable {
 	
   @Column(name = "path_carteira_especialidade")
   private String pathCarteiraEspecialidade;
+  
+  @Column(name = "path_diploma_especialidade_verso")
+  private String pathDiplomaEspecialidadeVerso;
+	
+  @Column(name = "path_carteira_especialidade_verso")
+  private String pathCarteiraEspecialidadeVerso;
 
   @Column(name = "nome_arquivo")
   private String nomeArquivo;
