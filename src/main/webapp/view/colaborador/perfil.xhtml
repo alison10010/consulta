@@ -67,14 +67,98 @@
 			.fw-bold {
 			    font-weight: 500 !important;
 			}
+			
+			.foto-container {
+			    position: relative;
+			    display: inline-block;
+			}
+			
+			.foto-preview {
+			    width: 150px;
+			    height: 150px;
+			    border-radius: 50%;
+			    object-fit: contain; /* mostra a imagem inteira */
+			    object-position: center;
+			    background: #ffffff;
+			    border: 4px solid #ffffff;
+			    padding: 4px;
+			    box-shadow: 0 6px 20px rgba(0,0,0,.15);
+			    cursor: pointer;
+			    transition: all 0.3s ease;
+			}
+			
+			.foto-preview:hover {
+			    transform: scale(1.03);
+			    box-shadow: 0 10px 25px rgba(0,0,0,.20);
+			}
+			
+			.foto-edit-icon {
+			    position: absolute;
+			    right: 6px;
+			    bottom: 6px;
+			    width: 42px;
+			    height: 42px;
+			    border-radius: 50%;
+			    background: linear-gradient(135deg, #2563eb, #7c3aed);
+			    color: #fff;
+			    display: flex;
+			    align-items: center;
+			    justify-content: center;
+			    border: 3px solid #fff;
+			    box-shadow: 0 4px 12px rgba(0,0,0,.20);
+			    pointer-events: none;
+			}
+			
+			.foto-edit-icon i {
+			    font-size: 1rem;
+			}
 					
         </style>
 
         <div class="page">
         
-        	<p:growl id="messages" />
+        	<p:growl id="messages" showDetail="true" life="4000" />
 
             <h:form id="frm" styleClass="form-card" enctype="multipart/form-data">
+            
+            	<!-- FOTO DE PERFIL -->
+            	<div class="text-center mb-12">
+			
+			        <!-- Container da foto -->
+			        <div class="foto-container">
+			
+			            <!-- Foto clicável -->
+			            <p:commandLink onclick="document.getElementById('frm:upload_input').click(); return false;"
+			                           title="Clique para alterar a foto">
+			
+			                <p:graphicImage id="fotoPerfil"
+			                                value="#{colaboradorController.fotoPerfil}"
+			                                styleClass="foto-preview"
+			                                cache="false"
+			                                stream="false" />
+			
+			                <!-- Ícone de editar -->
+			                <span class="foto-edit-icon">
+			                    <i class="bi bi-pencil-fill"></i>
+			                </span>
+			            </p:commandLink>
+			
+			            <!-- Upload oculto -->
+			            <p:fileUpload id="upload"
+			                          mode="simple"
+			                          auto="true"
+			                          skinSimple="true"
+			                          style="display:none"
+			                          listener="#{colaboradorController.uploadFotoPerfil}"
+			                          update="fotoPerfil :messages"
+			                          allowTypes="/(\.|\/)(png|jpg|jpeg)$/"
+			                          sizeLimit="5000000" />
+			        </div>
+			
+			        <div class="text-muted small mt-2">
+			            Clique na foto para alterar.
+			        </div>
+			    </div>
 
                 <p class="text-muted mb-4">Informações pessoais e contato</p>
 
@@ -177,6 +261,7 @@
 			</div>
 
           </h:form>
+          
       </div>
         
 

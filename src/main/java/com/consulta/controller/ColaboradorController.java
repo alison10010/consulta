@@ -1,6 +1,8 @@
 package com.consulta.controller;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -16,6 +18,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
 import org.primefaces.model.file.UploadedFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -81,6 +86,10 @@ public class ColaboradorController implements Serializable {
     
     private UploadedFile fileDiploma;
     private UploadedFile fileCarteira;
+    private UploadedFile fileDiplomaVerso;
+    private UploadedFile fileCarteiraVerso;
+    
+    private UploadedFile pathFotoPerfil;
 
     // lista pra montar o select
     private List<String> especialidadesDisponiveis;
@@ -344,6 +353,111 @@ public class ColaboradorController implements Serializable {
     
     
     // #===== FIM DE UPLOAD DOS DOCUMENTOS
+    
+    
+    // #========= FOTO DE PERFIL - INICIO
+    
+    public void visualizarFotoPerfil() {
+        try {
+
+            String nomeArquivo = usuario.getPerfil();
+
+            if (nomeArquivo == null || nomeArquivo.isEmpty()) {
+                return;
+            }
+
+            byte[] arquivoBytes = fileService.buscarBytesArquivo(usuario.getId(), nomeArquivo);
+
+            if (arquivoBytes != null) {
+
+                FacesContext context = FacesContext.getCurrentInstance();
+                ExternalContext external = context.getExternalContext();
+
+                external.responseReset();
+
+                String contentType = external.getMimeType(nomeArquivo);
+
+                external.setResponseContentType(
+                    contentType != null ? contentType : "image/png"
+                );
+
+                external.setResponseHeader(
+                    "Content-Disposition",
+                    "inline; filename=\"" + nomeArquivo + "\""
+                );
+
+                OutputStream out = external.getResponseOutputStream();
+                out.write(arquivoBytes);
+
+                context.responseComplete();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public StreamedContent getFotoPerfil() {
+        try {
+            if (usuario == null || usuario.getPerfil() == null || usuario.getPerfil().isBlank()) {
+                return imagemPadrao();
+            }
+
+            byte[] bytes = fileService.buscarBytesArquivo(
+                    usuario.getId(),
+                    usuario.getPerfil()
+            );
+
+            if (bytes == null || bytes.length == 0) {
+                return imagemPadrao();
+            }
+
+            return DefaultStreamedContent.builder()
+                    .contentType("image/png")
+                    .stream(() -> new ByteArrayInputStream(bytes))
+                    .build();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return imagemPadrao();
+        }
+    }
+    
+    private StreamedContent imagemPadrao() {
+        return DefaultStreamedContent.builder()
+                .contentType("image/png")
+                .stream(() -> {
+                    InputStream is = getClass()
+                            .getResourceAsStream("/static/img/perfil.png");
+
+                    if (is == null) {
+                        return new ByteArrayInputStream(new byte[0]);
+                    }
+
+                    return is;
+                })
+                .build();
+    }
+    
+    public void uploadFotoPerfil(FileUploadEvent event) {
+
+        try {
+            this.pathFotoPerfil = event.getFile();
+            String imgPerfil = fileService.salvarDocumentoJSF(usuario.getId(), "perfil", pathFotoPerfil, "COLABORADOR");
+            usuario.setPerfil(imgPerfil);
+
+            usuarioRepository.save(usuario);
+
+            Mensagens.info("Foto alterada!", "");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Mensagens.erro("Erro ao alterar foto", "");
+        }
+    }
+    
+    // 	#========= FOTO DE PERFIL - FIM
+    
     
 
     public void salvarEndereco() {

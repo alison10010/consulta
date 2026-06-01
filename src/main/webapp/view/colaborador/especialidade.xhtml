@@ -8,388 +8,808 @@
     <ui:define name="title">Especialidades</ui:define>
 
     <ui:define name="content">
+
         <style>
-            /* Design Tokens */
             :root {
-                --card-radius: 16px;
-                --primary-soft: #eef2ff;
+                --esp-primary: #2563eb;
+                --esp-primary-soft: #eff6ff;
+                --esp-success: #16a34a;
+                --esp-warning: #d97706;
+                --esp-danger: #dc2626;
+                --esp-border: #e5e7eb;
+                --esp-muted: #64748b;
+                --esp-bg: #f8fafc;
+                --esp-radius: 18px;
             }
-            .page { padding: 40px 20px; min-height: 90vh; }
-            .form-card { width: 100%; max-width: 1000px; margin: 0 auto; }
-            
-            /* Card Styling */
-            .esp-card { 
-                border: 1px solid #e5e7eb !important;
-                border-radius: var(--card-radius);
-                transition: all 0.2s ease-in-out;
+
+            .especialidades-page {
+                padding: 28px 14px 45px;
+                min-height: 88vh;
+                background:
+                    radial-gradient(circle at top left, rgba(37, 99, 235, .08), transparent 32%),
+                    linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+            }
+
+            .especialidades-container {
+                width: 100%;
+                max-width: 1180px;
+                margin: 0 auto;
+            }
+
+            .page-header-card {
                 background: #fff;
+                border: 1px solid var(--esp-border);
+                border-radius: 22px;
+                padding: 22px;
+                box-shadow: 0 12px 28px rgba(15, 23, 42, .06);
+                margin-bottom: 20px;
             }
-            .esp-card:hover { 
-                transform: translateY(-4px);
-                box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-                border-color: var(--blue-500, #3b82f6) !important;
-            }
-            
-            /* Icon Styling */
-            .icon-box {
-                width: 48px; height: 48px;
-                background-color: var(--primary-soft);
-                color: #4f46e5;
-                border-radius: 12px;
-                display: flex; align-items: center; justify-content: center;
+
+            .page-title {
+                font-weight: 600;
+                color: #0f172a;
+                margin: 0;
                 font-size: 1.25rem;
             }
 
-            /* Empty State */
-            .empty-state {
-                padding: 60px 20px;
-                text-align: center;
-                background: #fff;
-                border: 2px dashed #e5e7eb;
-                border-radius: var(--card-radius);
+            .page-subtitle {
+                color: var(--esp-muted);
+                font-size: .92rem;
+                margin: 5px 0 0;
             }
 
-            /* PrimeFaces Overrides */
-            .ui-selectonemenu { border-radius: 8px; padding: 3px; }
-            .ui-inputnumber input { border-radius: 8px !important; padding: 8px; }
-            .premium-dialog .ui-dialog-titlebar { background: #fff; border: none; padding: 20px; }
-            
-            .fw-bold{
-            	font-weight: 600 !important;
+            .title-icon {
+                width: 46px;
+                height: 46px;
+                border-radius: 14px;
+                background: var(--esp-primary-soft);
+                color: var(--esp-primary);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.25rem;
+                flex: 0 0 auto;
+            }
+
+            .empty-state {
+                background: #fff;
+                border: 2px dashed #cbd5e1;
+                border-radius: var(--esp-radius);
+                padding: 55px 20px;
+                text-align: center;
+                color: var(--esp-muted);
+            }
+
+            .empty-state i {
+                font-size: 2.4rem;
+                color: #94a3b8;
+            }
+
+            .especialidade-card {
+                position: relative;
+                background: #fff;
+                border: 1px solid var(--esp-border);
+                border-radius: var(--esp-radius);
+                padding: 20px;
+                box-shadow: 0 10px 24px rgba(15, 23, 42, .05);
+                overflow: hidden;
+                transition: .22s ease;
+            }
+
+            .especialidade-card:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 16px 34px rgba(15, 23, 42, .09);
+                border-color: rgba(37, 99, 235, .35);
+            }
+
+            .status-bar {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 6px;
+                height: 100%;
+            }
+
+            .status-aprovado { background: var(--esp-success); }
+            .status-analise { background: var(--esp-primary); }
+            .status-pendente { background: var(--esp-warning); }
+            .status-outro { background: #94a3b8; }
+
+            .status-badge {
+                display: inline-flex;
+                align-items: center;
+                gap: 5px;
+                font-size: .72rem;
+                font-weight: 700;
+                border-radius: 999px;
+                padding: 5px 10px;
+                margin-bottom: 8px;
+            }
+
+            .badge-aprovado {
+                color: #166534;
+                background: #dcfce7;
+                border: 1px solid #bbf7d0;
+            }
+
+            .badge-analise {
+                color: #1d4ed8;
+                background: #dbeafe;
+                border: 1px solid #bfdbfe;
+            }
+
+            .badge-pendente {
+                color: #92400e;
+                background: #fef3c7;
+                border: 1px solid #fde68a;
+            }
+
+            .badge-outro {
+                color: #334155;
+                background: #f1f5f9;
+                border: 1px solid #e2e8f0;
+            }
+
+            .especialidade-nome {
+                color: #0f172a;
+                font-size: 1.05rem;
+                font-weight: 600;
+                line-height: 1.25;
+                margin-bottom: 5px;
+            }
+
+            .especialidade-valor {
+                color: var(--esp-primary);
+                font-weight: 600;
+                font-size: 1rem;
+            }
+
+            .info-box {
+                height: 100%;
+                min-height: 72px;
+                background: var(--esp-bg);
+                border: 1px solid #e2e8f0;
+                border-radius: 14px;
+                padding: 11px 12px;
+            }
+
+            .info-label {
+                display: block;
+                color: #475569;
+                font-size: .72rem;
+                font-weight: 600;
+                margin-bottom: 5px;
+            }
+
+            .doc-ok {
+                color: var(--esp-primary);
+                font-weight: 700;
+                font-size: .78rem;
+            }
+
+            .doc-pendente {
+                color: var(--esp-danger);
+                font-weight: 600;
+                font-size: .78rem;
+            }
+
+            .card-actions {
+                display: flex;
+                align-items: center;
+                justify-content: flex-end;
+                gap: 6px;
+            }
+
+            .round-action {
+                width: 40px !important;
+                height: 40px !important;
+                border-radius: 50% !important;
+            }
+
+            .premium-dialog .ui-dialog-titlebar {
+                background: #fff;
+                border: none;
+                padding: 20px 22px 10px;
+                border-radius: 18px 18px 0 0;
+            }
+
+            .premium-dialog .ui-dialog-content {
+                border-radius: 0 0 18px 18px;
+            }
+
+            .section-upload {
+                background: #f8fafc;
+                border: 1px dashed #cbd5e1;
+                border-radius: 18px;
+                padding: 16px;
+            }
+
+            .value-card {
+                border: 1px solid #e2e8f0 !important;
+                border-radius: 18px;
+                padding: 16px;
+                background: #f8fafc;
+                height: 100%;
+            }
+
+            .value-card-primary {
+                background: linear-gradient(145deg, #ffffff, #eff6ff);
+                border-color: #bfdbfe !important;
+            }
+
+            .form-label {
+                font-weight: 700;
+                color: #1e293b;
+            }
+
+            .ui-selectonemenu,
+            .ui-inputfield {
+                border-radius: 10px !important;
+            }
+
+            .ui-inputnumber {
+                width: 100%;
+            }
+
+            .ui-inputnumber input {
+                width: 100% !important;
+            }
+
+            @media (max-width: 768px) {
+                .especialidades-page {
+                    padding: 18px 8px 35px;
+                }
+
+                .page-header-card {
+                    padding: 18px;
+                }
+
+                .page-header-content {
+                    flex-direction: column;
+                    align-items: flex-start !important;
+                    gap: 15px;
+                }
+
+                .page-header-action {
+                    width: 100%;
+                }
+
+                .page-header-action .ui-button {
+                    width: 100%;
+                }
+
+                .especialidade-card {
+                    padding: 18px 15px 15px 19px;
+                }
+
+                .card-actions {
+                    justify-content: flex-start;
+                    margin-top: 15px;
+                    border-top: 1px solid #e2e8f0;
+                    padding-top: 12px;
+                }
             }
         </style>
 
-        <div class="page">
-            <h:form id="frm" styleClass="form-card" enctype="multipart/form-data">
+        <div class="especialidades-page">
+            <div class="especialidades-container">
 
-            <p:growl id="messages" showDetail="true" life="3000" />
+                <h:form id="frm" enctype="multipart/form-data">
 
-            <div class="d-flex align-items-center justify-content-between mb-4">
-                <div>
-                    <h5 class="fw-bold mb-1">
-                        <i class="bi bi-award-fill me-2 text-primary"></i>Dados Profissionais - Especialidades
-                    </h5>
-                    <p class="text-muted small mb-0">Gerencie outros títulos e seus respectivos valores.</p>
-                </div>
-                <p:commandButton value="Nova Especialidade" icon="pi pi-plus" type="button"
-                                 onclick="PF('dlgEsp').show()"
-                                 styleClass="ui-button-primary rounded-pill shadow-sm" />
-            </div>
+                    <p:growl id="messages" showDetail="true" life="3500" />
 
-            <h:panelGroup id="listaCards" layout="block">
-                <h:panelGroup rendered="#{empty colaboradorController.especialidadesDoUsuario}">
-                    <div class="text-center p-5 border rounded-4 border-dashed bg-light">
-                        <i class="bi bi-journal-plus fs-1 text-muted"></i>
-                        <p class="mt-2 text-muted">Nenhuma especialidade extra adicionada.</p>
-                    </div>
-                </h:panelGroup>
+                    <div class="page-header-card">
+                        <div class="d-flex align-items-center justify-content-between page-header-content">
 
-                <div class="row g-3">
-                    <ui:repeat value="#{colaboradorController.especialidadesDoUsuario}" var="ue">
-                        <div class="col-12">
-                            <div class="esp-card-item p-4 bg-white rounded-4 position-relative overflow-hidden">
-                                <div class="status-bar #{ue.status == 'EM_ANALISE' ? 'bg-success' : 'bg-warning'}" style="position:absolute; left:0; top:0; height:100%; width:6px;"></div>
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="title-icon">
+                                    <i class="bi bi-award-fill"></i>
+                                </div>
 
-                                <div class="row align-items-center">
-								    <div class="col-md-3">
-								        
-								        <span class="badge mb-2 px-2 border 
-										      #{ue.status == 'APROVADO' ? 'bg-success-subtle text-success border-success-subtle' : 
-										        ue.status == 'EM_ANALISE' ? 'bg-primary-subtle text-primary border-primary-subtle' : 
-										        'bg-warning-subtle text-warning border-warning-subtle'}">
-										    
-										    #{ue.status == 'APROVADO' ? 'Aprovado' : 
-										      ue.status == 'EM_ANALISE' ? 'Em Análise' : 
-										      ue.status == 'PENDENTE_DOCS' ? 'Pendente de Docs' : ue.status}
-										</span>
-
-
-								        <div class="fw-bold text-dark fs-5 text-truncate" title="#{ue.especialidade.especialidade}">
-								            #{ue.especialidade.especialidade}
-								        </div>
-								        <div class="text-primary fw-bold fs-6">
-								            <h:outputText value="#{ue.valorComGuia}">
-								                <f:convertNumber type="currency" currencySymbol="R$" locale="pt_BR" />
-								            </h:outputText>
-								        </div>
-								    </div>
-								
-								    <div class="col-md-8 mt-3 mt-md-0">
-								        <div class="row g-2">
-								            <div class="col-6 col-md-3">
-								                <div class="doc-preview-box h-100">
-								                    <span class="d-block small fw-bold text-dark mb-1">Conselho</span>
-								                    <h:outputText value="#{ue.conselho}" rendered="#{not empty ue.conselho}" styleClass="text-primary fw-bold small" />
-								                    <h:outputText value="—" rendered="#{empty ue.conselho}" styleClass="text-muted small" />
-								                </div>
-								            </div>
-								
-								            <div class="col-6 col-md-3">
-								                <div class="doc-preview-box h-100">
-								                    <span class="d-block small fw-bold text-dark mb-1">Registro</span>
-								                    <h:outputText value="#{ue.registro}" rendered="#{not empty ue.registro}" styleClass="text-primary fw-bold small" />
-								                    <h:outputText value="—" rendered="#{empty ue.registro}" styleClass="text-muted small" />
-								                </div>
-								            </div>
-								
-								            <div class="col-6 col-md-3">
-								                <div class="doc-preview-box h-100">
-								                    <span class="d-block small fw-bold text-dark mb-1">Diploma</span>
-								                    <p:commandButton value="Visualizar" icon="pi pi-eye" 
-								                                     rendered="#{not empty ue.pathDiplomaEspecialidade}"
-								                                     action="#{colaboradorController.visualizarDocumentoEspecialidade(ue, 'diploma')}"
-								                                     ajax="false" onclick="target='_blank'"
-								                                     styleClass="ui-button-flat ui-button-info btn-sm p-0 w-100 text-start small" />
-								                    <h:outputText value="Pendente" rendered="#{empty ue.pathDiplomaEspecialidade}" styleClass="small text-danger fw-bold" />
-								                </div>
-								            </div>
-								
-								            <div class="col-6 col-md-3">
-								                <div class="doc-preview-box h-100">
-								                    <span class="d-block small fw-bold text-dark mb-1">Carteira</span>
-								                    <p:commandButton value="Visualizar" icon="pi pi-eye" 
-								                                     rendered="#{not empty ue.pathCarteiraEspecialidade}"
-								                                     action="#{colaboradorController.visualizarDocumentoEspecialidade(ue, 'carteira')}"
-								                                     ajax="false" onclick="target='_blank'"
-								                                     styleClass="ui-button-flat ui-button-info btn-sm p-0 w-100 text-start small" />
-								                    <h:outputText value="Pendente" rendered="#{empty ue.pathCarteiraEspecialidade}" styleClass="small text-danger fw-bold" />
-								                </div>
-								            </div>
-								        </div>
-								    </div>
-								
-								    <div class="col-md-1">
-									    <div class="d-flex align-items-center justify-content-end gap-1">
-									        
-									        <p:commandButton icon="pi pi-pencil" 
-									                         title="Editar Valores"
-									                         styleClass="ui-button-info ui-button-flat rounded-circle"
-									                         process="@this" 
-									                         update=":frm:dlgEditarValores"
-									                         oncomplete="PF('dlgEditarValores').show()"
-									                         actionListener="#{colaboradorController.prepararEdicaoValores(ue)}" 
-									                         style="width: 40px; height: 40px;"/>
-									        
-									        <p:commandButton icon="pi pi-trash" 
-									                         title="Remover"
-									                         styleClass="ui-button-danger ui-button-flat rounded-circle"
-									                         process="@this" 
-									                         update=":frm:listaCards :frm:messages"
-									                         actionListener="#{colaboradorController.removerEspecialidade(ue)}"
-									                         style="width: 40px; height: 40px;">
-									            <p:confirm header="Confirmação" message="Deseja remover?" icon="pi pi-exclamation-triangle" />
-									        </p:commandButton>
-									        
-									    </div>
-									</div>
-								</div>
+                                <div>
+                                    <h4 class="page-title">Dados Profissionais - Especialidades</h4>
+                                    <p class="page-subtitle">
+                                        Gerencie especialidades, conselhos, registros, documentos e valores de atendimento.
+                                    </p>
+                                </div>
                             </div>
+
+                            <div class="page-header-action">
+                                <p:commandButton value="Nova Especialidade"
+                                                 icon="pi pi-plus"
+                                                 type="button"
+                                                 onclick="PF('dlgEsp').show()"
+                                                 styleClass="ui-button-primary rounded-pill px-4" />
+                            </div>
+
                         </div>
-                    </ui:repeat>
-                </div>
-            </h:panelGroup>
+                    </div>
 
-            <p:dialog widgetVar="dlgEsp" 
-		          header="Configurar Nova Especialidade" 
-		          modal="true" 
-		          width="650"
-		          responsive="true" 
-		          draggable="false" 
-		          resizable="false" 
-		          styleClass="premium-dialog"
-		          showEffect="fade"
-		          hideEffect="fade">
-		    
-		    <div class="p-3">
-		        <div class="row g-3 mb-4">
-		            <div class="col-12">
-		                <label class="form-label fw-bold text-dark mb-1 small">
-		                    <i class="bi bi-search me-1 text-primary"></i>Qual a Especialidade?
-		                </label>
-		                <p:selectOneMenu id="espSelect" value="#{colaboradorController.especialidadeSelecionadaId}"
-		                                 styleClass="w-100 custom-select" filter="true" filterMatchMode="contains">
-		                    <f:selectItem itemLabel="Selecione na lista..." itemValue="#{null}" />
-		                    <f:selectItems value="#{colaboradorController.todasEspecialidades}" var="e"
-		                                   itemLabel="#{e.especialidade}" itemValue="#{e.id}" />
-		                </p:selectOneMenu>
-		            </div>
-		
-		            <div class="col-md-6">
-		                <label class="form-label fw-bold text-dark mb-1 small">Conselho</label>
-		                <p:selectOneMenu id="conselho" value="#{colaboradorController.conselho}"
-		                                 styleClass="w-100">
-		                    <f:selectItem itemLabel="Selecione..." itemValue="#{null}" />
-		                    <f:selectItem itemLabel="CRM (Medicina)" itemValue="CRM" />
-		                    <f:selectItem itemLabel="CRP (Psicologia)" itemValue="CRP" />
-		                    <f:selectItem itemLabel="CRO (Odontologia)" itemValue="CRO" />
-		                    <f:selectItem itemLabel="COREN (Enfermagem)" itemValue="COREN" />
-		                </p:selectOneMenu>
-		            </div>
-		
-		            <div class="col-md-6">
-		                <label class="form-label fw-bold text-dark mb-1 small">Nº Registro</label>
-		                <p:inputText id="registro" value="#{colaboradorController.registro}" 
-		                             styleClass="w-100" placeholder="Ex: xxxxx" />
-		            </div>
-		        </div>
-		
-		        <div class="p-3 rounded-4 mb-4" style="background-color: #f8fafc; border: 1px dashed #cbd5e1;">
-		            <label class="form-label fw-bold text-dark mb-3 small d-block">
-		                <i class="bi bi-cloud-arrow-up me-1 text-primary"></i>Anexar Comprovantes
-		            </label>
-		            <div class="row g-2">
-		                <div class="col-md-6">
-		                    <label class="form-label text-secondary small mb-1">Diploma</label>
-		                    <p:fileUpload value="#{colaboradorController.fileDiploma}" mode="simple" skinSimple="true"
-		                                 label="Escolher Arquivo" styleClass="w-100 ui-button-outlined" accept=".pdf,.jpg,.jpeg,.png" />
-		                </div>
-		                <div class="col-md-6">
-		                    <label class="form-label text-secondary small mb-1">Carteira do Conselho</label>
-		                    <p:fileUpload value="#{colaboradorController.fileCarteira}" mode="simple" skinSimple="true"
-		                                 label="Escolher Arquivo" styleClass="w-100 ui-button-outlined" accept=".pdf,.jpg,.jpeg,.png" />
-		                </div>
-		            </div>
-		            <div class="mt-2 text-muted" style="font-size: 10px;">Formatos aceitos: PDF, JPG ou PNG (Máx 5MB).</div>
-		        </div>
-		
-		        <div class="row g-4">
-				    <div class="col-md-6">
-				        <div class="card border-0 bg-light rounded-4 p-3 shadow-sm">
-				            <label class="form-label fw-bold text-secondary mb-2 small d-flex align-items-center">
-				                <i class="bi bi-tag-fill me-2 text-muted"></i>VALOR ORIGINAL (BALCÃO)
-				            </label>
-				            
-				            <div class="input-group custom-input-number">
-				                <p:inputNumber value="#{colaboradorController.valorSelecionado}"
-				                               symbol="R$ " 
-				                               decimalSeparator=","
-				                               thousandSeparator="."
-				                               decimalPlaces="2"
-				                               inputmode="decimal"
-				                               placeholder="0,00"
-				                               styleClass="w-100 flex-grow-1" />
-				            </div>
-				            
-				            <div class="mt-2 d-flex align-items-center text-muted">
-				                
-				                <span class="smaller">Preço padrão sem o uso da guia.</span>
-				            </div>
-				        </div>
-				    </div>
-				
-				    <div class="col-md-6">
-				        <div class="card border-0 rounded-4 p-3 shadow-sm" style="background: linear-gradient(145deg, #ffffff, #f0f7ff); border: 1px solid #cfe2ff !important;">
-				            <label class="form-label fw-bold text-primary mb-2 small d-flex align-items-center">
-				                <i class="bi bi-shield-check me-2"></i>VALOR COM GUIA (DESCONTO)
-				            </label>
-				            
-				            <div class="input-group custom-input-number">
-				                <p:inputNumber value="#{colaboradorController.valorComGuia}"
-				                               symbol="R$ " 
-				                               decimalSeparator=","
-				                               thousandSeparator="."
-				                               decimalPlaces="2"
-				                               inputmode="decimal"
-				                               placeholder="0,00"
-				                               styleClass="w-100 flex-grow-1" />
-				            </div>
-				            
-				            <div class="mt-2 d-flex align-items-center text-primary">
-				                <i class="bi bi-stars me-1 small"></i>
-				                <span class="smaller fw-medium">Preço usando a guia.</span>
-				            </div>
-				        </div>
-				    </div>
-				</div>
+                    <h:panelGroup id="listaCards" layout="block">
 
-		    </div>
-		
-		    <f:facet name="footer">
-		        <div class="pt-3 border-top d-flex justify-content-end gap-2">
-		            <p:commandButton value="Cancelar" 
-		                             styleClass="ui-button-flat ui-button-plain" 
-		                             onclick="PF('dlgEsp').hide()" 
-		                             icon="pi pi-times" />
-		            <p:commandButton value="Salvar Especialidade" 
-		                             icon="pi pi-check" 
-		                             actionListener="#{colaboradorController.addEspecialidades}"
-		                             update="listaCards messages" 
-		                             oncomplete="if(!args.validationFailed) PF('dlgEsp').hide();"
-		                             styleClass="rounded-pill px-4 shadow-sm" />
-		        </div>
-		    </f:facet>
-		</p:dialog>
-		
-		<p:dialog id="dlgEditarValores" 
-			          widgetVar="dlgEditarValores" 
-			          header="Editar Valores da Especialidade" 
-			          modal="true" 
-			          width="500"
-			          responsive="true" 
-			          draggable="false" 
-			          resizable="false" 
-			          styleClass="premium-dialog"
-			          showEffect="fade">
+                        <h:panelGroup rendered="#{empty colaboradorController.especialidadesDoUsuario}">
+                            <div class="empty-state">
+                                <i class="bi bi-journal-plus"></i>
+                                <h5 class="mt-3 mb-1 fw-bold">Nenhuma especialidade cadastrada</h5>
+                                <p class="mb-0">Clique em “Nova Especialidade” para adicionar seu primeiro registro.</p>
+                            </div>
+                        </h:panelGroup>
 
-				    <h:panelGroup id="pnlEdicao" layout="block" class="p-3" rendered="#{not empty colaboradorController.usuarioEspecialidade}">
-				        
-				        <div class="mb-4 text-center">
-				            <h5 class="fw-bold text-primary mb-1">#{colaboradorController.usuarioEspecialidade.especialidade.especialidade}</h5>
-				            <p class="text-muted small">Atualize os valores de atendimento desta especialidade.</p>
-				        </div>
-				
-				        <div class="row g-3">
-				            <div class="col-12">
-				                <div class="card border-0 bg-light rounded-4 p-3 shadow-sm">
-				                    <label class="form-label fw-bold text-secondary mb-2 small d-flex align-items-center">
-				                        <i class="bi bi-tag-fill me-2 text-muted"></i>VALOR ORIGINAL (BALCÃO)
-				                    </label>
-				                    <p:inputNumber value="#{colaboradorController.usuarioEspecialidade.valor}"
-				                                   symbol="R$ " 
-				                                   decimalSeparator=","
-				                                   thousandSeparator="."
-				                                   decimalPlaces="2"
-				                                   styleClass="w-100" />
-				                </div>
-				            </div>
-				
-				            <div class="col-12">
-				                <div class="card border-0 rounded-4 p-3 shadow-sm" style="background: linear-gradient(145deg, #ffffff, #f0f7ff); border: 1px solid #cfe2ff !important;">
-				                    <label class="form-label fw-bold text-primary mb-2 small d-flex align-items-center">
-				                        <i class="bi bi-shield-check me-2"></i>VALOR COM GUIA (DESCONTO)
-				                    </label>
-				                    <p:inputNumber value="#{colaboradorController.usuarioEspecialidade.valorComGuia}"
-				                                   symbol="R$ " 
-				                                   decimalSeparator=","
-				                                   thousandSeparator="."
-				                                   decimalPlaces="2"
-				                                   styleClass="w-100" />
-				                </div>
-				            </div>
-				        </div>
-				
-				        <div class="pt-4 d-flex justify-content-end gap-2">
-				            <p:commandButton value="Cancelar" 
-				                             styleClass="ui-button-flat ui-button-plain" 
-				                             onclick="PF('dlgEditarValores').hide()" 
-				                             type="button"
-				                             icon="pi pi-times" />
-				                             
-				            <p:commandButton value="Salvar Alterações" 
-				                             icon="pi pi-check" 
-				                             actionListener="#{colaboradorController.atualizarValoresEspecialidade}"
-				                             update="listaCards messages" 
-				                             oncomplete="if(!args.validationFailed) PF('dlgEditarValores').hide();"
-				                             styleClass="rounded-pill px-4 ui-button-primary shadow-sm" />
-				        </div>
-				    </h:panelGroup>
-				</p:dialog>
+                        <div class="row g-3">
+                            <ui:repeat value="#{colaboradorController.especialidadesDoUsuario}" var="ue">
 
-            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" responsive="true" width="350">
-                <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no ui-button-flat"/>
-                <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes ui-button-danger" />
-            </p:confirmDialog>
-        </h:form>
+                                <div class="col-12">
+                                    <div class="especialidade-card">
+
+                                        <div class="status-bar #{ue.status == 'APROVADO' ? 'status-aprovado' :
+                                                                  ue.status == 'EM_ANALISE' ? 'status-analise' :
+                                                                  ue.status == 'PENDENTE_DOCS' ? 'status-pendente' :
+                                                                  'status-outro'}">
+                                        </div>
+
+                                        <div class="row align-items-center">
+
+                                            <div class="col-lg-3 col-md-12 mb-3 mb-lg-0">
+
+                                                <span class="status-badge #{ue.status == 'APROVADO' ? 'badge-aprovado' :
+                                                                            ue.status == 'EM_ANALISE' ? 'badge-analise' :
+                                                                            ue.status == 'PENDENTE_DOCS' ? 'badge-pendente' :
+                                                                            'badge-outro'}">
+
+                                                    <i class="#{ue.status == 'APROVADO' ? 'pi pi-check-circle' :
+                                                               ue.status == 'EM_ANALISE' ? 'pi pi-clock' :
+                                                               ue.status == 'PENDENTE_DOCS' ? 'pi pi-exclamation-circle' :
+                                                               'pi pi-info-circle'}"></i>
+
+                                                    #{ue.status == 'APROVADO' ? 'Aprovado' :
+                                                      ue.status == 'EM_ANALISE' ? 'Em análise' :
+                                                      ue.status == 'PENDENTE_DOCS' ? 'Pendente de documentos' :
+                                                      ue.status}
+                                                </span>
+
+                                                <div class="especialidade-nome text-truncate"
+                                                     title="#{ue.especialidade.especialidade}">
+                                                    #{ue.especialidade.especialidade}
+                                                </div>
+
+                                                <div class="especialidade-valor">
+                                                    <h:outputText value="#{ue.valorComGuia}">
+                                                        <f:convertNumber type="currency"
+                                                                         currencySymbol="R$ "
+                                                                         locale="pt_BR" />
+                                                    </h:outputText>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="col-lg-8 col-md-12">
+                                                <div class="row g-2">
+
+                                                    <div class="col-6 col-md-3">
+                                                        <div class="info-box">
+                                                            <span class="info-label">Conselho</span>
+                                                            <h:outputText value="#{ue.conselho}"
+                                                                          rendered="#{not empty ue.conselho}"
+                                                                          styleClass="doc-ok" />
+                                                            <h:outputText value="—"
+                                                                          rendered="#{empty ue.conselho}"
+                                                                          styleClass="text-muted small" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-6 col-md-3">
+                                                        <div class="info-box">
+                                                            <span class="info-label">Registro</span>
+                                                            <h:outputText value="#{ue.registro}"
+                                                                          rendered="#{not empty ue.registro}"
+                                                                          styleClass="doc-ok" />
+                                                            <h:outputText value="—"
+                                                                          rendered="#{empty ue.registro}"
+                                                                          styleClass="text-muted small" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-6 col-md-3">
+                                                        <div class="info-box">
+                                                            <span class="info-label">Diploma - Frente</span>
+
+                                                            <p:commandButton value="Visualizar"
+                                                                             icon="pi pi-eye"
+                                                                             rendered="#{not empty ue.pathDiplomaEspecialidade}"
+                                                                             action="#{colaboradorController.visualizarDocumentoEspecialidade(ue, 'diploma')}"
+                                                                             ajax="false"
+                                                                             onclick="this.form.target='_blank'"
+                                                                             styleClass="ui-button-flat ui-button-info p-0 doc-ok" />
+
+                                                            <h:outputText value="Pendente"
+                                                                          rendered="#{empty ue.pathDiplomaEspecialidade}"
+                                                                          styleClass="doc-pendente" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-6 col-md-3">
+                                                        <div class="info-box">
+                                                            <span class="info-label">Diploma - Verso</span>
+
+                                                            <p:commandButton value="Visualizar"
+                                                                             icon="pi pi-eye"
+                                                                             rendered="#{not empty ue.pathDiplomaEspecialidadeVerso}"
+                                                                             action="#{colaboradorController.visualizarDocumentoEspecialidade(ue, 'diploma_verso')}"
+                                                                             ajax="false"
+                                                                             onclick="this.form.target='_blank'"
+                                                                             styleClass="ui-button-flat ui-button-info p-0 doc-ok" />
+
+                                                            <h:outputText value="Pendente"
+                                                                          rendered="#{empty ue.pathDiplomaEspecialidadeVerso}"
+                                                                          styleClass="doc-pendente" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-6 col-md-3">
+                                                        <div class="info-box">
+                                                            <span class="info-label">Carteira - Frente</span>
+
+                                                            <p:commandButton value="Visualizar"
+                                                                             icon="pi pi-eye"
+                                                                             rendered="#{not empty ue.pathCarteiraEspecialidade}"
+                                                                             action="#{colaboradorController.visualizarDocumentoEspecialidade(ue, 'carteira')}"
+                                                                             ajax="false"
+                                                                             onclick="this.form.target='_blank'"
+                                                                             styleClass="ui-button-flat ui-button-info p-0 doc-ok" />
+
+                                                            <h:outputText value="Pendente"
+                                                                          rendered="#{empty ue.pathCarteiraEspecialidade}"
+                                                                          styleClass="doc-pendente" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-6 col-md-3">
+                                                        <div class="info-box">
+                                                            <span class="info-label">Carteira - Verso</span>
+
+                                                            <p:commandButton value="Visualizar"
+                                                                             icon="pi pi-eye"
+                                                                             rendered="#{not empty ue.pathCarteiraEspecialidadeVerso}"
+                                                                             action="#{colaboradorController.visualizarDocumentoEspecialidade(ue, 'carteira_verso')}"
+                                                                             ajax="false"
+                                                                             onclick="this.form.target='_blank'"
+                                                                             styleClass="ui-button-flat ui-button-info p-0 doc-ok" />
+
+                                                            <h:outputText value="Pendente"
+                                                                          rendered="#{empty ue.pathCarteiraEspecialidadeVerso}"
+                                                                          styleClass="doc-pendente" />
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+                                            <div class="col-lg-1 col-md-12">
+                                                <div class="card-actions">
+
+                                                    <p:commandButton icon="pi pi-pencil"
+                                                                     title="Editar valores"
+                                                                     styleClass="ui-button-info ui-button-flat round-action"
+                                                                     process="@this"
+                                                                     update=":frm:dlgEditarValores"
+                                                                     actionListener="#{colaboradorController.prepararEdicaoValores(ue)}"
+                                                                     oncomplete="PF('dlgEditarValores').show()" />
+
+                                                    <p:commandButton icon="pi pi-trash"
+                                                                     title="Remover"
+                                                                     styleClass="ui-button-danger ui-button-flat round-action"
+                                                                     process="@this"
+                                                                     update=":frm:listaCards :frm:messages"
+                                                                     actionListener="#{colaboradorController.removerEspecialidade(ue)}">
+
+                                                        <p:confirm header="Confirmação"
+                                                                   message="Deseja remover esta especialidade?"
+                                                                   icon="pi pi-exclamation-triangle" />
+                                                    </p:commandButton>
+
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </ui:repeat>
+                        </div>
+
+                    </h:panelGroup>
+
+                    <p:dialog widgetVar="dlgEsp"
+                              header="Nova Especialidade"
+                              modal="true"
+                              width="760"
+                              responsive="true"
+                              draggable="false"
+                              resizable="false"
+                              styleClass="premium-dialog"
+                              showEffect="fade"
+                              hideEffect="fade">
+
+                        <div class="p-2 p-md-3">
+
+                            <div class="row g-3 mb-4">
+
+                                <div class="col-12">
+                                    <label class="form-label small mb-1">
+                                        <i class="bi bi-search me-1 text-primary"></i>
+                                        Especialidade
+                                    </label>
+
+                                    <p:selectOneMenu id="espSelect"
+                                                     value="#{colaboradorController.especialidadeSelecionadaId}"
+                                                     styleClass="w-100"
+                                                     filter="true"
+                                                     filterMatchMode="contains">
+
+                                        <f:selectItem itemLabel="Selecione a especialidade..."
+                                                      itemValue="#{null}" />
+
+                                        <f:selectItems value="#{colaboradorController.todasEspecialidades}"
+                                                       var="e"
+                                                       itemLabel="#{e.especialidade}"
+                                                       itemValue="#{e.id}" />
+                                    </p:selectOneMenu>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label small mb-1">Conselho</label>
+
+                                    <p:selectOneMenu id="conselho"
+                                                     value="#{colaboradorController.conselho}"
+                                                     styleClass="w-100">
+
+                                        <f:selectItem itemLabel="Selecione..."
+                                                      itemValue="#{null}" />
+
+                                        <f:selectItem itemLabel="CRM - Medicina" itemValue="CRM" />
+                                        <f:selectItem itemLabel="CRP - Psicologia" itemValue="CRP" />
+                                        <f:selectItem itemLabel="CRO - Odontologia" itemValue="CRO" />
+                                        <f:selectItem itemLabel="COREN - Enfermagem" itemValue="COREN" />
+                                        <f:selectItem itemLabel="CREFITO - Fisioterapia/Terapia Ocupacional" itemValue="CREFITO" />
+                                        <f:selectItem itemLabel="CRN - Nutrição" itemValue="CRN" />
+                                    </p:selectOneMenu>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label small mb-1">Nº Registro</label>
+
+                                    <p:inputText id="registro"
+                                                 value="#{colaboradorController.registro}"
+                                                 styleClass="w-100"
+                                                 placeholder="Ex: 12345" />
+                                </div>
+
+                            </div>
+
+                            <div class="section-upload mb-4">
+                                <label class="form-label small d-block mb-3">
+                                    <i class="bi bi-cloud-arrow-up me-1 text-primary"></i>
+                                    Anexar comprovantes
+                                </label>
+
+                                <div class="row g-3">
+
+                                    <div class="col-md-6">
+                                        <label class="form-label text-secondary small mb-1">Diploma - Frente</label>
+                                        <p:fileUpload value="#{colaboradorController.fileDiploma}"
+                                                      mode="simple"
+                                                      skinSimple="true"
+                                                      label="Escolher arquivo"
+                                                      styleClass="w-100"
+                                                      accept=".pdf,.jpg,.jpeg,.png" />
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="form-label text-secondary small mb-1">Diploma - Verso</label>
+                                        <p:fileUpload value="#{colaboradorController.fileDiplomaVerso}"
+                                                      mode="simple"
+                                                      skinSimple="true"
+                                                      label="Escolher arquivo"
+                                                      styleClass="w-100"
+                                                      accept=".pdf,.jpg,.jpeg,.png" />
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="form-label text-secondary small mb-1">Carteira - Frente</label>
+                                        <p:fileUpload value="#{colaboradorController.fileCarteira}"
+                                                      mode="simple"
+                                                      skinSimple="true"
+                                                      label="Escolher arquivo"
+                                                      styleClass="w-100"
+                                                      accept=".pdf,.jpg,.jpeg,.png" />
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="form-label text-secondary small mb-1">Carteira - Verso</label>
+                                        <p:fileUpload value="#{colaboradorController.fileCarteiraVerso}"
+                                                      mode="simple"
+                                                      skinSimple="true"
+                                                      label="Escolher arquivo"
+                                                      styleClass="w-100"
+                                                      accept=".pdf,.jpg,.jpeg,.png" />
+                                    </div>
+
+                                </div>
+
+                                <div class="mt-3 text-muted" style="font-size: 11px;">
+                                    Formatos aceitos: PDF, JPG, JPEG ou PNG. Tamanho recomendado: até 5MB.
+                                </div>
+                            </div>
+
+                            <div class="row g-3">
+
+                                <div class="col-md-6">
+                                    <div class="value-card">
+                                        <label class="form-label small mb-2 d-flex align-items-center">
+                                            <i class="bi bi-tag-fill me-2 text-muted"></i>
+                                            Valor original
+                                        </label>
+
+                                        <p:inputNumber value="#{colaboradorController.valorSelecionado}"
+                                                       symbol="R$ "
+                                                       decimalSeparator=","
+                                                       thousandSeparator="."
+                                                       decimalPlaces="2"
+                                                       inputmode="decimal"
+                                                       placeholder="0,00"
+                                                       styleClass="w-100" />
+
+                                        <small class="text-muted d-block mt-2">
+                                            Valor normal do atendimento.
+                                        </small>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="value-card value-card-primary">
+                                        <label class="form-label small mb-2 d-flex align-items-center text-primary">
+                                            <i class="bi bi-shield-check me-2"></i>
+                                            Valor com guia
+                                        </label>
+
+                                        <p:inputNumber value="#{colaboradorController.valorComGuia}"
+                                                       symbol="R$ "
+                                                       decimalSeparator=","
+                                                       thousandSeparator="."
+                                                       decimalPlaces="2"
+                                                       inputmode="decimal"
+                                                       placeholder="0,00"
+                                                       styleClass="w-100" />
+
+                                        <small class="text-primary d-block mt-2">
+                                            Valor com desconto usando a guia.
+                                        </small>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <f:facet name="footer">
+                            <div class="d-flex justify-content-end gap-2 pt-3 border-top">
+                                <p:commandButton value="Cancelar"
+                                                 type="button"
+                                                 icon="pi pi-times"
+                                                 onclick="PF('dlgEsp').hide()"
+                                                 styleClass="ui-button-flat ui-button-plain" />
+
+                                <p:commandButton value="Salvar Especialidade"
+                                                 icon="pi pi-check"
+                                                 actionListener="#{colaboradorController.addEspecialidades}"
+                                                 update="listaCards messages"
+                                                 oncomplete="if(!args.validationFailed) PF('dlgEsp').hide();"
+                                                 styleClass="ui-button-primary rounded-pill px-4" />
+                            </div>
+                        </f:facet>
+
+                    </p:dialog>
+
+                    <p:dialog id="dlgEditarValores"
+                              widgetVar="dlgEditarValores"
+                              header="Editar Valores"
+                              modal="true"
+                              width="540"
+                              responsive="true"
+                              draggable="false"
+                              resizable="false"
+                              styleClass="premium-dialog"
+                              showEffect="fade"
+                              hideEffect="fade">
+
+                        <h:panelGroup id="pnlEdicao"
+                                      layout="block"
+                                      styleClass="p-2 p-md-3"
+                                      rendered="#{not empty colaboradorController.usuarioEspecialidade}">
+
+                            <div class="text-center mb-4">
+                                <h5 class="fw-bold text-primary mb-1">
+                                    #{colaboradorController.usuarioEspecialidade.especialidade.especialidade}
+                                </h5>
+                                <p class="text-muted small mb-0">
+                                    Atualize os valores de atendimento desta especialidade.
+                                </p>
+                            </div>
+
+                            <div class="row g-3">
+
+                                <div class="col-12">
+                                    <div class="value-card">
+                                        <label class="form-label small mb-2 d-flex align-items-center">
+                                            <i class="bi bi-tag-fill me-2 text-muted"></i>
+                                            Valor original
+                                        </label>
+
+                                        <p:inputNumber value="#{colaboradorController.usuarioEspecialidade.valor}"
+                                                       symbol="R$ "
+                                                       decimalSeparator=","
+                                                       thousandSeparator="."
+                                                       decimalPlaces="2"
+                                                       styleClass="w-100" />
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <div class="value-card value-card-primary">
+                                        <label class="form-label small mb-2 d-flex align-items-center text-primary">
+                                            <i class="bi bi-shield-check me-2"></i>
+                                            Valor com guia
+                                        </label>
+
+                                        <p:inputNumber value="#{colaboradorController.usuarioEspecialidade.valorComGuia}"
+                                                       symbol="R$ "
+                                                       decimalSeparator=","
+                                                       thousandSeparator="."
+                                                       decimalPlaces="2"
+                                                       styleClass="w-100" />
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="d-flex justify-content-end gap-2 pt-4">
+                                <p:commandButton value="Cancelar"
+                                                 type="button"
+                                                 icon="pi pi-times"
+                                                 onclick="PF('dlgEditarValores').hide()"
+                                                 styleClass="ui-button-flat ui-button-plain" />
+
+                                <p:commandButton value="Salvar Alterações"
+                                                 icon="pi pi-check"
+                                                 actionListener="#{colaboradorController.atualizarValoresEspecialidade}"
+                                                 update="listaCards messages"
+                                                 oncomplete="if(!args.validationFailed) PF('dlgEditarValores').hide();"
+                                                 styleClass="ui-button-primary rounded-pill px-4" />
+                            </div>
+
+                        </h:panelGroup>
+
+                    </p:dialog>
+
+                    <p:confirmDialog global="true"
+                                     showEffect="fade"
+                                     hideEffect="fade"
+                                     responsive="true"
+                                     width="360">
+
+                        <p:commandButton value="Não"
+                                         type="button"
+                                         styleClass="ui-confirmdialog-no ui-button-flat" />
+
+                        <p:commandButton value="Sim"
+                                         type="button"
+                                         styleClass="ui-confirmdialog-yes ui-button-danger" />
+                    </p:confirmDialog>
+
+                </h:form>
+
+            </div>
         </div>
+
     </ui:define>
 </ui:composition>
