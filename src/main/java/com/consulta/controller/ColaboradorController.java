@@ -202,24 +202,29 @@ public class ColaboradorController implements Serializable {
             Mensagens.aviso("Selecione uma especialidade.", "");
             return;
         }
+
         if (valorSelecionado == null || valorSelecionado.compareTo(BigDecimal.ZERO) <= 0) {
             Mensagens.aviso("Informe um valor válido.", "");
             return;
         }
+
         if (valorComGuia == null || valorComGuia.compareTo(BigDecimal.ZERO) <= 0) {
-            Mensagens.aviso("Informe um valor com a Guia.", "");
+            Mensagens.aviso("Informe um valor com a guia.", "");
             return;
         }
+
         if (usuario == null || usuario.getId() == null) {
             Mensagens.erro("Usuário não carregado.", "");
             return;
         }
+
         if (usuarioEspecialidadeRepository.existsByUsuarioIdAndEspecialidadeId(usuario.getId(), especialidadeSelecionadaId)) {
             Mensagens.aviso("Você já adicionou essa especialidade.", "");
             return;
         }
 
         Especialidade esp = especialidadeRepository.findById(especialidadeSelecionadaId).orElse(null);
+
         if (esp == null) {
             Mensagens.aviso("Especialidade inválida.", "");
             return;
@@ -232,54 +237,78 @@ public class ColaboradorController implements Serializable {
         ue.setValorComGuia(valorComGuia);
         ue.setConselho(conselho);
         ue.setRegistro(registro);
-
-        // status padrão
         ue.setStatus("PENDENTE_DOCS");
 
-        // ====== SALVAR NO DISCO + GUARDAR PATH ======
         try {
 
-        	String espNomeBase = normalizaParaArquivo(esp.getEspecialidade());
-            ue.setNomeArquivo(espNomeBase); 
-
             String espNome = normalizaParaArquivo(esp.getEspecialidade());
-
             ue.setNomeArquivo(espNome);
-            
-            // DIPLOMA: Usando o Service
+
             if (fileDiploma != null && fileDiploma.getSize() > 0) {
-                String nomeSalvo = fileService.salvarDocumentoJSF(usuario.getId(), espNome + "_diploma", fileDiploma);
-                ue.setPathDiplomaEspecialidade(nomeSalvo); // Salvamos apenas o nome do arquivo no banco
+                String nomeSalvo = fileService.salvarDocumentoJSF(
+                        usuario.getId(),
+                        espNome + "_diploma_frente",
+                        fileDiploma
+                );
+                ue.setPathDiplomaEspecialidade(nomeSalvo);
             }
 
-            // CARTEIRA: Usando o Service
+            if (fileDiplomaVerso != null && fileDiplomaVerso.getSize() > 0) {
+                String nomeSalvo = fileService.salvarDocumentoJSF(
+                        usuario.getId(),
+                        espNome + "_diploma_verso",
+                        fileDiplomaVerso
+                );
+                ue.setPathDiplomaEspecialidadeVerso(nomeSalvo);
+            }
+
             if (fileCarteira != null && fileCarteira.getSize() > 0) {
-                String nomeSalvo = fileService.salvarDocumentoJSF(usuario.getId(), espNome + "_carteira", fileCarteira);
-                ue.setPathCarteiraEspecialidade(nomeSalvo); // Salvamos apenas o nome do arquivo no banco
+                String nomeSalvo = fileService.salvarDocumentoJSF(
+                        usuario.getId(),
+                        espNome + "_carteira_frente",
+                        fileCarteira
+                );
+                ue.setPathCarteiraEspecialidade(nomeSalvo);
             }
 
-            // Ajusta status conforme anexos
-            boolean temDiploma = ue.getPathDiplomaEspecialidade() != null;
-            boolean temCarteira = ue.getPathCarteiraEspecialidade() != null;
-            ue.setStatus((temDiploma && temCarteira) ? "EM_ANALISE" : "PENDENTE_DOCS");
+            if (fileCarteiraVerso != null && fileCarteiraVerso.getSize() > 0) {
+                String nomeSalvo = fileService.salvarDocumentoJSF(
+                        usuario.getId(),
+                        espNome + "_carteira_verso",
+                        fileCarteiraVerso
+                );
+                ue.setPathCarteiraEspecialidadeVerso(nomeSalvo);
+            }
+
+            boolean temDiplomaFrente = ue.getPathDiplomaEspecialidade() != null;
+            boolean temDiplomaVerso = ue.getPathDiplomaEspecialidadeVerso() != null;
+            boolean temCarteiraFrente = ue.getPathCarteiraEspecialidade() != null;
+            boolean temCarteiraVerso = ue.getPathCarteiraEspecialidadeVerso() != null;
+
+            if (temDiplomaFrente && temDiplomaVerso && temCarteiraFrente && temCarteiraVerso) {
+                ue.setStatus("EM_ANALISE");
+            } else {
+                ue.setStatus("PENDENTE_DOCS");
+            }
 
         } catch (IOException ex) {
             Mensagens.erro("Erro ao salvar documentos: " + ex.getMessage(), "");
             return;
+
         } finally {
-            // limpa uploads pra não reaproveitar sem querer
-        	fileDiploma = null;
-        	fileCarteira = null;
+            fileDiploma = null;
+            fileDiplomaVerso = null;
+            fileCarteira = null;
+            fileCarteiraVerso = null;
         }
-        
+
         usuarioEspecialidadeRepository.save(ue);
 
         especialidadesDoUsuario = usuarioEspecialidadeRepository.findByUsuarioId(usuario.getId());
 
         especialidadeSelecionadaId = null;
-        valorSelecionado = null;        
+        valorSelecionado = null;
         valorComGuia = null;
-        
         conselho = null;
         registro = null;
 

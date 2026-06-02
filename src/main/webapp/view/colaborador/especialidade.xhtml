@@ -19,14 +19,15 @@
                 --esp-border: #e5e7eb;
                 --esp-muted: #64748b;
                 --esp-bg: #f8fafc;
-                --esp-radius: 18px;
+                --esp-dark: #0f172a;
+                --esp-radius: 20px;
             }
 
             .especialidades-page {
                 padding: 28px 14px 45px;
                 min-height: 88vh;
                 background:
-                    radial-gradient(circle at top left, rgba(37, 99, 235, .08), transparent 32%),
+                    radial-gradient(circle at top left, rgba(37, 99, 235, .08), transparent 30%),
                     linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
             }
 
@@ -42,12 +43,12 @@
                 border-radius: 22px;
                 padding: 22px;
                 box-shadow: 0 12px 28px rgba(15, 23, 42, .06);
-                margin-bottom: 20px;
+                margin-bottom: 22px;
             }
 
             .page-title {
-                font-weight: 600;
-                color: #0f172a;
+                font-weight: 700;
+                color: var(--esp-dark);
                 margin: 0;
                 font-size: 1.25rem;
             }
@@ -61,7 +62,7 @@
             .title-icon {
                 width: 46px;
                 height: 46px;
-                border-radius: 14px;
+                border-radius: 15px;
                 background: var(--esp-primary-soft);
                 color: var(--esp-primary);
                 display: flex;
@@ -87,27 +88,28 @@
 
             .especialidade-card {
                 position: relative;
+                height: 100%;
                 background: #fff;
                 border: 1px solid var(--esp-border);
                 border-radius: var(--esp-radius);
                 padding: 20px;
-                box-shadow: 0 10px 24px rgba(15, 23, 42, .05);
-                overflow: hidden;
+                box-shadow: 0 10px 26px rgba(15, 23, 42, .055);
                 transition: .22s ease;
+                overflow: hidden;
             }
 
             .especialidade-card:hover {
-                transform: translateY(-3px);
-                box-shadow: 0 16px 34px rgba(15, 23, 42, .09);
+                transform: translateY(-4px);
+                box-shadow: 0 18px 38px rgba(15, 23, 42, .10);
                 border-color: rgba(37, 99, 235, .35);
             }
 
-            .status-bar {
+            .card-top-line {
                 position: absolute;
                 left: 0;
                 top: 0;
-                width: 6px;
-                height: 100%;
+                width: 100%;
+                height: 5px;
             }
 
             .status-aprovado { background: var(--esp-success); }
@@ -123,7 +125,6 @@
                 font-weight: 700;
                 border-radius: 999px;
                 padding: 5px 10px;
-                margin-bottom: 8px;
             }
 
             .badge-aprovado {
@@ -150,59 +151,134 @@
                 border: 1px solid #e2e8f0;
             }
 
+            .especialidade-avatar {
+                width: 48px;
+                height: 48px;
+                border-radius: 16px;
+                background: var(--esp-primary-soft);
+                color: var(--esp-primary);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.25rem;
+                flex: 0 0 auto;
+            }
+
             .especialidade-nome {
-                color: #0f172a;
                 font-size: 1.05rem;
-                font-weight: 600;
-                line-height: 1.25;
-                margin-bottom: 5px;
-            }
-
-            .especialidade-valor {
-                color: var(--esp-primary);
-                font-weight: 600;
-                font-size: 1rem;
-            }
-
-            .info-box {
-                height: 100%;
-                min-height: 72px;
-                background: var(--esp-bg);
-                border: 1px solid #e2e8f0;
-                border-radius: 14px;
-                padding: 11px 12px;
-            }
-
-            .info-label {
-                display: block;
-                color: #475569;
-                font-size: .72rem;
-                font-weight: 600;
-                margin-bottom: 5px;
-            }
-
-            .doc-ok {
-                color: var(--esp-primary);
                 font-weight: 700;
-                font-size: .78rem;
+                color: var(--esp-dark);
+                line-height: 1.25;
+                margin: 0;
             }
 
-            .doc-pendente {
-                color: var(--esp-danger);
+            .mini-info {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+                margin-top: 12px;
+            }
+
+            .mini-pill {
+                background: #f8fafc;
+                border: 1px solid #e2e8f0;
+                color: #334155;
+                border-radius: 999px;
+                padding: 6px 10px;
+                font-size: .78rem;
                 font-weight: 600;
-                font-size: .78rem;
             }
 
-            .card-actions {
+            .price-area {
+                margin-top: 16px;
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+
+            .price-box {
+                border-radius: 16px;
+                padding: 12px;
+                background: #f8fafc;
+                border: 1px solid #e2e8f0;
+            }
+
+            .price-box.primary {
+                background: linear-gradient(145deg, #ffffff, #eff6ff);
+                border-color: #bfdbfe;
+            }
+
+            .price-label {
+                display: block;
+                font-size: .70rem;
+                color: #64748b;
+                font-weight: 700;
+                text-transform: uppercase;
+                margin-bottom: 4px;
+            }
+
+            .price-value {
+                color: var(--esp-dark);
+                font-weight: 600;
+                font-size: .95rem;
+            }
+
+            .price-box.primary .price-value {
+                color: var(--esp-primary);
+            }
+
+            .documents-area {
+                margin-top: 16px;
+                padding-top: 15px;
+                border-top: 1px solid #e2e8f0;
+            }
+
+            .documents-title {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin-bottom: 10px;
+            }
+
+            .documents-title span {
+                font-size: .82rem;
+                font-weight: 600;
+                color: #334155;
+            }
+
+            .documents-grid {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+
+            .doc-chip {
+                border-radius: 999px !important;
+                padding: 4px 10px !important;
+                font-size: .75rem !important;
+                border: 1px solid #bfdbfe !important;
+                background: #eff6ff !important;
+                color: var(--esp-primary) !important;
+                font-weight: 700 !important;
+            }
+            
+            .medio{
+            	padding: 0.5rem !important;
+            }
+
+            .card-footer-actions {
+                margin-top: 18px;
+                padding-top: 14px;
+                border-top: 1px solid #e2e8f0;
                 display: flex;
                 align-items: center;
                 justify-content: flex-end;
-                gap: 6px;
+                gap: 8px;
             }
 
             .round-action {
-                width: 40px !important;
-                height: 40px !important;
+                width: 39px !important;
+                height: 39px !important;
                 border-radius: 50% !important;
             }
 
@@ -211,10 +287,6 @@
                 border: none;
                 padding: 20px 22px 10px;
                 border-radius: 18px 18px 0 0;
-            }
-
-            .premium-dialog .ui-dialog-content {
-                border-radius: 0 0 18px 18px;
             }
 
             .section-upload {
@@ -254,6 +326,10 @@
             .ui-inputnumber input {
                 width: 100% !important;
             }
+            
+            body .ui-button.ui-button-text-icon-left .ui-button-text {
+			    padding: 0 1rem 0 2rem !important;
+			}
 
             @media (max-width: 768px) {
                 .especialidades-page {
@@ -278,15 +354,12 @@
                     width: 100%;
                 }
 
-                .especialidade-card {
-                    padding: 18px 15px 15px 19px;
+                .price-area {
+                    grid-template-columns: 1fr;
                 }
 
-                .card-actions {
+                .card-footer-actions {
                     justify-content: flex-start;
-                    margin-top: 15px;
-                    border-top: 1px solid #e2e8f0;
-                    padding-top: 12px;
                 }
             }
         </style>
@@ -315,7 +388,7 @@
                             </div>
 
                             <div class="page-header-action">
-                                <p:commandButton value="Nova Especialidade"
+                                <p:commandButton value="Nova Especialidade" style="padding: 0.5rem !important;"
                                                  icon="pi pi-plus"
                                                  type="button"
                                                  onclick="PF('dlgEsp').show()"
@@ -338,179 +411,161 @@
                         <div class="row g-3">
                             <ui:repeat value="#{colaboradorController.especialidadesDoUsuario}" var="ue">
 
-                                <div class="col-12">
+                                <div class="col-12 col-md-6 col-xl-4">
                                     <div class="especialidade-card">
 
-                                        <div class="status-bar #{ue.status == 'APROVADO' ? 'status-aprovado' :
+                                        <div class="card-top-line #{ue.status == 'APROVADO' ? 'status-aprovado' :
                                                                   ue.status == 'EM_ANALISE' ? 'status-analise' :
                                                                   ue.status == 'PENDENTE_DOCS' ? 'status-pendente' :
                                                                   'status-outro'}">
                                         </div>
 
-                                        <div class="row align-items-center">
+                                        <div class="d-flex align-items-start justify-content-between gap-3 mt-2">
 
-                                            <div class="col-lg-3 col-md-12 mb-3 mb-lg-0">
-
-                                                <span class="status-badge #{ue.status == 'APROVADO' ? 'badge-aprovado' :
-                                                                            ue.status == 'EM_ANALISE' ? 'badge-analise' :
-                                                                            ue.status == 'PENDENTE_DOCS' ? 'badge-pendente' :
-                                                                            'badge-outro'}">
-
-                                                    <i class="#{ue.status == 'APROVADO' ? 'pi pi-check-circle' :
-                                                               ue.status == 'EM_ANALISE' ? 'pi pi-clock' :
-                                                               ue.status == 'PENDENTE_DOCS' ? 'pi pi-exclamation-circle' :
-                                                               'pi pi-info-circle'}"></i>
-
-                                                    #{ue.status == 'APROVADO' ? 'Aprovado' :
-                                                      ue.status == 'EM_ANALISE' ? 'Em análise' :
-                                                      ue.status == 'PENDENTE_DOCS' ? 'Pendente de documentos' :
-                                                      ue.status}
-                                                </span>
-
-                                                <div class="especialidade-nome text-truncate"
-                                                     title="#{ue.especialidade.especialidade}">
-                                                    #{ue.especialidade.especialidade}
+                                            <div class="d-flex align-items-start gap-3">
+                                                <div class="especialidade-avatar">
+                                                    <i class="bi bi-patch-check-fill"></i>
                                                 </div>
 
-                                                <div class="especialidade-valor">
+                                                <div>
+                                                    <h5 class="especialidade-nome"
+                                                        title="#{ue.especialidade.especialidade}">
+                                                        #{ue.especialidade.especialidade}
+                                                    </h5>
+
+                                                    <div class="mini-info">
+                                                        <span class="mini-pill">
+                                                            <i class="bi bi-building me-1"></i>
+                                                            <h:outputText value="#{ue.conselho}" rendered="#{not empty ue.conselho}" />
+                                                            <h:outputText value="Sem conselho" rendered="#{empty ue.conselho}" />
+                                                        </span>
+
+                                                        <span class="mini-pill">
+                                                            <i class="bi bi-person-vcard me-1"></i>
+                                                            <h:outputText value="#{ue.registro}" rendered="#{not empty ue.registro}" />
+                                                            <h:outputText value="Sem registro" rendered="#{empty ue.registro}" />
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="mt-3">
+                                            <span class="status-badge #{ue.status == 'APROVADO' ? 'badge-aprovado' :
+                                                                        ue.status == 'EM_ANALISE' ? 'badge-analise' :
+                                                                        ue.status == 'PENDENTE_DOCS' ? 'badge-pendente' :
+                                                                        'badge-outro'}">
+
+                                                <i class="#{ue.status == 'APROVADO' ? 'pi pi-check-circle' :
+                                                           ue.status == 'EM_ANALISE' ? 'pi pi-clock' :
+                                                           ue.status == 'PENDENTE_DOCS' ? 'pi pi-exclamation-circle' :
+                                                           'pi pi-info-circle'}"></i>
+
+                                                #{ue.status == 'APROVADO' ? 'Aprovado' :
+                                                  ue.status == 'EM_ANALISE' ? 'Em análise' :
+                                                  ue.status == 'PENDENTE_DOCS' ? 'Pendente de documentos' :
+                                                  ue.status}
+                                            </span>
+                                        </div>
+
+                                        <div class="price-area">
+
+                                            <div class="price-box">
+                                                <span class="price-label">Valor original</span>
+                                                <span class="price-value">
+                                                    <h:outputText value="#{ue.valor}">
+                                                        <f:convertNumber type="currency"
+                                                                         currencySymbol="R$ "
+                                                                         locale="pt_BR" />
+                                                    </h:outputText>
+                                                </span>
+                                            </div>
+
+                                            <div class="price-box primary">
+                                                <span class="price-label">Valor com guia</span>
+                                                <span class="price-value">
                                                     <h:outputText value="#{ue.valorComGuia}">
                                                         <f:convertNumber type="currency"
                                                                          currencySymbol="R$ "
                                                                          locale="pt_BR" />
                                                     </h:outputText>
-                                                </div>
-
-                                            </div>
-
-                                            <div class="col-lg-8 col-md-12">
-                                                <div class="row g-2">
-
-                                                    <div class="col-6 col-md-3">
-                                                        <div class="info-box">
-                                                            <span class="info-label">Conselho</span>
-                                                            <h:outputText value="#{ue.conselho}"
-                                                                          rendered="#{not empty ue.conselho}"
-                                                                          styleClass="doc-ok" />
-                                                            <h:outputText value="—"
-                                                                          rendered="#{empty ue.conselho}"
-                                                                          styleClass="text-muted small" />
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="col-6 col-md-3">
-                                                        <div class="info-box">
-                                                            <span class="info-label">Registro</span>
-                                                            <h:outputText value="#{ue.registro}"
-                                                                          rendered="#{not empty ue.registro}"
-                                                                          styleClass="doc-ok" />
-                                                            <h:outputText value="—"
-                                                                          rendered="#{empty ue.registro}"
-                                                                          styleClass="text-muted small" />
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="col-6 col-md-3">
-                                                        <div class="info-box">
-                                                            <span class="info-label">Diploma - Frente</span>
-
-                                                            <p:commandButton value="Visualizar"
-                                                                             icon="pi pi-eye"
-                                                                             rendered="#{not empty ue.pathDiplomaEspecialidade}"
-                                                                             action="#{colaboradorController.visualizarDocumentoEspecialidade(ue, 'diploma')}"
-                                                                             ajax="false"
-                                                                             onclick="this.form.target='_blank'"
-                                                                             styleClass="ui-button-flat ui-button-info p-0 doc-ok" />
-
-                                                            <h:outputText value="Pendente"
-                                                                          rendered="#{empty ue.pathDiplomaEspecialidade}"
-                                                                          styleClass="doc-pendente" />
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="col-6 col-md-3">
-                                                        <div class="info-box">
-                                                            <span class="info-label">Diploma - Verso</span>
-
-                                                            <p:commandButton value="Visualizar"
-                                                                             icon="pi pi-eye"
-                                                                             rendered="#{not empty ue.pathDiplomaEspecialidadeVerso}"
-                                                                             action="#{colaboradorController.visualizarDocumentoEspecialidade(ue, 'diploma_verso')}"
-                                                                             ajax="false"
-                                                                             onclick="this.form.target='_blank'"
-                                                                             styleClass="ui-button-flat ui-button-info p-0 doc-ok" />
-
-                                                            <h:outputText value="Pendente"
-                                                                          rendered="#{empty ue.pathDiplomaEspecialidadeVerso}"
-                                                                          styleClass="doc-pendente" />
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="col-6 col-md-3">
-                                                        <div class="info-box">
-                                                            <span class="info-label">Carteira - Frente</span>
-
-                                                            <p:commandButton value="Visualizar"
-                                                                             icon="pi pi-eye"
-                                                                             rendered="#{not empty ue.pathCarteiraEspecialidade}"
-                                                                             action="#{colaboradorController.visualizarDocumentoEspecialidade(ue, 'carteira')}"
-                                                                             ajax="false"
-                                                                             onclick="this.form.target='_blank'"
-                                                                             styleClass="ui-button-flat ui-button-info p-0 doc-ok" />
-
-                                                            <h:outputText value="Pendente"
-                                                                          rendered="#{empty ue.pathCarteiraEspecialidade}"
-                                                                          styleClass="doc-pendente" />
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="col-6 col-md-3">
-                                                        <div class="info-box">
-                                                            <span class="info-label">Carteira - Verso</span>
-
-                                                            <p:commandButton value="Visualizar"
-                                                                             icon="pi pi-eye"
-                                                                             rendered="#{not empty ue.pathCarteiraEspecialidadeVerso}"
-                                                                             action="#{colaboradorController.visualizarDocumentoEspecialidade(ue, 'carteira_verso')}"
-                                                                             ajax="false"
-                                                                             onclick="this.form.target='_blank'"
-                                                                             styleClass="ui-button-flat ui-button-info p-0 doc-ok" />
-
-                                                            <h:outputText value="Pendente"
-                                                                          rendered="#{empty ue.pathCarteiraEspecialidadeVerso}"
-                                                                          styleClass="doc-pendente" />
-                                                        </div>
-                                                    </div>
-
-                                                </div>
-                                            </div>
-
-                                            <div class="col-lg-1 col-md-12">
-                                                <div class="card-actions">
-
-                                                    <p:commandButton icon="pi pi-pencil"
-                                                                     title="Editar valores"
-                                                                     styleClass="ui-button-info ui-button-flat round-action"
-                                                                     process="@this"
-                                                                     update=":frm:dlgEditarValores"
-                                                                     actionListener="#{colaboradorController.prepararEdicaoValores(ue)}"
-                                                                     oncomplete="PF('dlgEditarValores').show()" />
-
-                                                    <p:commandButton icon="pi pi-trash"
-                                                                     title="Remover"
-                                                                     styleClass="ui-button-danger ui-button-flat round-action"
-                                                                     process="@this"
-                                                                     update=":frm:listaCards :frm:messages"
-                                                                     actionListener="#{colaboradorController.removerEspecialidade(ue)}">
-
-                                                        <p:confirm header="Confirmação"
-                                                                   message="Deseja remover esta especialidade?"
-                                                                   icon="pi pi-exclamation-triangle" />
-                                                    </p:commandButton>
-
-                                                </div>
+                                                </span>
                                             </div>
 
                                         </div>
+
+                                        <div class="documents-area">
+
+                                            <div class="documents-title">
+                                                <span>
+                                                    <i class="bi bi-folder2-open me-1 text-primary"></i>
+                                                    Documentos
+                                                </span>
+                                            </div>
+
+                                            <div class="documents-grid">
+
+                                                <p:commandButton value="Diploma"
+                                                                 icon="pi pi-file"
+                                                                 rendered="#{not empty ue.pathDiplomaEspecialidade}"
+                                                                 action="#{colaboradorController.visualizarDocumentoEspecialidade(ue, 'diploma')}"
+                                                                 ajax="false"
+                                                                 onclick="this.form.target='_blank'"
+                                                                 styleClass="doc-chip" />
+
+                                                <p:commandButton value="Diploma Verso"
+                                                                 icon="pi pi-file"
+                                                                 rendered="#{not empty ue.pathDiplomaEspecialidadeVerso}"
+                                                                 action="#{colaboradorController.visualizarDocumentoEspecialidade(ue, 'diploma_verso')}"
+                                                                 ajax="false"
+                                                                 onclick="this.form.target='_blank'"
+                                                                 styleClass="doc-chip" />
+
+                                                <p:commandButton value="Carteira"
+                                                                 icon="pi pi-id-card"
+                                                                 rendered="#{not empty ue.pathCarteiraEspecialidade}"
+                                                                 action="#{colaboradorController.visualizarDocumentoEspecialidade(ue, 'carteira')}"
+                                                                 ajax="false"
+                                                                 onclick="this.form.target='_blank'"
+                                                                 styleClass="doc-chip" />
+
+                                                <p:commandButton value="Carteira Verso"
+                                                                 icon="pi pi-id-card"
+                                                                 rendered="#{not empty ue.pathCarteiraEspecialidadeVerso}"
+                                                                 action="#{colaboradorController.visualizarDocumentoEspecialidade(ue, 'carteira_verso')}"
+                                                                 ajax="false"
+                                                                 onclick="this.form.target='_blank'"
+                                                                 styleClass="doc-chip" />
+
+                                            </div>
+
+                                        </div>
+
+                                        <div class="card-footer-actions">
+
+                                            <p:commandButton icon="pi pi-pencil"
+                                                             title="Editar valores"
+                                                             styleClass="ui-button-info ui-button-flat round-action"
+                                                             process="@this"
+                                                             update=":frm:dlgEditarValores"
+                                                             actionListener="#{colaboradorController.prepararEdicaoValores(ue)}"
+                                                             oncomplete="PF('dlgEditarValores').show()" />
+
+                                            <p:commandButton icon="pi pi-trash"
+                                                             title="Remover"
+                                                             styleClass="ui-button-danger ui-button-flat round-action"
+                                                             process="@this"
+                                                             update=":frm:listaCards :frm:messages"
+                                                             actionListener="#{colaboradorController.removerEspecialidade(ue)}">
+
+                                                <p:confirm header="Confirmação"
+                                                           message="Deseja remover esta especialidade?"
+                                                           icon="pi pi-exclamation-triangle" />
+                                            </p:commandButton>
+
+                                        </div>
+
                                     </div>
                                 </div>
 
@@ -520,15 +575,16 @@
                     </h:panelGroup>
 
                     <p:dialog widgetVar="dlgEsp"
-                              header="Nova Especialidade"
-                              modal="true"
-                              width="760"
-                              responsive="true"
-                              draggable="false"
-                              resizable="false"
-                              styleClass="premium-dialog"
-                              showEffect="fade"
-                              hideEffect="fade">
+				          header="Nova Especialidade"
+				          modal="true"
+				          width="760"
+				          responsive="true"
+				          draggable="false"
+				          resizable="false"
+				          fitViewport="true"
+				          styleClass="premium-dialog"
+				          showEffect="fade"
+				          hideEffect="fade">
 
                         <div class="p-2 p-md-3">
 
@@ -700,11 +756,11 @@
                                                  styleClass="ui-button-flat ui-button-plain" />
 
                                 <p:commandButton value="Salvar Especialidade"
-                                                 icon="pi pi-check"
+                                                 icon="pi pi-check" 
                                                  actionListener="#{colaboradorController.addEspecialidades}"
                                                  update="listaCards messages"
                                                  oncomplete="if(!args.validationFailed) PF('dlgEsp').hide();"
-                                                 styleClass="ui-button-primary rounded-pill px-4" />
+                                                 styleClass="ui-button-primary rounded-pill px-4 medio" />
                             </div>
                         </f:facet>
 
@@ -784,7 +840,7 @@
                                                  actionListener="#{colaboradorController.atualizarValoresEspecialidade}"
                                                  update="listaCards messages"
                                                  oncomplete="if(!args.validationFailed) PF('dlgEditarValores').hide();"
-                                                 styleClass="ui-button-primary rounded-pill px-4" />
+                                                 styleClass="ui-button-primary rounded-pill px-4 medio" />
                             </div>
 
                         </h:panelGroup>
