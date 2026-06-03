@@ -939,7 +939,7 @@
                                                     </div>
 
                                                     <h3>
-                                                        #{h.disponivel ? 'Horário Livre' : h.paciente.nome}
+                                                        #{h.disponivel ? 'Horário Livre' : (not empty h.pacienteConvidado ? h.pacienteConvidado.nome : h.paciente.nome)}
                                                     </h3>
 
                                                     <small>
@@ -952,34 +952,54 @@
 
                                             <div class="patient-card-body">
 
-                                                <ui:fragment rendered="#{not h.disponivel}">
-
-                                                    <div class="info-line">
-                                                        <i class="pi pi-id-card"></i>
-                                                        <span>#{h.paciente.cpf}</span>
-                                                    </div>
-
-                                                    <div class="info-line">
-                                                        <i class="pi pi-phone"></i>
-                                                        <span>#{h.paciente.celular}</span>
-                                                    </div>
-
-                                                    <div class="info-line">
-                                                        <i class="pi pi-envelope"></i>
-                                                        <span>#{h.paciente.email}</span>
-                                                    </div>
-
-                                                </ui:fragment>
-
-                                                <ui:fragment rendered="#{h.disponivel}">
-
-                                                    <div class="empty-slot">
-                                                        Este horário está aguardando agendamento.
-                                                    </div>
-
-                                                </ui:fragment>
-
-                                            </div>
+											    <ui:fragment rendered="#{not h.disponivel}">
+											
+											        <!-- Quando existe paciente convidado -->
+											        <ui:fragment rendered="#{not empty h.pacienteConvidado}">
+											
+											            <div class="info-line">
+											                <i class="pi pi-id-card"></i>
+											                <span>#{h.pacienteConvidado.cpf}</span>
+											            </div>
+											
+											            <div class="info-line">
+											                <i class="pi pi-calendar"></i>
+											                <span>#{h.pacienteConvidado.nascimento}</span>
+											            </div>
+											
+											        </ui:fragment>
+											
+											        <!-- Quando NÃO existe paciente convidado, usa paciente normal -->
+											        <ui:fragment rendered="#{empty h.pacienteConvidado and not empty h.paciente}">
+											
+											            <div class="info-line">
+											                <i class="pi pi-id-card"></i>
+											                <span>#{h.paciente.cpf}</span>
+											            </div>
+											            
+											            <div class="info-line">
+											                <i class="pi pi-calendar"></i>
+											                <span>#{h.paciente.nascimento}</span>
+											            </div>
+											
+											        </ui:fragment>
+											
+											        <!-- Segurança caso não tenha nenhum paciente -->
+											        <ui:fragment rendered="#{empty h.pacienteConvidado and empty h.paciente}">
+											            <div class="empty-slot">
+											                Paciente não informado.
+											            </div>
+											        </ui:fragment>
+											
+											    </ui:fragment>
+											
+											    <ui:fragment rendered="#{h.disponivel}">
+											        <div class="empty-slot">
+											            Este horário está aguardando agendamento.
+											        </div>
+											    </ui:fragment>
+											
+											</div>
 
                                             <div class="patient-card-actions">
 
@@ -1067,6 +1087,23 @@
                                                     #{not empty colaboradorController.pacienteConvidadoModal
                                                         ? colaboradorController.pacienteConvidadoModal.cpf
                                                         : colaboradorController.pacienteSelecionado.cpf}
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        
+                                        <div class="patient-line">
+
+                                            <div class="patient-line-icon">
+                                                <i class="pi pi-calendar"></i>
+                                            </div>
+
+                                            <div>
+                                                <span class="patient-line-label">Nascimento</span>
+                                                <div class="patient-line-value">
+                                                    #{not empty colaboradorController.pacienteConvidadoModal
+                                                        ? colaboradorController.pacienteConvidadoModal.nascimento
+                                                        : colaboradorController.pacienteSelecionado.nascimento}
                                                 </div>
                                             </div>
 
