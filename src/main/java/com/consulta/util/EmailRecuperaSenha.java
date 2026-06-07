@@ -24,8 +24,6 @@ public class EmailRecuperaSenha {
 
     public void enviaMensagem(String email, String senhaProvisoria) {
     	
-    	email = "alisonlimabandeira@gmail.com";
-
         String assunto = "Recuperação de senha - Senha provisória";
 
         // Se você tiver uma rota específica, troque aqui:

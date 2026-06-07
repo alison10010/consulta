@@ -1,4 +1,4 @@
-package com.consulta.service;
+package com.consulta.util.schedule;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

@@ -21,8 +21,6 @@ public class EmailConfirmaCadastro {
     }
 
     public void enviaMensagem(String email, String hash) {
-        // Remova a linha abaixo em produção para usar o e-mail do parâmetro
-         email = "alisonlimabandeira@gmail.com"; 
         
         String assunto = "Confirme seu cadastro - Consulta Médica Online";
         String confirmUrl = urlSite + "/consulta/api/usuario/confirmar-cadastro?hash=" + 
