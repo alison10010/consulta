@@ -84,7 +84,9 @@ public class ResponseController {
             usuario.setNome(dto.nome().toUpperCase());
             usuario.setUsername(dto.username());
             usuario.setEmail(dto.email());
-            usuario.setCpf(dto.cpf());
+            
+            usuario.setCpf(dto.cpf().replaceAll("\\D", ""));
+            
             usuario.setNascimento(dto.nascimento());
             usuario.setSexo(dto.sexo());
             usuario.setTelefone(dto.telefone());
@@ -271,7 +273,8 @@ public class ResponseController {
 	        usuario.setAcesso("NORMAL");
 	        usuario.setCelular(usuarioDTO.telefone());
 	        
-	        usuario.setCpf(usuarioDTO.cpf());         
+	        usuario.setCpf(usuarioDTO.cpf().replaceAll("\\D", ""));
+	        
 	        usuario.setSexo(usuarioDTO.sexo());        
 	        usuario.setNascimento(usuarioDTO.nascimento()); 
 
