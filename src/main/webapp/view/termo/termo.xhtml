@@ -336,7 +336,7 @@
                         <div class="termo-row">
                             <span>Data:</span>
                             <strong>
-                                ??????
+                                <h:outputText value="#{homeController.termoUsario.createdAt}" converter="localDateTimeConverter" />
                             </strong>
                         </div>
 
@@ -361,13 +361,13 @@
                         <div class="termo-row">
                             <span>✔ Data/Hora:</span>
                             <strong>
-                                ??????
+                                <h:outputText value="#{homeController.termoUsario.createdAt}" converter="localDateTimeConverter" />
                             </strong>
                         </div>
 
                         <div class="termo-row">
                             <span>✔ Versão do contrato:</span>
-                            <strong>??????</strong>
+                            <strong><h:outputText value="#{homeController.termoUsario.versaoTermo}" /></strong>
                         </div>
 
                     </div>

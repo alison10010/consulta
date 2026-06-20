@@ -12,7 +12,9 @@ import org.springframework.web.context.annotation.SessionScope;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import com.consulta.model.Termo;
 import com.consulta.model.Usuario;
+import com.consulta.repository.TermoRepository;
 import com.consulta.repository.UsuarioRepository;
 
 import jakarta.inject.Named;
@@ -28,10 +30,13 @@ public class HomeController implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
-	@Autowired
-	UsuarioRepository usuarioRepository;
+	@Autowired UsuarioRepository usuarioRepository;
 	
+	@Autowired private TermoRepository termoRepository;
 	
+	// TERMO
+    private Termo termoUsario; 
+    
 	private String username;
     private String password;
     
@@ -134,6 +139,7 @@ public class HomeController implements Serializable {
 	
 	@GetMapping("/termo-consentimento")
     public String termo() {
+		this.termoUsario = termoRepository.findByUsuarioId(usuarioLogado.getId());
         return "termo/termo";
     }
 }

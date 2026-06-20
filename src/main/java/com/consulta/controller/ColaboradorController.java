@@ -35,6 +35,7 @@ import com.consulta.model.Endereco;
 import com.consulta.model.Especialidade;
 import com.consulta.model.Horario;
 import com.consulta.model.PacienteConvidado;
+import com.consulta.model.Termo;
 import com.consulta.model.Usuario;
 import com.consulta.model.UsuarioEspecialidade;
 import com.consulta.repository.EspecialidadeRepository;
