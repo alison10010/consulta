@@ -131,4 +131,9 @@ public class HomeController implements Serializable {
 	public boolean logado() {
 	    return usuarioLogado != null;
 	}
+	
+	@GetMapping("/termo-consentimento")
+    public String termo() {
+        return "termo/termo";
+    }
 }

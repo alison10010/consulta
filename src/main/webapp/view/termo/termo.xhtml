@@ -1,0 +1,511 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    template="/view/layout/admin.xhtml">
+
+    <ui:define name="title">Termo de Consentimento</ui:define>
+
+    <ui:define name="content">
+
+        <style>
+            :root {
+                --brand: #2b6cff;
+                --brand-soft: rgba(43, 108, 255, 0.10);
+                --brand-2: #7a5cff;
+                --ink: #0f172a;
+                --muted: #64748b;
+                --bg: #f8fafc;
+                --white: #ffffff;
+                --stroke: rgba(15, 23, 42, 0.08);
+                --shadow: 0 20px 25px -5px rgba(0,0,0,.05), 0 8px 10px -6px rgba(0,0,0,.05);
+                --radius: 24px;
+            }
+
+            .page-container {
+                max-width: 1180px;
+                margin: 30px auto;
+                padding: 0 18px;
+            }
+
+            .terms-card {
+                background: rgba(255,255,255,.95);
+                border: 1px solid var(--stroke);
+                border-radius: var(--radius);
+                padding: 34px;
+                box-shadow: var(--shadow);
+            }
+
+            .terms-header {
+                text-align: center;
+                margin-bottom: 28px;
+            }
+
+            .icon-box {
+                width: 58px;
+                height: 58px;
+                margin: 0 auto 14px;
+                border-radius: 18px;
+                background: linear-gradient(135deg, var(--brand), var(--brand-2));
+                color: #fff;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.7rem;
+                box-shadow: 0 14px 30px rgba(43,108,255,.22);
+            }
+
+            .terms-header h3 {
+                font-size: 1.35rem;
+                font-weight: 600;
+                color: var(--ink);
+                margin-bottom: 8px;
+            }
+
+            .terms-header p {
+                color: var(--muted);
+                margin: 0;
+                font-size: .95rem;
+            }
+
+            .terms-content {
+                max-height: 620px;
+                overflow-y: auto;
+                padding: 6px 14px 6px 2px;
+                line-height: 1.75;
+                font-size: .94rem;
+                color: #334155;
+            }
+
+            .terms-content::-webkit-scrollbar {
+                width: 8px;
+            }
+
+            .terms-content::-webkit-scrollbar-track {
+                background: rgba(15,23,42,.04);
+                border-radius: 20px;
+            }
+
+            .terms-content::-webkit-scrollbar-thumb {
+                background: rgba(43,108,255,.35);
+                border-radius: 20px;
+            }
+
+            .clausula {
+                background: #fff;
+                border: 1px solid var(--stroke);
+                border-radius: 16px;
+                padding: 18px 20px;
+                margin-bottom: 14px;
+            }
+
+            .clausula strong {
+                color: var(--ink);
+                font-weight: 600;
+            }
+
+            .signature-card {
+                background: #fff;
+                border: 1px solid var(--stroke);
+                border-radius: 18px;
+                padding: 22px;
+                margin-top: 18px;
+            }
+
+            .signature-card h5,
+            .signature-card h6 {
+                font-weight: 600;
+                color: var(--ink);
+                margin-bottom: 14px;
+            }
+
+            .termo-row {
+                display: flex;
+                justify-content: space-between;
+                gap: 12px;
+                padding: 10px 0;
+                border-bottom: 1px dashed var(--stroke);
+                color: #334155;
+            }
+
+            .termo-row:last-child {
+                border-bottom: none;
+            }
+
+            .termo-row span {
+                color: var(--muted);
+                font-weight: 600;
+            }
+
+            .accept-card {
+                background: #fff;
+                border: 1px solid var(--stroke);
+                border-radius: 22px;
+                padding: 28px;
+                margin-top: 24px;
+                box-shadow: 0 12px 25px rgba(15,23,42,.04);
+            }
+
+            .titulo {
+                font-weight: 600;
+                color: var(--ink);
+            }
+
+            .secao {
+                background: #fff;
+                border: 1px solid var(--stroke);
+                border-radius: 15px;
+                padding: 16px 18px;
+                margin-bottom: 14px;
+            }
+
+            .secao.destaque {
+                background: linear-gradient(135deg, rgba(43,108,255,.08), rgba(122,92,255,.08));
+                border-color: rgba(43,108,255,.22);
+            }
+
+            .secao-title {
+                font-size: .82rem;
+                font-weight: 600;
+                color: var(--brand);
+                text-transform: uppercase;
+                letter-spacing: .4px;
+                margin-bottom: 12px;
+            }
+
+            .form-check {
+                margin-bottom: 11px;
+            }
+
+            .form-check:last-child {
+                margin-bottom: 0;
+            }
+
+            .form-check-input {
+                width: 1.05rem;
+                height: 1.05rem;
+                margin-top: .32rem;
+                border-color: rgba(43,108,255,.45);
+            }
+
+            .form-check-input:checked {
+                background-color: var(--brand);
+                border-color: var(--brand);
+            }
+
+            .form-check-label {
+                color: #334155;
+                line-height: 1.6;
+                font-size: .93rem;
+            }
+
+            .terms-footer {
+                margin-top: 26px;
+                padding: 20px;
+                background: var(--brand-soft);
+                border: 1px solid rgba(43,108,255,.16);
+                border-radius: 16px;
+                text-align: center;
+                color: var(--ink);
+                font-weight: 600;
+                line-height: 1.6;
+            }
+
+            @media(max-width: 768px) {
+                .terms-card {
+                    padding: 22px;
+                }
+
+                .terms-content {
+                    max-height: 520px;
+                }
+
+                .clausula,
+                .accept-card,
+                .signature-card {
+                    padding: 18px;
+                }
+
+                .termo-row {
+                    flex-direction: column;
+                    gap: 3px;
+                }
+            }
+            
+            h4{
+            	font-size: 1.2rem;
+             } 
+        </style>
+
+        <main class="page-container">
+
+            <div class="terms-card">
+
+                <div class="terms-header">
+                    <div class="icon-box">
+                        <i class="pi pi-shield"></i>
+                    </div>
+
+                    <h3>TERMO DE USO E CADASTRO DE USUÁRIO</h3>
+                    <p>Plataforma Despachante Médico</p>
+                </div>
+
+                <div class="terms-content">
+
+                    <div class="clausula">
+                        <strong>CLÁUSULA 1 – OBJETO E NATUREZA DA PLATAFORMA</strong><br />
+                        1.1. O presente Termo regula o acesso e utilização da plataforma digital denominada <strong>DESPACHANTE MÉDICO</strong>, de titularidade da pessoa jurídica responsável por sua operação, a qual consiste em ambiente tecnológico destinado à intermediação e facilitação do contato entre usuários e profissionais da área da saúde regularmente habilitados.<br />
+                        1.2. O <strong>DESPACHANTE MÉDICO</strong> atua exclusivamente como plataforma tecnológica de intermediação, não prestando, em nenhuma hipótese, serviços médicos, clínicos, hospitalares ou de qualquer natureza assistencial direta.<br />
+                        1.3. Os serviços disponibilizados pela plataforma compreendem, dentre outros:<br />
+                        I – Agendamento de consultas, exames e atendimentos de saúde presenciais e/ou por teleatendimento, quando disponibilizados pelos profissionais cadastrados e permitidos pela legislação vigente;<br />
+                        II – organização e armazenamento digital de informações de saúde do usuário, nos limites da legislação aplicável.<br />
+                        1.4. O usuário declara ciência de que o <strong>DESPACHANTE MÉDICO</strong> não interfere no conteúdo técnico, diagnóstico, conduta terapêutica ou qualquer decisão profissional adotada pelo profissional de saúde.<br />
+                        1.5. O <strong>DESPACHANTE MÉDICO</strong> não se destina ao atendimento de situações de urgência ou emergência médica.
+                    </div>
+
+                    <div class="clausula">
+                        <strong>CLÁUSULA 2 – CADASTRO E RESPONSABILIDADE DO USUÁRIO</strong><br />
+                        2.1. O acesso à plataforma está condicionado à realização de cadastro prévio, mediante fornecimento de dados verdadeiros, completos e atualizados, sob responsabilidade exclusiva do usuário.<br />
+                        2.2. O usuário declara, sob as penas da lei, que possui capacidade civil plena ou está devidamente assistido/representado, que as informações fornecidas correspondem à realidade e que manterá seus dados atualizados.<br />
+                        2.3. O compartilhamento de login e senha é vedado, sendo o usuário integralmente responsável por toda e qualquer atividade realizada em sua conta.
+                    </div>
+
+                    <div class="clausula">
+                        <strong>CLÁUSULA 3 – RELAÇÃO ENTRE USUÁRIO E PROFISSIONAL DE SAÚDE</strong><br />
+                        3.1. A relação estabelecida entre o usuário e o profissional de saúde é direta, autônoma e independente, não havendo qualquer vínculo societário, empregatício ou de subordinação entre estes e o <strong>DESPACHANTE MÉDICO</strong>.<br />
+                        3.2. O <strong>DESPACHANTE MÉDICO</strong> não se responsabiliza por condutas médicas adotadas, diagnósticos, prescrições, tratamentos indicados ou eventual inadequação técnica do atendimento realizado.<br />
+                        3.3. Os profissionais cadastrados declaram possuir habilitação legal para o exercício de suas atividades.
+                    </div>
+
+                    <div class="clausula">
+                        <strong>CLÁUSULA 4 – DA RESPONSABILIDADE DA PLATAFORMA</strong><br />
+                        4.1. O <strong>DESPACHANTE MÉDICO</strong> responde, nos termos do art. 14 do Código de Defesa do Consumidor, exclusivamente pelos defeitos relativos à prestação de seus serviços enquanto plataforma tecnológica.<br />
+                        4.2. Não se considera defeito do serviço a insatisfação do usuário com resultado clínico, divergência de diagnóstico entre profissionais ou evolução natural da condição de saúde do paciente.<br />
+                        4.3. A responsabilidade do <strong>DESPACHANTE MÉDICO</strong>, quando caracterizada, limita-se aos danos diretos comprovadamente decorrentes de falha da plataforma.<br />
+                        4.4. Qualquer limitação aqui prevista será interpretada em conformidade com o art. 51 do CDC.
+                    </div>
+
+                    <div class="clausula">
+                        <strong>CLÁUSULA 5 – PROTEÇÃO DE DADOS PESSOAIS E DADOS SENSÍVEIS</strong><br />
+                        5.1. O tratamento dos dados pessoais e dados sensíveis de saúde poderá ocorrer com fundamento nas hipóteses legais previstas nos arts. 7º e 11 da Lei Geral de Proteção de Dados Pessoais, Lei nº 13.709/2018.<br />
+                        5.2. O <strong>DESPACHANTE MÉDICO</strong> adota medidas técnicas e administrativas aptas a proteger os dados contra acessos não autorizados, vazamentos ou incidentes.<br />
+                        5.3. O usuário autoriza o compartilhamento de seus dados com os profissionais de saúde envolvidos no atendimento, na estrita medida necessária à prestação do serviço.
+                    </div>
+
+                    <div class="clausula">
+                        <strong>CLÁUSULA 6 – SUSPENSÃO E EXCLUSÃO DE CONTA</strong><br />
+                        6.1. O <strong>DESPACHANTE MÉDICO</strong> poderá suspender ou excluir o cadastro do usuário em caso de uso indevido da plataforma, fornecimento de informações falsas, violação deste Termo ou da legislação aplicável.
+                    </div>
+
+                    <div class="clausula">
+                        <strong>CLÁUSULA 7 – LIMITAÇÃO OPERACIONAL E ESCALABILIDADE DO SERVIÇO</strong><br />
+                        7.1. O <strong>DESPACHANTE MÉDICO</strong> poderá realizar manutenções programadas, atualizações sistêmicas e melhorias tecnológicas.<br />
+                        7.2. Eventuais indisponibilidades temporárias decorrentes dessas ações não caracterizam falha na prestação do serviço.<br />
+                        7.3. A plataforma não garante disponibilidade contínua e ininterrupta, especialmente diante de fatores externos ou de força maior.
+                    </div>
+
+                    <div class="clausula">
+                        <strong>CLÁUSULA 8 – FORO E DISPOSIÇÃO FINAL ESTRATÉGICA</strong><br />
+                        8.1. Fica eleito o foro do domicílio do consumidor, conforme previsão do Código de Defesa do Consumidor, para dirimir eventuais controvérsias.<br />
+                        8.2. Sem prejuízo do disposto acima, as partes envidarão esforços para solução consensual de conflitos.
+                    </div>
+
+                    <div class="signature-card">
+
+                        <h5>
+                            <i class="pi pi-file"></i>
+                            Identificação do Termo
+                        </h5>
+
+                        <div class="termo-row">
+                            <span>Plataforma:</span>
+                            <strong>DESPACHANTE MÉDICO - PLATAFORMA DIGITAL</strong>
+                        </div>
+
+                        <div class="termo-row">
+                            <span>Representante Legal:</span>
+                            <strong>Dr. Enoque Pereira de Araújo</strong>
+                        </div>
+
+                        <div class="termo-row">
+                            <span>Cargo:</span>
+                            <strong>Médico</strong>
+                        </div>
+
+                        <div class="termo-row">
+                            <span>Data:</span>
+                            <strong>
+                                ??????
+                            </strong>
+                        </div>
+
+                        <hr />
+
+                        <h6>USUÁRIO ADERENTE À PLATAFORMA</h6>
+
+                        <div class="termo-row">
+                            <span>Nome:</span>
+                            <strong>??????</strong>
+                        </div>
+
+                        <div class="termo-row">
+                            <span>CPF:</span>
+                            <strong class="cpf">??????</strong>
+                        </div>
+
+                        <hr />
+
+                        <h6>ACEITE ELETRÔNICO REGISTRADO NO SISTEMA</h6>
+
+                        <div class="termo-row">
+                            <span>✔ Data/Hora:</span>
+                            <strong>
+                                ??????
+                            </strong>
+                        </div>
+
+                        <div class="termo-row">
+                            <span>✔ Versão do contrato:</span>
+                            <strong>??????</strong>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="accept-card">
+
+                    <h4 class="titulo mb-4 text-center">
+                        <i class="pi pi-check-square"></i>
+                        CHECK-BOX – USUÁRIO/PACIENTE
+                    </h4>
+
+                    <div class="secao">
+                        <div class="secao-title">1. Aceite geral obrigatório</div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" checked="checked" disabled="disabled" id="chk1" />
+                            <label class="form-check-label" for="chk1">
+                                Declaro que li integralmente e concordo com os Termos de Uso da plataforma DESPACHANTE MÉDICO.
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="secao">
+                        <div class="secao-title">2. Natureza da plataforma</div>
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" checked="checked" disabled="disabled" id="chk2" />
+                            <label class="form-check-label" for="chk2">
+                                Declaro ciência de que o DESPACHANTE MÉDICO atua exclusivamente como plataforma tecnológica de intermediação, não prestando serviços médicos, clínicos ou hospitalares.
+                            </label>
+                        </div>
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" checked="checked" disabled="disabled" id="chk3" />
+                            <label class="form-check-label" for="chk3">
+                                Reconheço que os atendimentos são realizados por profissionais de saúde independentes, sendo estes os únicos responsáveis pelos serviços prestados.
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="secao destaque">
+                        <div class="secao-title">3. Responsabilidade médica</div>
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" checked="checked" disabled="disabled" id="chk4" />
+                            <label class="form-check-label" for="chk4">
+                                Declaro expressamente que compreendi que a responsabilidade pelo diagnóstico, tratamento, prescrição e demais atos médicos é exclusiva do profissional de saúde, não podendo ser atribuída ao DESPACHANTE MÉDICO, nos limites da legislação aplicável.
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="secao">
+                        <div class="secao-title">4. Documentos médicos e urgência</div>
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" checked="checked" disabled="disabled" id="chk5" />
+                            <label class="form-check-label" for="chk5">
+                                Declaro estar ciente de que a plataforma DESPACHANTE MÉDICO não se destina ao atendimento de urgências ou emergências médicas.
+                            </label>
+                        </div>
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" checked="checked" disabled="disabled" id="chk6" />
+                            <label class="form-check-label" for="chk6">
+                                Declaro ciência de que receitas, laudos, diagnósticos e pedidos de exames são de responsabilidade exclusiva do profissional de saúde.
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="secao">
+                        <div class="secao-title">5. Proteção de dados LGPD</div>
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" checked="checked" disabled="disabled" id="chk7" />
+                            <label class="form-check-label" for="chk7">
+                                Autorizo o tratamento dos meus dados pessoais, inclusive dados sensíveis de saúde, conforme a LGPD.
+                            </label>
+                        </div>
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" checked="checked" disabled="disabled" id="chk8" />
+                            <label class="form-check-label" for="chk8">
+                                Estou ciente de que meus dados poderão ser compartilhados com profissionais de saúde envolvidos no atendimento.
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="secao">
+                        <div class="secao-title">6. Registros e provas</div>
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" checked="checked" disabled="disabled" id="chk9" />
+                            <label class="form-check-label" for="chk9">
+                                Autorizo o registro de logs, interações e dados de acesso para fins de segurança, auditoria e eventual uso como prova.
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="secao">
+                        <div class="secao-title">7. Declaração final de ciência</div>
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" checked="checked" disabled="disabled" id="chk10" />
+                            <label class="form-check-label" for="chk10">
+                                Declaro que tive acesso claro, prévio e adequado a todas as informações relevantes, compreendendo plenamente os termos de uso da plataforma.
+                            </label>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="terms-footer">
+                    <i class="pi pi-lock"></i>
+                    Ao prosseguir com o cadastro, o usuário declara que leu, compreendeu e concorda integralmente com os Termos de Uso da plataforma DESPACHANTE MÉDICO.
+                </div>
+
+            </div>
+
+        </main>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const cpfs = document.querySelectorAll(".cpf");
+
+                cpfs.forEach(function(el) {
+                    let cpf = el.textContent.replace(/\D/g, "");
+
+                    if (cpf.length === 11) {
+                        cpf = cpf.replace(/(\d{3})(\d)/, "$1.$2");
+                        cpf = cpf.replace(/(\d{3})(\d)/, "$1.$2");
+                        cpf = cpf.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+                    }
+
+                    el.textContent = cpf;
+                });
+            });
+        </script>
+
+    </ui:define>
+</ui:composition>

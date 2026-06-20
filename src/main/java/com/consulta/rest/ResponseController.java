@@ -22,19 +22,25 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.consulta.model.Endereco;
 import com.consulta.model.Especialidade;
+import com.consulta.model.Termo;
 import com.consulta.model.Usuario;
 import com.consulta.model.UsuarioEspecialidade;
 import com.consulta.record.UsuarioDTO;
 import com.consulta.repository.EspecialidadeRepository;
+import com.consulta.repository.TermoRepository;
 import com.consulta.repository.UsuarioEspecialidadeRepository;
 import com.consulta.repository.UsuarioRepository;
 import com.consulta.service.FileStorageService;
 import com.consulta.util.EmailConfirmaCadastro;
 import com.consulta.util.Ferramentas;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 
 @RestController
@@ -47,6 +53,8 @@ public class ResponseController {
 	@Autowired private PasswordEncoder passwordEncoder;
 	
 	@Autowired private FileStorageService fileService;
+	
+	@Autowired private TermoRepository termoRepository;
 	
 	@Autowired private EmailConfirmaCadastro emailConfirmaCadastro;
 	
@@ -101,6 +109,15 @@ public class ResponseController {
 
             // 3. Primeiro Save: Gera o ID necessário para a pasta de arquivos
             usuario = usuarioRepository.save(usuario);
+            
+            // SALVA TERMO
+            Termo termo = new Termo();
+            
+            termo.setUsuario(usuario);
+            termo.setTermoAceite(true);
+            termo.setVersaoTermo("1.0");  // VERSAO TERMO 
+            termo.setIp(clientIp());
+            termoRepository.save(termo);
                         
             Especialidade esp = especialidadeRepository.findById(dto.especialidade()).orElse(null);
 
@@ -272,7 +289,16 @@ public class ResponseController {
             );
             usuario.setHash(hash);
 
-	        usuarioRepository.save(usuario);
+            usuario = usuarioRepository.save(usuario);
+	        
+	        // SALVA TERMO
+            Termo termo = new Termo();
+            
+            termo.setUsuario(usuario);
+            termo.setTermoAceite(true);
+            termo.setVersaoTermo("1.0");  // VERSAO TERMO 
+            termo.setIp(clientIp());
+            termoRepository.save(termo);
 	        
 	        // envia Mensagem Assincrona sem esperar pela confirmação do envio do e-mail
 	        new Thread(() -> {
@@ -298,15 +324,23 @@ public class ResponseController {
 	@GetMapping("especialidades")
     public ResponseEntity<?> listar() {
         return ResponseEntity.ok(especialidadeRepository.listarDTO());
-    }
-
-	
+    }	
     
     private String normalizaParaArquivo(String s) {
         if (s == null) return "sem_nome";
         return s.toLowerCase()
                 .replaceAll("\\s+", "_")
                 .replaceAll("[^a-z0-9_\\-]", ""); // tira acentos/símbolos
+    }
+    
+    public String clientIp() {
+        ServletRequestAttributes attrs =
+            (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        if (attrs == null) return "";
+        HttpServletRequest req = attrs.getRequest();
+        String xff = req.getHeader("X-Forwarded-For");
+        if (xff != null && !xff.isBlank()) return xff.split(",")[0].trim();
+        return req.getRemoteAddr();
     }
 
 }
