@@ -3,283 +3,818 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Termo do Usuário | Agendamento Seguro</title>
+  <title>Termo do Usuário | Despachante Médico</title>
 
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet" />
 
   <style>
-    :root{
-      --brand1:#4f46e5; 
-      --brand2:#10b981; /* Verde para passar sensação de "OK" e segurança ao paciente */
-      --ink:#0f172a;
-      --muted:#475569;
-      --card:#ffffff;
-      --bg1:#f8fafc;
-      --stroke: rgba(15,23,42,.08);
-      --shadow: 0 20px 50px rgba(15,23,42,.05);
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --success: #10b981;
+      --success-soft: #ecfdf5;
+      --blue-soft: #eff6ff;
+      --ink: #0f172a;
+      --text: #334155;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --border-soft: #edf2f7;
+      --card: #ffffff;
+      --bg: #f8fafc;
+      --shadow: 0 18px 45px rgba(15, 23, 42, .07);
+      --shadow-soft: 0 10px 28px rgba(15, 23, 42, .05);
+      --radius: 24px;
     }
 
-    body{
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
       min-height: 100vh;
-      background: 
-        radial-gradient(circle at top left, rgba(16,185,129,0.05), transparent 400px),
-        radial-gradient(circle at top right, rgba(79,70,229,0.05), transparent 400px),
-        var(--bg1);
+      margin: 0;
+      color: var(--text);
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(37, 99, 235, .10), transparent 340px),
+        radial-gradient(circle at top right, rgba(16, 185, 129, .10), transparent 340px),
+        linear-gradient(180deg, #ffffff 0%, #f8fafc 45%, #eef5ff 100%);
+    }
+
+    .navbar {
+      backdrop-filter: blur(14px);
+      background: rgba(255, 255, 255, .92) !important;
+    }
+
+    .brand-area {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+
+    .brand-logo {
+      height: 44px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .brand-fallback {
+      width: 44px;
+      height: 44px;
+      border-radius: 15px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      background: linear-gradient(135deg, var(--primary), var(--success));
+      box-shadow: 0 10px 22px rgba(37, 99, 235, .18);
+    }
+
+    .brand-text strong {
+      display: block;
       color: var(--ink);
-      font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    }
-
-    .hero{ padding: 3rem 0 2rem; }
-
-    .hero-badge{
-      display:inline-flex;
-      align-items:center;
-      gap:.5rem;
-      background: #ecfdf5;
-      color: #047857;
-      padding: .5rem 1rem;
-      border-radius: 999px;
-      font-weight: 700;
-      font-size: .75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      border: 1px solid rgba(16,185,129,0.1);
-    }
-
-    .headline{
-      letter-spacing: -0.03em;
+      line-height: 1.1;
       font-weight: 600;
-      margin: 1rem 0;
-      font-size: 2rem;
+      font-size: .98rem;
     }
 
-    .term-card{
+    .brand-text span {
+      color: var(--muted);
+      font-size: .78rem;
+      font-weight: 600;
+    }
+
+    .page-container {
+      width: min(1160px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 30px 0 54px;
+    }
+
+    .hero-card {
+      border: 1px solid rgba(37, 99, 235, .12);
+      border-radius: 30px;
+      padding: 30px;
+      margin-bottom: 22px;
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, .98), rgba(239, 246, 255, .86)),
+        radial-gradient(circle at top right, rgba(16, 185, 129, .12), transparent 320px);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .hero-card::after {
+      content: "";
+      position: absolute;
+      inset: auto -60px -90px auto;
+      width: 210px;
+      height: 210px;
+      border-radius: 999px;
+      background: rgba(37, 99, 235, .08);
+      pointer-events: none;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 13px;
+      border-radius: 999px;
+      color: #047857;
+      background: #ecfdf5;
+      border: 1px solid #bbf7d0;
+      font-size: .78rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+
+    .headline {
+      margin: 14px 0 8px;
+      color: var(--ink);
+      font-size: clamp(1.1rem, 2vw, 2.05rem);
+      font-weight: 600;
+      letter-spacing: -.04em;
+      line-height: 1.05;
+    }
+
+    .hero-subtitle {
+      margin: 0;
+      max-width: 760px;
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.6;
+      font-weight: 500;
+    }
+
+    .hero-info {
+      display: grid;
+      gap: 10px;
+      min-width: 230px;
+    }
+
+    .hero-info-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, .76);
+      color: var(--ink);
+      font-weight: 700;
+      box-shadow: 0 8px 20px rgba(15, 23, 42, .04);
+    }
+
+    .terms-card {
       background: var(--card);
-      border: 1px solid var(--stroke);
-      border-radius: 1.5rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
       box-shadow: var(--shadow);
       overflow: hidden;
     }
 
-    .term-top{
-      padding: 2rem;
-      border-bottom: 1px solid var(--stroke);
-      background: linear-gradient(to right, #ffffff, #f0fdf4);
+    .terms-header {
+      padding: 26px 30px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      border-bottom: 1px solid var(--border-soft);
+      background: linear-gradient(135deg, #ffffff 0%, #f8fbff 56%, #ecfdf5 100%);
     }
 
-    .term-body{ padding: 2rem; }
-
-    .term-item{
-      border-radius: 1.25rem;
-      padding: 1.25rem;
-      background: #ffffff;
-      border: 1px solid rgba(16,185,129,0.08);
-      transition: all .2s ease;
-    }
-    
-    .term-item:hover{
-      border-color: rgba(16,185,129,0.3);
-      transform: translateY(-2px);
-    }
-
-    .term-item .icon{
-      width: 48px;
-      height: 48px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      border-radius: 12px;
-      background: var(--brand2);
-      color: #fff;
+    .icon-box {
+      width: 50px;
+      height: 50px;
+      border-radius: 18px;
       flex: 0 0 auto;
-      font-size: 1.25rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      font-size: 1.55rem;
+      background: linear-gradient(135deg, var(--primary), var(--success));
+      box-shadow: 0 16px 30px rgba(37, 99, 235, .18);
     }
 
-    .highlight-box {
-      background: #f0fdf4;
-      border-left: 4px solid var(--brand2);
-      padding: 1rem;
-      border-radius: 0 8px 8px 0;
-      margin-top: 1rem;
+    .terms-header h5 {
+      margin: 0;
+      color: var(--ink);
+      font-size: 1.2rem;
+      font-weight: 600;
+      letter-spacing: -.02em;
     }
 
-    .footer{
+    .terms-header p {
+      margin: 4px 0 0;
       color: var(--muted);
-      font-size: .85rem;
-      padding: 2rem 0;
+      font-weight: 600;
+      font-size: .92rem;
+    }
+
+    .terms-content {
+      padding: 24px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .clausula {
+      position: relative;
+      padding: 18px 18px 18px 20px;
+      border: 1px solid var(--border-soft);
+      border-radius: 18px;
+      background: #ffffff;
+      color: #334155;
+      font-size: .88rem;
+      line-height: 1.62;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .clausula::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 18px;
+      bottom: 18px;
+      width: 4px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, var(--primary), var(--success));
+    }
+
+    .clausula strong {
+      color: var(--ink);
+      display: inline-block;
+      margin-bottom: 6px;
+      font-size: .9rem;
+      letter-spacing: -.01em;
+    }
+
+    .signature-card {
+      grid-column: 1 / -1;
+      padding: 22px;
+      border: 1px solid #bfdbfe;
+      border-radius: 22px;
+      background:
+        linear-gradient(135deg, #eff6ff 0%, #ffffff 54%, #ecfdf5 100%);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .signature-card h6 {
+      color: var(--ink);
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .signature-line {
+      color: #475569;
+      font-size: .9rem;
+      padding: 4px 0;
+    }
+
+    .accept-card {
+      margin: 0 24px 24px;
+      padding: 24px;
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      background: #fbfdff;
+    }
+
+    .titulo {
+      color: var(--ink);
+      font-weight: 600;
+      letter-spacing: -.02em;
+    }
+
+    .secao {
+      padding: 16px 18px;
+      border-radius: 18px;
+      background: #ffffff;
+      border: 1px solid var(--border-soft);
+      margin-bottom: 12px;
+      box-shadow: 0 8px 20px rgba(15, 23, 42, .035);
+    }
+
+    .secao.destaque {
+      border-color: #bfdbfe;
+      background: linear-gradient(135deg, #eff6ff 0%, #ffffff 100%);
+    }
+
+    .secao-title {
+      color: var(--ink);
+      font-weight: 600;
+      font-size: .94rem;
+      margin-bottom: 10px;
+    }
+
+    .form-check {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 10px;
+      align-items: flex-start;
+    }
+
+    .form-check:last-child {
+      margin-bottom: 0;
+    }
+
+    .form-check-input {
+      width: 1.1rem;
+      height: 1.1rem;
+      margin-top: .24rem;
+      flex: 0 0 auto;
+      border-color: #93c5fd;
+    }
+
+    .form-check-input:checked {
+      background-color: var(--primary);
+      border-color: var(--primary);
+    }
+
+    .form-check-label {
+      color: #334155;
+      font-size: .9rem;
+      line-height: 1.55;
+      font-weight: 500;
+    }
+
+    .terms-footer {
+      margin: 0 24px 22px;
+      padding: 16px 18px;
+      border-radius: 18px;
+      color: #1d4ed8;
+      border: 1px solid #bfdbfe;
+      background: #eff6ff;
+      font-size: .92rem;
+      font-weight: 700;
+      line-height: 1.5;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+
+    .actions-footer {
+      display: flex;
+      justify-content: center;
+      padding: 0 24px 30px;
+    }
+
+    .btn-submit-modern {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-width: 230px;
+      padding: 14px 28px;
+      border: 0;
+      border-radius: 999px;
+      color: #ffffff;
+      text-decoration: none;
+      font-weight: 600;
+      letter-spacing: .02em;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      box-shadow: 0 16px 30px rgba(37, 99, 235, .24);
+      transition: .2s ease;
+    }
+
+    .btn-submit-modern:hover {
+      color: #ffffff;
+      transform: translateY(-2px);
+      box-shadow: 0 20px 36px rgba(37, 99, 235, .30);
+    }
+
+    .site-footer {
+      color: var(--muted);
+      font-size: .86rem;
+      padding: 24px 0 0;
       text-align: center;
     }
 
-    .mini{ font-size: 0.9rem; line-height: 1.6; }
+    .btn-nav-hover {
+      transition: .2s ease;
+    }
+
+    .btn-nav-hover:hover {
+      background: #eff6ff;
+    }
+
+    .btn-outline-premium {
+      border: 1px solid #dbeafe;
+      color: #1d4ed8 !important;
+      background: #ffffff;
+    }
+
+    @media (max-width: 992px) {
+      .hero-content {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-info {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .terms-content {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .page-container {
+        width: min(100% - 18px, 1160px);
+        padding-top: 18px;
+      }
+
+      .hero-card,
+      .terms-header,
+      .terms-content,
+      .accept-card {
+        padding: 18px;
+      }
+
+      .hero-card,
+      .terms-card {
+        border-radius: 22px;
+      }
+
+      .terms-header {
+        align-items: flex-start;
+      }
+
+      .hero-info {
+        grid-template-columns: 1fr;
+      }
+
+      .accept-card,
+      .terms-footer {
+        margin-left: 14px;
+        margin-right: 14px;
+      }
+
+      .actions-footer {
+        padding-left: 14px;
+        padding-right: 14px;
+      }
+
+      .btn-submit-modern {
+        width: 100%;
+      }
+    }
   </style>
 </head>
 
 <body>
 
-  <nav class="navbar sticky-top bg-white border-bottom py-3">
+  <nav class="navbar sticky-top border-bottom py-3">
     <div class="container d-flex justify-content-between align-items-center">
-      <a class="navbar-brand" href="#">
-        <img src="logo.png" alt="Logo" style="height:40px;"/>
+      <a class="brand-area" href="index.html">
+        <img src="logo.png" alt="Logo" class="brand-logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-flex';" />
+        <span class="brand-fallback" style="display:none;">
+          <i class="bi bi-heart-pulse-fill"></i>
+        </span>
+        <span class="brand-text d-none d-sm-block">
+          <strong>Despachante Médico</strong>
+          <span>Agendamento Seguro</span>
+        </span>
       </a>
-      <div class="text-muted small fw-medium">
-        <div class="d-flex align-items-center gap-2">
-          <div id="menuUsuario"></div>
-        </div>
-      </div>
+
+      <div id="menuUsuario" class="text-muted small fw-medium"></div>
     </div>
   </nav>
 
-  <main class="container hero">
-    <div class="row justify-content-center">
-      <div class="col-lg-10 col-xl-8">
+  <main class="page-container">
 
-        <header class="text-center mb-5">
+    <section class="hero-card">
+      <div class="hero-content">
+        <div>
           <span class="hero-badge">
-            <i class="bi bi-person-check-fill"></i> Ambiente Seguro
+            <i class="bi bi-shield-check"></i>
+            Termo obrigatório
           </span>
-          <h1 class="headline">Termos de Uso do Usuário</h1>
-          <p class="text-muted lead px-md-5">
-            Informações sobre o seu cadastro, privacidade e como seus dados são compartilhados com os profissionais.
+
+          <h4 class="headline">Termo de uso e cadastro de usuário</h4>
+
+          <p class="hero-subtitle">
+            Leia as condições de uso da plataforma, responsabilidades, proteção de dados e aceite eletrônico antes de continuar o cadastro.
           </p>
-        </header>
-
-        <section class="term-card">
-          <div class="term-top">
-            <h5 class="fw-bold mb-2">Seja bem-vindo(a)</h5>
-            <p class="text-muted small mb-0">Para utilizar nossa plataforma de agendamentos, leia as diretrizes abaixo.</p>
-          </div>
-
-          <div class="term-body">
-            <div class="d-grid gap-4">
-
-              <div class="term-item">
-                <div class="d-flex gap-3">
-                  <div class="icon" style="background: #4f46e5;"><i class="bi bi-card-text"></i></div>
-                  <div>
-                    <h6 class="fw-bold mb-2">1. Cadastro Simplificado</h6>
-                    <div class="text-muted mini">
-                      Solicitamos apenas as informações básicas necessárias para criar sua conta. Estes dados permanecem privados em seu perfil e não são exibidos publicamente na plataforma.
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="term-item">
-                <div class="d-flex gap-3">
-                  <div class="icon" style="background: #10b981;"><i class="bi bi-shield-lock"></i></div>
-                  <div>
-                    <h6 class="fw-bold mb-2">2. Visibilidade de Dados</h6>
-                    <div class="text-muted mini">
-                      A sua privacidade é prioridade. Suas informações de contato e identificação <b>só ficarão visíveis para o consultório ou profissional</b> após a confirmação de um agendamento.
-                    </div>
-                    <div class="highlight-box mini text-dark">
-                      Nenhum profissional terá acesso aos seus dados antes que você decida marcar um horário com ele.
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="term-item">
-                <div class="d-flex gap-3">
-                  <div class="icon" style="background: #f59e0b;"><i class="bi bi-hospital"></i></div>
-                  <div>
-                    <h6 class="fw-bold mb-2">3. Vínculo Clínico e Atendimento</h6>
-                    <div class="text-muted mini">
-                      O atendimento realizado é de inteira responsabilidade do profissional escolhido. O vínculo clínico é estabelecido diretamente entre você e o profissional (detentor de registro <b>CRM, CRP, CRO ou COREN</b>).
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="term-item">
-                <div class="d-flex gap-3">
-                  <div class="icon" style="background: #ef4444;"><i class="bi bi-alarm"></i></div>
-                  <div>
-                    <h6 class="fw-bold mb-2">4. Compromisso com o Horário</h6>
-                    <div class="text-muted mini">
-                      Ao realizar um agendamento, você assume o compromisso de comparecer ao consultório. Caso precise desmarcar, utilize a plataforma com antecedência para liberar o horário para outros pacientes.
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-            </div>
-          </div>
-
-          <div class="bg-light p-4 border-top">
-            <div class="d-flex align-items-center gap-3 text-muted mini">
-              <i class="bi bi-info-circle-fill fs-5 text-success"></i>
-              <span>Seus dados são protegidos conforme a LGPD e você tem total controle sobre seu histórico de consultas.</span>
-            </div>
-          </div>
-        </section>
-
-        <div class="footer">
-          <p class="mb-1">© <span id="year"></span>  Consulta Médica • Termo de uso</p>
         </div>
 
+        <div class="hero-info">
+          <div class="hero-info-item">
+            <i class="bi bi-calendar-check text-primary"></i>
+            <span>Data: <span id="today">--/--/----</span></span>
+          </div>
+
+          <div class="hero-info-item">
+            <i class="bi bi-file-lock2 text-success"></i>
+            <span>Versão atual</span>
+          </div>
+        </div>
       </div>
+    </section>
+
+    <div class="terms-card">
+
+    <div class="terms-header">
+      <div class="icon-box">
+        <i class="bi bi-shield-check"></i>
+      </div>
+
+      <h5>TERMO DE USO E CADASTRO DE USUÁRIO</h5>
+      <p>Plataforma Despachante Médico</p>
     </div>
+
+    <div class="terms-content">
+
+      <div class="clausula">
+        <strong>CLÁUSULA 1 – OBJETO E NATUREZA DA PLATAFORMA</strong><br />
+        1.1. O presente Termo regula o acesso e utilização da plataforma digital denominada <strong>DESPACHANTE MÉDICO</strong>, de titularidade da pessoa jurídica responsável por sua operação, a qual consiste em ambiente tecnológico destinado à intermediação e facilitação do contato entre usuários e profissionais da área da saúde regularmente habilitados.<br />
+        1.2. O <strong>DESPACHANTE MÉDICO</strong> atua exclusivamente como plataforma tecnológica de intermediação, não prestando, em nenhuma hipótese, serviços médicos, clínicos, hospitalares ou de qualquer natureza assistencial direta.<br />
+        1.3. Os serviços disponibilizados pela plataforma compreendem, dentre outros:<br />
+        I – Agendamento de consultas, exames e atendimentos de saúde presenciais e/ou por teleatendimento, quando disponibilizados pelos profissionais cadastrados e permitidos pela legislação vigente;<br />
+        II – organização e armazenamento digital de informações de saúde do usuário, nos limites da legislação aplicável.<br />
+        1.4. O usuário declara ciência de que o <strong>DESPACHANTE MÉDICO</strong> não interfere no conteúdo técnico, diagnóstico, conduta terapêutica ou qualquer decisão profissional adotada pelo profissional de saúde.<br />
+        1.5. O <strong>DESPACHANTE MÉDICO</strong> não se destina ao atendimento de situações de urgência ou emergência médica. Em casos de risco imediato à vida, agravamento súbito do estado de saúde ou qualquer situação que exija atendimento emergencial, o usuário deverá procurar imediatamente serviço médico de emergência, hospital, unidade de pronto atendimento ou acionar os serviços públicos competentes.
+      </div>
+
+      <div class="clausula">
+        <strong>CLÁUSULA 2 – CADASTRO E RESPONSABILIDADE DO USUÁRIO</strong><br />
+        2.1. O acesso à plataforma está condicionado à realização de cadastro prévio, mediante fornecimento de dados verdadeiros, completos e atualizados, sob responsabilidade exclusiva do usuário.<br />
+        2.2. O usuário declara, sob as penas da lei, que:<br />
+        I – possui capacidade civil plena ou está devidamente assistido/representado;<br />
+        II – as informações fornecidas correspondem à realidade;<br />
+        III – manterá seus dados atualizados durante toda a utilização da plataforma.<br />
+        2.3. O compartilhamento de login e senha é vedado, sendo o usuário integralmente responsável por toda e qualquer atividade realizada em sua conta.
+      </div>
+
+      <div class="clausula">
+        <strong>CLÁUSULA 3 – RELAÇÃO ENTRE USUÁRIO E PROFISSIONAL DE SAÚDE</strong><br />
+        3.1. A relação estabelecida entre o usuário e o profissional de saúde é direta, autônoma e independente, não havendo qualquer vínculo societário, empregatício ou de subordinação entre estes e o <strong>DESPACHANTE MÉDICO</strong>.<br />
+        3.2. O <strong>DESPACHANTE MÉDICO</strong> não se responsabiliza por:<br />
+        I – condutas médicas adotadas;<br />
+        II – diagnósticos, prescrições ou tratamentos indicados;<br />
+        III – eventual inadequação técnica do atendimento realizado.<br />
+        3.3. Os profissionais cadastrados declaram possuir habilitação legal para o exercício de suas atividades, sendo responsáveis, de forma exclusiva, pelos atos praticados no âmbito da consulta.
+      </div>
+
+      <div class="clausula">
+        <strong>CLÁUSULA 4 – DA RESPONSABILIDADE DA PLATAFORMA</strong><br />
+        4.1. O <strong>DESPACHANTE MÉDICO</strong> responde, nos termos do art. 14 do Código de Defesa do Consumidor, exclusivamente pelos defeitos relativos à prestação de seus serviços enquanto plataforma tecnológica, compreendidos como falhas na disponibilização, funcionamento ou segurança do ambiente digital.<br />
+        4.2. Não se considera defeito do serviço:<br />
+        I – insatisfação do usuário com o resultado clínico;<br />
+        II – divergência de diagnóstico entre profissionais;<br />
+        III – evolução natural da condição de saúde do paciente.<br />
+        4.3. A responsabilidade do <strong>DESPACHANTE MÉDICO</strong>, quando caracterizada, limita-se aos danos diretos comprovadamente decorrentes de falha da plataforma, excluindo-se danos indiretos, lucros cessantes hipotéticos ou eventos decorrentes de atuação profissional independente.<br />
+        4.4. Qualquer limitação aqui prevista será interpretada em conformidade com o art. 51 do CDC, não implicando renúncia a direitos indisponíveis do consumidor.
+      </div>
+
+      <div class="clausula">
+        <strong>CLÁUSULA 5 – PROTEÇÃO DE DADOS PESSOAIS E DADOS SENSÍVEIS</strong><br />
+        5.1. O tratamento dos dados pessoais e dados sensíveis de saúde poderá ocorrer com fundamento nas hipóteses legais previstas nos arts. 7º e 11 da Lei Geral de Proteção de Dados Pessoais, Lei nº 13.709/2018, incluindo, quando aplicável:<br />
+        I – execução dos serviços contratados pelo usuário;<br />
+        II – tutela da saúde em procedimentos realizados por profissionais da área da saúde;<br />
+        III – cumprimento de obrigação legal ou regulatória;<br />
+        IV – exercício regular de direitos em processos judiciais, administrativos ou arbitrais;<br />
+        V – proteção da vida ou da incolumidade física do titular ou de terceiros;<br />
+        VI – garantia da segurança da plataforma e prevenção de fraudes;<br />
+        VII – consentimento do titular, quando exigido pela legislação aplicável.<br />
+        5.2. O <strong>DESPACHANTE MÉDICO</strong> adota medidas técnicas e administrativas aptas a proteger os dados contra acessos não autorizados, vazamentos ou incidentes.<br />
+        5.3. O usuário autoriza o compartilhamento de seus dados com os profissionais de saúde envolvidos no atendimento, na estrita medida necessária à prestação do serviço.
+      </div>
+
+      <div class="clausula">
+        <strong>CLÁUSULA 6 – SUSPENSÃO E EXCLUSÃO DE CONTA</strong><br />
+        6.1. O <strong>DESPACHANTE MÉDICO</strong> poderá suspender ou excluir o cadastro do usuário em caso de:<br />
+        I – uso indevido da plataforma;<br />
+        II – fornecimento de informações falsas;<br />
+        III – violação deste Termo ou da legislação aplicável.
+      </div>
+
+      <div class="clausula">
+        <strong>CLÁUSULA 7 – LIMITAÇÃO OPERACIONAL E ESCALABILIDADE DO SERVIÇO</strong><br />
+        7.1. O <strong>DESPACHANTE MÉDICO</strong> poderá realizar:<br />
+        I – Manutenções programadas;<br />
+        II – Atualizações sistêmicas;<br />
+        III – Melhorias tecnológicas.<br />
+        7.2. Eventuais indisponibilidades temporárias decorrentes dessas ações não caracterizam falha na prestação do serviço, desde que realizadas de forma razoável.<br />
+        7.3. A plataforma não garante disponibilidade contínua e ininterrupta, especialmente diante de fatores externos ou de força maior.
+      </div>
+
+      <div class="clausula">
+        <strong>CLÁUSULA 8 – FORO E DISPOSIÇÃO FINAL ESTRATÉGICA</strong><br />
+        8.1. Fica eleito o foro do domicílio do consumidor, conforme previsão do Código de Defesa do Consumidor, para dirimir eventuais controvérsias.<br />
+        8.2. Sem prejuízo do disposto acima, as partes envidarão esforços para solução consensual de conflitos.
+      </div>
+     
+
+    </div>
+
+    <div class="accept-card">
+
+      <h4 class="titulo mb-4 text-center">
+        <i class="bi bi-check2-square me-2 text-primary"></i>
+        CHECK-BOX JURÍDICO – USUÁRIO/PACIENTE
+      </h4>
+
+      <form>
+
+        <div class="secao">
+          <div class="secao-title">1. Aceite geral obrigatório</div>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" checked disabled id="chk1" />
+            <label class="form-check-label" for="chk1">
+              Declaro que li integralmente e concordo com os Termos de Uso da plataforma DESPACHANTE MÉDICO.
+            </label>
+          </div>
+        </div>
+
+        <div class="secao">
+          <div class="secao-title">2. Natureza da plataforma</div>
+
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" checked disabled id="chk2" />
+            <label class="form-check-label" for="chk2">
+              Declaro ciência de que o DESPACHANTE MÉDICO atua exclusivamente como plataforma tecnológica de intermediação, não prestando serviços médicos, clínicos ou hospitalares.
+            </label>
+          </div>
+
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" checked disabled id="chk3" />
+            <label class="form-check-label" for="chk3">
+              Reconheço que os atendimentos são realizados por profissionais de saúde independentes, sendo estes os únicos responsáveis pelos serviços prestados.
+            </label>
+          </div>
+        </div>
+
+        <div class="secao destaque">
+          <div class="secao-title">3. Responsabilidade médica</div>
+
+          <div class="form-check mb-0">
+            <input class="form-check-input" type="checkbox" checked disabled id="chk4" />
+            <label class="form-check-label" for="chk4">
+              Declaro expressamente que compreendi que a responsabilidade pelo diagnóstico, tratamento, prescrição e demais atos médicos é exclusiva do profissional de saúde, não podendo ser atribuída ao DESPACHANTE MÉDICO, nos limites da legislação aplicável.
+            </label>
+          </div>
+        </div>
+
+        <div class="secao">
+          <div class="secao-title">4. Documentos médicos e urgência</div>
+
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" checked disabled id="chk5" />
+            <label class="form-check-label" for="chk5">
+              Declaro estar ciente de que a plataforma DESPACHANTE MÉDICO não se destina ao atendimento de urgências ou emergências médicas, devendo eu procurar imediatamente os serviços de saúde competentes em situações de risco ou necessidade de atendimento emergencial.
+            </label>
+          </div>
+
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" checked disabled id="chk6" />
+            <label class="form-check-label" for="chk6">
+              Declaro ciência de que receitas, laudos, diagnósticos e pedidos de exames são de responsabilidade exclusiva do profissional de saúde.
+            </label>
+          </div>
+        </div>
+
+        <div class="secao">
+          <div class="secao-title">5. Proteção de dados LGPD</div>
+
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" checked disabled id="chk7" />
+            <label class="form-check-label" for="chk7">
+              Autorizo o tratamento dos meus dados pessoais, inclusive dados sensíveis de saúde, conforme a Lei Geral de Proteção de Dados Pessoais, para fins de prestação dos serviços da plataforma.
+            </label>
+          </div>
+
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" checked disabled id="chk8" />
+            <label class="form-check-label" for="chk8">
+              Estou ciente de que meus dados poderão ser compartilhados com profissionais de saúde envolvidos no atendimento.
+            </label>
+          </div>
+        </div>
+
+        <div class="secao">
+          <div class="secao-title">6. Registros e provas</div>
+
+          <div class="form-check mb-0">
+            <input class="form-check-input" type="checkbox" checked disabled id="chk9" />
+            <label class="form-check-label" for="chk9">
+              Autorizo o registro de logs, interações e dados de acesso para fins de segurança, auditoria e eventual uso como prova.
+            </label>
+          </div>
+        </div>
+
+        <div class="secao">
+          <div class="secao-title">7. Declaração final de ciência</div>
+
+          <div class="form-check mb-0">
+            <input class="form-check-input" type="checkbox" checked disabled id="chk10" />
+            <label class="form-check-label" for="chk10">
+              Declaro que tive acesso claro, prévio e adequado a todas as informações relevantes, compreendendo plenamente os termos de uso da plataforma.
+            </label>
+          </div>
+        </div>
+
+      </form>
+
+    </div>
+
+    <div class="terms-footer">
+      <i class="bi bi-shield-lock me-2"></i>
+      Ao prosseguir com o cadastro, você declara que leu, compreendeu e concorda integralmente com os Termos de Uso da plataforma DESPACHANTE MÉDICO.
+    </div>
+
+    <div class="actions-footer">
+      <a href="/cadastro-paciente.html" class="btn-submit-modern">
+        <i class="bi bi-check2-circle me-2"></i>
+        CADASTRAR
+      </a>
+    </div>
+
+  </div>
+
+    <footer class="site-footer">
+      © <span id="year"></span> Despachante Médico. Todos os direitos reservados.
+    </footer>
+
   </main>
 
   <script>
     const now = new Date();
-    document.getElementById("year").textContent = now.getFullYear();
-    const dd = String(now.getDate()).padStart(2, "0");
-    const mm = String(now.getMonth() + 1).padStart(2, "0");
-    const yyyy = now.getFullYear();
-    document.getElementById("today").textContent = `${dd}/${mm}/${yyyy}`;
+    const yearEl = document.getElementById("year");
+    const todayEl = document.getElementById("today");
+
+    if (yearEl) {
+      yearEl.textContent = now.getFullYear();
+    }
+
+    if (todayEl) {
+      const dd = String(now.getDate()).padStart(2, "0");
+      const mm = String(now.getMonth() + 1).padStart(2, "0");
+      const yyyy = now.getFullYear();
+      todayEl.textContent = `${dd}/${mm}/${yyyy}`;
+    }
   </script>
-  
+
   <script>
+    async function carregarMenuUsuario() {
+      try {
+        const resp = await fetch("/consulta/api/usuario/logado");
+        const data = await resp.json();
 
-  async function carregarMenuUsuario() {
-	  try {
-	    const resp = await fetch("/consulta/api/usuario/logado");
-	    const data = await resp.json();
+        const container = document.getElementById("menuUsuario");
 
-	    const container = document.getElementById("menuUsuario");
+        if (!container) {
+          return;
+        }
 
-	    if (data.logado) {
-	    	  // ✅ LOGADO
-	    	  container.innerHTML = `
-	    	    <div class="d-flex align-items-center gap-2 ms-lg-3 mt-3 mt-lg-0">
-	    		  <a href="index.html" class="btn btn-link text-decoration-none fw-bold px-3 rounded-pill btn-nav-hover d-flex align-items-center gap-2">
-	    	        <i class="bi bi-house-door"></i> Home
-	    	      </a>
-	    	      <a href="/consulta/" class="btn btn-link text-decoration-none px-3 btn-outline-premium btn-nav-hover rounded-pill d-inline-flex align-items-center gap-2">
-	    	        <i class="bi bi-calendar-check-fill"></i> Minhas Consultas
-	    	      </a>
-	    	      <a href="/consulta/logout" class="btn btn-primary rounded-pill px-4 shadow-sm d-inline-flex align-items-center gap-2">
-	    	        <i class="bi bi-box-arrow-right"></i> Deslogar
-	    	      </a>
-	    	    </div>
-	    	  `;
-	    	} else {
-	    	  // ❌ NÃO LOGADO
-	    	  container.innerHTML = `
-	    	    <div class="d-flex align-items-center gap-2 ms-lg-3 mt-3 mt-lg-0">
-	    		  <a href="index.html" class="btn btn-link text-decoration-none fw-bold px-3 rounded-pill btn-nav-hover d-flex align-items-center gap-2">
-	    	        <i class="bi bi-house-door"></i> Home
-	    	      </a>
-	    	      <a href="/consulta/" class="btn btn-link text-decoration-none fw-bold px-3 btn-outline-premium btn-nav-hover rounded-pill d-inline-flex align-items-center gap-2">
-	    	        <i class="bi bi-person-fill-lock"></i> Acessar
-	    	      </a>
-	    	      <a href="cadastro-painel.html" class="btn btn-primary rounded-pill px-4 shadow-sm d-inline-flex align-items-center gap-2">
-	    	        <i class="bi bi-person-plus-fill"></i> Cadastrar
-	    	      </a>
-	    	    </div>
-	    	  `;
-	    	}
+        if (data.logado) {
+          container.innerHTML = `
+            <div class="d-flex align-items-center gap-2 ms-lg-3 mt-2 mt-lg-0 flex-wrap justify-content-end">
+              <a href="index.html" class="btn btn-link text-decoration-none fw-bold px-3 rounded-pill btn-nav-hover d-flex align-items-center gap-2">
+                <i class="bi bi-house-door"></i> Home
+              </a>
+              <a href="/consulta/" class="btn btn-link text-decoration-none px-3 btn-outline-premium btn-nav-hover rounded-pill d-inline-flex align-items-center gap-2">
+                <i class="bi bi-calendar-check-fill"></i> Minhas Consultas
+              </a>
+              <a href="/consulta/logout" class="btn btn-primary rounded-pill px-4 shadow-sm d-inline-flex align-items-center gap-2">
+                <i class="bi bi-box-arrow-right"></i> Deslogar
+              </a>
+            </div>
+          `;
+        } else {
+          container.innerHTML = `
+            <div class="d-flex align-items-center gap-2 ms-lg-3 mt-2 mt-lg-0 flex-wrap justify-content-end">
+              <a href="index.html" class="btn btn-link text-decoration-none fw-bold px-3 rounded-pill btn-nav-hover d-flex align-items-center gap-2">
+                <i class="bi bi-house-door"></i> Home
+              </a>
+              <a href="/consulta/" class="btn btn-link text-decoration-none fw-bold px-3 btn-outline-premium btn-nav-hover rounded-pill d-inline-flex align-items-center gap-2">
+                <i class="bi bi-person-fill-lock"></i> Acessar
+              </a>
+              <a href="cadastro-painel.html" class="btn btn-primary rounded-pill px-4 shadow-sm d-inline-flex align-items-center gap-2">
+                <i class="bi bi-person-plus-fill"></i> Cadastrar
+              </a>
+            </div>
+          `;
+        }
 
-	  } catch (e) {
-	    console.error("Erro ao verificar login:", e);
-	  }
-	}
+      } catch (e) {
+        console.error("Erro ao verificar login:", e);
+      }
+    }
 
-  carregarMenuUsuario();
-  	
+    carregarMenuUsuario();
   </script>
 
 </body>
