@@ -92,7 +92,7 @@ public class ResponseController {
             usuario.setTelefone(dto.telefone());
             usuario.setCelular(dto.telefone());
             usuario.setAcesso(dto.acesso());
-            usuario.setTermoAceite(dto.termoAceite());
+            usuario.setTermoAceite(true);
             
             usuario.setPossuiWpp(false);
             
@@ -272,6 +272,8 @@ public class ResponseController {
 	        usuario.setUsername(usuarioDTO.username());
 	        usuario.setAcesso("NORMAL");
 	        usuario.setCelular(usuarioDTO.telefone());
+	        
+	        usuario.setTermoAceite(true);
 	        
 	        usuario.setCpf(usuarioDTO.cpf().replaceAll("\\D", ""));
 	        
