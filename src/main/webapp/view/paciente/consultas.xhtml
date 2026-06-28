@@ -176,7 +176,7 @@
                         <div class="mm-card">
                             <div class="mm-map">
                                 <ui:fragment rendered="#{not empty pacienteController.enderecoModalObj}">
-                                    <iframe class="mm-iframe" frameborder="0" src="https://maps.google.com/maps?q=#{pacienteController.enderecoModalObj.endereco},#{pacienteController.enderecoModalObj.numero},#{pacienteController.enderecoModalObj.cidade}&amp;z=16&amp;output=embed"></iframe>
+                                    <iframe class="mm-iframe" frameborder="0" src="https://maps.google.com/maps?q=#{pacienteController.enderecoModalObj.coordenadas}&amp;z=16&amp;output=embed"></iframe>
                                 </ui:fragment>
                             </div>
                         </div>
@@ -185,7 +185,7 @@
                             <p>#{pacienteController.enderecoModalObj.endereco}, #{pacienteController.enderecoModalObj.numero}</p>
                             <p>#{pacienteController.enderecoModalObj.bairro} - #{pacienteController.enderecoModalObj.cidade}/#{pacienteController.enderecoModalObj.estado}</p>
                             <p:button value="Abrir no Google Maps" icon="pi pi-external-link" target="_blank"
-                                      href="https://www.google.com/maps/search/?api=1&amp;query=#{pacienteController.enderecoModalObj.endereco},#{pacienteController.enderecoModalObj.numero}" />
+                                      href="https://www.google.com/maps/search/?api=1&amp;query=#{pacienteController.enderecoModalObj.coordenadas}" />
                         </div>
                     </h:panelGroup>
                 </p:dialog>

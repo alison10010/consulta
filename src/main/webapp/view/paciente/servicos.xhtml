@@ -8,121 +8,440 @@
     <ui:define name="title">Serviços disponíveis</ui:define>
 
     <ui:define name="content">
+
         <style>
             :root {
-                --brand: #2b6cff;
-                --brand-2: #7a5cff;
-                --ink: #0f172a;
-                --muted: #64748b;
-                --bg: #f8fafc;
-                --card: rgba(255, 255, 255, .92);
-                --stroke: rgba(15, 23, 42, .10);
-                --shadow: 0 18px 55px rgba(15, 23, 42, .10);
-                --shadow-soft: 0 10px 30px rgba(15, 23, 42, .08);
-                --radius: 18px;
-                --radius-sm: 12px;
+                --svc-primary: #2563eb;
+                --svc-primary-dark: #1d4ed8;
+                --svc-secondary: #7c3aed;
+                --svc-success: #16a34a;
+                --svc-warning: #f59e0b;
+                --svc-danger: #dc2626;
+                --svc-ink: #0f172a;
+                --svc-muted: #64748b;
+                --svc-light: #f8fafc;
+                --svc-border: #e2e8f0;
+                --svc-card: #ffffff;
+                --svc-radius: 22px;
+                --svc-radius-sm: 14px;
+                --svc-shadow: 0 22px 55px rgba(15, 23, 42, .10);
+                --svc-shadow-soft: 0 12px 28px rgba(15, 23, 42, .08);
             }
 
-            .svc-wrap {
-                background:
-                    radial-gradient(1200px 600px at 10% 5%, rgba(43, 108, 255, .14), transparent 55%),
-                    radial-gradient(1000px 520px at 90% 15%, rgba(122, 92, 255, .14), transparent 55%),
-                    linear-gradient(180deg, #ffffff 0%, var(--bg) 100%);
+            .svc-page {
                 min-height: 100vh;
-                padding: 2rem 1rem;
+                padding: 28px 16px;
+                background:
+                    radial-gradient(circle at top left, rgba(37, 99, 235, .15), transparent 32%),
+                    radial-gradient(circle at top right, rgba(124, 58, 237, .14), transparent 34%),
+                    linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
             }
 
-            .premium-card {
-                background: var(--card);
-                border: 1px solid rgba(255, 255, 255, .9);
-                border-radius: var(--radius);
-                box-shadow: var(--shadow);
-                backdrop-filter: blur(8px);
-                overflow: hidden;
-                max-width: 1200px;
+            .svc-shell {
+                max-width: 1240px;
                 margin: 0 auto;
             }
 
+            .svc-hero {
+                position: relative;
+                overflow: hidden;
+                border-radius: 28px;
+                padding: 10px 30px;
+                color: #fff;
+                background:
+                    linear-gradient(135deg, rgba(37, 99, 235, .98), rgba(124, 58, 237, .95));
+                box-shadow: var(--svc-shadow);
+                margin-bottom: 22px;
+            }
+
+            .svc-hero:after {
+                content: "";
+                position: absolute;
+                width: 300px;
+                height: 300px;
+                border-radius: 50%;
+                right: -90px;
+                top: -110px;
+                background: rgba(255,255,255,.18);
+            }
+
+            .svc-hero-content {
+                position: relative;
+                z-index: 2;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                gap: 18px;
+                flex-wrap: wrap;
+            }
+
+            .svc-title {
+                font-size: 1.75rem;
+                font-weight: 600;
+                margin: 0;
+                letter-spacing: -0.04em;
+            }
+
+            .svc-subtitle {
+                margin: 8px 0 0;
+                color: rgba(255,255,255,.86);
+                font-size: .95rem;
+            }
+
+            .svc-status-pill {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                padding: 10px 16px;
+                border-radius: 999px;
+                background: rgba(255,255,255,.17);
+                border: 1px solid rgba(255,255,255,.25);
+                color: #fff;
+                font-weight: 600;
+                font-size: .82rem;
+                backdrop-filter: blur(8px);
+            }
+
+            .svc-panel {
+                background: rgba(255,255,255,.94);
+                border: 1px solid rgba(226,232,240,.90);
+                border-radius: var(--svc-radius);
+                box-shadow: var(--svc-shadow);
+                padding: 24px;
+                backdrop-filter: blur(10px);
+            }
+
+            .filter-card {
+                background: #fff;
+                border: 1px solid var(--svc-border);
+                border-radius: 20px;
+                padding: 18px;
+                box-shadow: var(--svc-shadow-soft);
+                margin-bottom: 22px;
+            }
+
+            .filter-label {
+                display: flex;
+                align-items: center;
+                gap: 7px;
+                color: var(--svc-ink);
+                font-size: .78rem;
+                margin-bottom: 8px;
+                text-transform: uppercase;
+                letter-spacing: .04em;
+            }
+
+            .form-select {
+                min-height: 46px;
+                border-radius: 14px !important;
+                border: 1px solid var(--svc-border) !important;
+                color: var(--svc-ink);
+                box-shadow: none !important;
+            }
+
+            .form-select:focus {
+                border-color: rgba(37,99,235,.65) !important;
+                box-shadow: 0 0 0 4px rgba(37,99,235,.11) !important;
+            }
+
+            .svc-actions {
+                display: flex;
+                gap: 12px;
+                margin-top: 18px;
+            }
+
+            .btn-premium {
+                border: none;
+                min-height: 46px;
+                border-radius: 999px;
+                padding: 11px 26px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                color: #fff !important;
+                font-weight: 600;
+                text-decoration: none;
+                background: linear-gradient(135deg, var(--svc-primary), var(--svc-secondary));
+                box-shadow: 0 14px 32px rgba(37,99,235,.25);
+                transition: .18s ease;
+            }
+
+            .btn-premium:hover {
+                transform: translateY(-1px);
+                filter: brightness(.98);
+            }
+
+            .btn-clean {
+                min-height: 46px;
+                border-radius: 999px;
+                border: 1px solid var(--svc-border);
+                background: #fff;
+                color: var(--svc-muted);
+                font-weight: 600;
+                padding: 10px 24px;
+                transition: .18s ease;
+            }
+
+            .btn-clean:hover {
+                color: var(--svc-primary);
+                border-color: rgba(37,99,235,.35);
+                background: #eff6ff;
+            }
+
+            .result-header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 12px;
+                margin-bottom: 16px;
+            }
+
+            .result-title {
+                display: flex;
+                align-items: center;
+                gap: 9px;
+                color: var(--svc-ink);
+            }
+
+            .result-count-pill {
+                min-width: 38px;
+                height: 30px;
+                border-radius: 999px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                background: #eff6ff;
+                border: 1px solid #bfdbfe;
+                color: #1d4ed8;
+                font-weight: 600;
+            }
+
+            .empty-state {
+                border: 1px dashed #cbd5e1;
+                background: #fff;
+                border-radius: 22px;
+                padding: 52px 20px;
+                text-align: center;
+                color: var(--svc-muted);
+            }
+
+            .empty-state i {
+                width: 58px;
+                height: 58px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 20px;
+                background: #eff6ff;
+                color: var(--svc-primary);
+                font-size: 1.7rem;
+                margin-bottom: 12px;
+            }
+
             .professional-card {
-                background: white;
-                border: 1px solid var(--stroke);
-                border-radius: var(--radius-sm);
-                padding: 1.5rem;
+                background: var(--svc-card);
+                border: 1px solid var(--svc-border);
+                border-radius: 22px;
+                padding: 18px;
                 height: 100%;
                 display: flex;
                 flex-direction: column;
-                transition: transform 0.2s;
+                box-shadow: 0 8px 22px rgba(15,23,42,.05);
+                transition: .20s ease;
             }
 
             .professional-card:hover {
-                transform: translateY(-4px);
-                box-shadow: var(--shadow-soft);
+                transform: translateY(-5px);
+                box-shadow: var(--svc-shadow-soft);
+                border-color: rgba(37,99,235,.30);
             }
 
             .prof-header {
                 display: flex;
                 align-items: flex-start;
                 justify-content: space-between;
-                margin-bottom: 1rem;
+                gap: 12px;
+                margin-bottom: 14px;
             }
 
-            .avatar-placeholder {
-                width: 48px;
-                height: 48px;
+            .prof-photo {
+                width: 74px;
+                height: 74px;
+                object-fit: cover;
+                border-radius: 22px;
+                border: 3px solid #fff;
+                box-shadow: 0 10px 24px rgba(15,23,42,.14);
                 background: #e2e8f0;
-                border-radius: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                color: #94a3b8;
-                font-size: 1.5rem;
             }
 
             .location-tag {
-                background: #f1f5f9;
+                display: inline-flex;
+                align-items: center;
+                gap: 5px;
+                background: #f8fafc;
                 color: #475569;
-                font-size: 0.7rem;
-                font-weight: 700;
-                padding: 4px 10px;
-                border-radius: 100px;
+                font-size: .68rem;
+                font-weight: 600;
+                padding: 7px 10px;
+                border-radius: 999px;
+                border: 1px solid var(--svc-border);
                 text-transform: uppercase;
+                max-width: 150px;
+                text-align: right;
+            }
+
+            .prof-name {
+                color: var(--svc-ink);
+                font-size: 1rem;
+                font-weight: 600;
+                margin: 0 0 4px;
+                letter-spacing: -.02em;
+            }
+
+            .section-mini-title {
+                margin: 14px 0 8px;
+                color: #94a3b8;
+                font-size: .68rem;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: .08em;
+            }
+
+            .service-item {
+                padding: 11px 0;
+                border-bottom: 1px solid #f1f5f9;
+            }
+
+            .service-name {
+                color: var(--svc-ink);
+                font-size: .84rem;
+                font-weight: 850;
+            }
+
+            .service-name.selected {
+                color: var(--svc-primary);
+            }
+
+            .registro-badge {
+                background: #f8fafc;
+                color: #64748b;
+                border: 1px solid var(--svc-border);
+                font-size: .62rem;
+                border-radius: 999px;
+                padding: 4px 8px;
+                font-weight: 600;
+            }
+
+            .price-row {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                gap: 8px;
+                margin-top: 8px;
+                flex-wrap: wrap;
+            }
+
+            .price-text {
+                color: var(--svc-muted);
+                font-size: .72rem;
+                font-weight: 700;
+            }
+
+            .guide-price {
+                display: inline-flex;
+                align-items: center;
+                gap: 5px;
+                background: #dcfce7;
+                color: #166534;
+                border: 1px solid #bbf7d0;
+                border-radius: 999px;
+                padding: 5px 9px;
+                font-size: .67rem;
+                font-weight: 600;
+            }
+
+            .pay-info {
+                margin-top: 14px;
+                padding: 12px;
+                border-radius: 16px;
+                background: #fffbeb;
+                border: 1px dashed #fde68a;
+                color: #854d0e;
+                text-align: center;
+                font-size: .70rem;
+                font-weight: 600;
+                line-height: 1.45;
+            }
+
+            .btn-action-outline {
+                width: 100%;
+                min-height: 42px;
+                border-radius: 14px;
+                border: 1px solid #bfdbfe;
+                background: #eff6ff;
+                color: #1d4ed8;
+                font-weight: 600;
+                font-size: .80rem;
+                transition: .18s ease;
+            }
+
+            .btn-action-outline:hover {
+                background: #dbeafe;
+                color: #1e40af;
+            }
+
+            .btn-primary-modern {
+                width: 100%;
+                min-height: 44px;
+                border: none;
+                border-radius: 14px;
+                color: #fff;
+                background: linear-gradient(135deg, var(--svc-primary), var(--svc-primary-dark));
+                font-weight: 600;
+                box-shadow: 0 12px 26px rgba(37,99,235,.22);
+            }
+
+            .btn-primary-modern:hover {
+                filter: brightness(.97);
+                color: #fff;
             }
 
             .horarios-container {
-                background: #f8fafc;
-                border-radius: 10px;
                 margin-top: 10px;
                 padding: 10px;
-                border: 1px solid #e2e8f0;
+                border-radius: 16px;
+                background: #f8fafc;
+                border: 1px solid var(--svc-border);
             }
 
             .day-card {
-                background: white;
-                border: 1px solid #e2e8f0;
-                border-radius: 8px;
+                background: #fff;
+                border: 1px solid var(--svc-border);
+                border-radius: 14px;
                 margin-bottom: 8px;
                 overflow: hidden;
             }
 
             .day-head {
                 width: 100%;
-                padding: 10px 12px;
                 border: none;
-                background: none;
+                background: #fff;
+                padding: 11px 12px;
                 display: flex;
-                justify-content: space-between;
                 align-items: center;
+                justify-content: space-between;
                 gap: 10px;
-                font-size: 0.78rem;
-                font-weight: 700;
-                color: var(--ink);
+                color: var(--svc-ink);
+                font-size: .78rem;
+                font-weight: 600;
                 text-align: left;
             }
 
             .day-head .meta {
-                color: var(--muted);
-                font-size: 0.72rem;
-                font-weight: 700;
+                color: var(--svc-muted);
+                font-size: .70rem;
+                font-weight: 600;
                 white-space: nowrap;
             }
 
@@ -152,79 +471,42 @@
                 color: #1e3a8a;
                 padding: 6px 10px;
                 border-radius: 999px;
-                font-size: 0.72rem;
-                font-weight: 700;
+                font-size: .72rem;
+                font-weight: 600;
             }
 
             .agenda-help {
                 margin-top: 10px;
-                font-size: 0.72rem;
-                color: var(--muted);
-                line-height: 1.4;
-            }
-
-            .btn-primary-modern {
-                background: var(--brand);
-                color: white;
-                border: none;
-                padding: 10px;
-                border-radius: 8px;
-                font-weight: 700;
-                transition: opacity 0.2s;
-            }
-
-            .btn-primary-modern:hover {
-                opacity: .92;
-                color: #fff;
-            }
-
-            .btn-action-outline {
-                background: transparent;
-                border: 1px solid var(--brand);
-                color: var(--brand);
-                padding: 8px;
-                border-radius: 8px;
-                font-weight: 600;
-                font-size: 0.8rem;
-            }
-
-            .btn-premium {
-                background: linear-gradient(135deg, var(--brand), var(--brand-2));
-                color: #fff !important;
-                font-weight: 700;
-                border: none;
-                padding: 10px 24px;
-                border-radius: 100px;
-                box-shadow: 0 12px 30px rgba(43, 108, 255, .25);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                text-decoration: none;
-            }
-
-            .divider {
-                height: 1px;
-                background: rgba(15, 23, 42, .12);
-                margin: 1.5rem 0;
-            }
-
-            .btn:hover {
-                color: #FFF;
-                background-color: var(--brand);
-                border-color: var(--brand);
+                color: var(--svc-muted);
+                font-size: .72rem;
+                line-height: 1.45;
             }
 
             @media (max-width: 768px) {
-                .svc-wrap {
-                    padding: 1rem .75rem;
+                .svc-page {
+                    padding: 14px 10px;
                 }
 
-                .premium-card {
-                    padding: 1rem !important;
+                .svc-hero {
+                    padding: 22px;
+                    border-radius: 22px;
                 }
 
-                .professional-card {
-                    padding: 1rem;
+                .svc-title {
+                    font-size: 1.35rem;
+                }
+
+                .svc-panel {
+                    padding: 16px;
+                }
+
+                .svc-actions {
+                    flex-direction: column;
+                }
+
+                .btn-clean,
+                .btn-premium {
+                    width: 100%;
                 }
 
                 .day-head {
@@ -238,56 +520,87 @@
             }
         </style>
 
-        <div class="svc-wrap">
-            <div class="premium-card p-4">
-                <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
-                    <div>
-                        <h1 class="h4 fw-bold mb-1">Serviços disponíveis</h1>
-                        <div class="text-muted small">Refaça a busca abaixo se quiser.</div>
-                    </div>
-                    <span id="badgeResumo" class="badge rounded-pill text-bg-light border p-2">
-                        <i class="bi bi-funnel me-1"></i> Pronto para buscar
-                    </span>
-                </div>
+        <div class="svc-page">
+            <div class="svc-shell">
 
-                <div class="row g-3">
-                    <div class="col-md-4">
-                        <label class="small fw-bold text-muted mb-1 d-block">Especialidade</label>
-                        <select id="especialidadeSelect" class="form-select"></select>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="small fw-bold text-muted mb-1 d-block">Estado</label>
-                        <select id="stateSelect" class="form-select"></select>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="small fw-bold text-muted mb-1 d-block">Município</label>
-                        <select id="citySelect" class="form-select" disabled="true"></select>
-                    </div>
-                </div>
+                <section class="svc-hero">
+                    <div class="svc-hero-content">
+                        <div>
+                            <h1 class="svc-title">Serviços disponíveis</h1>
+                            <p class="svc-subtitle">
+                                Encontre profissionais por especialidade, estado e município.
+                            </p>
+                        </div>
 
-                <div class="d-flex gap-2 mt-4">
-                    <button id="btnSearch" type="button" class="btn-premium flex-fill">
-                        <i class="bi bi-search me-2"></i>Pesquisar
-                    </button>
-                    <button type="button" class="btn btn-outline-secondary rounded-pill px-4"
-                            onclick="window.location.reload();">
-                        Limpar
-                    </button>
-                </div>
-
-                <div class="divider"></div>
-
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <span class="fw-bold small">Resultados encontrados</span>
-                    <span id="resultCount" class="badge bg-light text-dark border">0</span>
-                </div>
-
-                <div id="results" class="row g-3">
-                    <div class="col-12 text-center py-5 text-muted">
-                        <i class="bi bi-search" style="font-size: 2rem; opacity: .3;"></i>
-                        <p class="mt-2">Selecione os filtros acima e clique em pesquisar.</p>
+                        <span id="badgeResumo" class="svc-status-pill">
+                            <i class="bi bi-funnel"></i>
+                            Pronto para buscar
+                        </span>
                     </div>
-                </div>
+                </section>
+
+                <section class="svc-panel">
+
+                    <div class="filter-card">
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label class="filter-label">
+                                    <i class="bi bi-briefcase-medical"></i>
+                                    Especialidade
+                                </label>
+                                <select id="especialidadeSelect" class="form-select"></select>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="filter-label">
+                                    <i class="bi bi-map"></i>
+                                    Estado
+                                </label>
+                                <select id="stateSelect" class="form-select"></select>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="filter-label">
+                                    <i class="bi bi-geo-alt"></i>
+                                    Município
+                                </label>
+                                <select id="citySelect" class="form-select" disabled="true"></select>
+                            </div>
+                        </div>
+
+                        <div class="svc-actions">
+                            <button id="btnSearch" type="button" class="btn-premium flex-fill">
+                                <i class="bi bi-search"></i>
+                                Pesquisar profissionais
+                            </button>
+
+                            <button type="button" class="btn-clean" onclick="window.location.reload();">
+                                <i class="bi bi-arrow-clockwise me-1"></i>
+                                Limpar
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="result-header">
+                        <div class="result-title">
+                            <i class="bi bi-grid-3x3-gap"></i>
+                            Resultados encontrados
+                        </div>
+
+                        <span id="resultCount" class="result-count-pill">0</span>
+                    </div>
+
+                    <div id="results" class="row g-3">
+                        <div class="col-12">
+                            <div class="empty-state">
+                                <i class="bi bi-search"></i>
+                                <p class="mb-0 fw-bold">Selecione os filtros acima e clique em pesquisar.</p>
+                                <small>Os profissionais disponíveis aparecerão aqui.</small>
+                            </div>
+                        </div>
+                    </div>
+
+                </section>
             </div>
         </div>
 
@@ -375,7 +688,7 @@
                     html += ''
                         + '<div class="day-card">'
                         + '  <button type="button" class="day-head">'
-                        + '    <span>' + esc(formatDataBR(data)) + '</span>'
+                        + '    <span><i class="bi bi-calendar-event me-1"></i>' + esc(formatDataBR(data)) + '</span>'
                         + '    <span class="meta">'
                         +         esc(vagas) + ' vagas • ' + esc(janela)
                         + '      <i class="bi bi-chevron-down ms-1"></i>'
@@ -452,19 +765,19 @@
                         : "";
 
                     return ''
-                        + '<div class="service-item flex-column align-items-start gap-1 py-2" style="border-bottom: 1px solid #f1f5f9;">'
+                        + '<div class="service-item">'
                         + '  <div class="d-flex justify-content-between align-items-start w-100 gap-2">'
-                        + '    <div class="' + (isSelected ? 'fw-bold text-primary' : 'fw-semibold text-dark') + '" style="font-size:0.8rem;">'
+                        + '    <div class="service-name ' + (isSelected ? 'selected' : '') + '">'
                         +         esc(es.nome)
                         + '    </div>'
-                        + '    <span class="badge text-secondary border" style="font-size:0.6rem; background: #f8fafc;">'
+                        + '    <span class="registro-badge">'
                         +         infoRegistro
                         + '    </span>'
                         + '  </div>'
-                        + '  <div class="d-flex w-100 justify-content-between align-items-center">'
-                        + '    <span class="text-muted" style="font-size:0.7rem;">Particular: <strong>' + esc(vNormal) + '</strong></span>'
-                        + '    <span class="badge" style="font-size:0.65rem; background-color:#dcfce7; color:#166534; border:1px solid #bbf7d0;">'
-                        + '      COM GUIA: <strong>' + esc(vGuia) + '</strong>'
+                        + '  <div class="price-row">'
+                        + '    <span class="price-text">Particular: <strong>' + esc(vNormal) + '</strong></span>'
+                        + '    <span class="guide-price">'
+                        + '      <i class="bi bi-ticket-perforated"></i> COM GUIA: <strong>' + esc(vGuia) + '</strong>'
                         + '    </span>'
                         + '  </div>'
                         + '</div>';
@@ -474,28 +787,27 @@
                     + '<div class="col-md-6 col-lg-4">'
                     + '  <div class="professional-card">'
                     + '    <div class="prof-header">'
-                    + '		<img src="' + esc(c.foto) + '"'
-                    + ' 	class="rounded-circle shadow-sm"'
-                    + ' 	style="width:70px;height:70px;object-fit:cover;border:2px solid #fff;"'
-                    + ' 	onerror="this.src=\'/consulta/api/usuario/0/perfil\'">'
-                    + '      <span class="location-tag">' + esc(cidadeEstado || "—") + '</span>'
+                    + '      <img src="' + esc(c.foto) + '"'
+                    + '        class="prof-photo"'
+                    + '        onerror="this.src=\'/consulta/api/usuario/0/perfil\'" />'
+                    + '      <span class="location-tag"><i class="bi bi-geo-alt-fill"></i>' + esc(cidadeEstado || "—") + '</span>'
                     + '    </div>'
-                    + '    <h3 class="h6 fw-bold mb-1">' + esc(c.nome || "Profissional") + '</h3>'
-                    + '    <div class="flex-grow-1 my-2">'
-                    + '      <div class="fw-bold mb-2" style="font-size:0.65rem;color:#94a3b8;text-transform:uppercase; letter-spacing:0.5px;">Especialidade e Valores</div>'
+
+                    + '    <h3 class="prof-name">' + esc(c.nome || "Profissional") + '</h3>'
+
+                    + '    <div class="flex-grow-1">'
+                    + '      <div class="section-mini-title">Especialidade e valores</div>'
                     +        (servicesHtml || '<div class="small text-muted">Sem especialidades</div>')
-                    + '      <div class="mt-3 p-2 rounded-3" style="background-color:#fefce8; border:1px dashed #fef08a;">'
-                    + '        <p class="mb-0 text-center" style="font-size:0.65rem; color:#854d0e; font-weight:600;">'
-                    + '          <i class="bi bi-cash me-1"></i> O valor da consulta é pago diretamente ao médico.'
-                    + '        </p>'
-                    + '        <p class="mb-0 text-center" style="font-size:0.65rem; color:#854d0e; font-weight:800;">'
-                    + '          <i class="bi bi-ticket-perforated me-1"></i> Valor da Guia: R$ 20,00'
-                    + '        </p>'
+
+                    + '      <div class="pay-info">'
+                    + '        <div><i class="bi bi-cash-coin me-1"></i> O valor da consulta é pago diretamente ao médico.</div>'
+                    + '        <div><i class="bi bi-ticket-perforated me-1"></i> Valor da Guia: R$ 20,00</div>'
                     + '      </div>'
                     + '    </div>'
-                    + '    <div class="mt-auto">'
-                    + '      <button class="btn btn-action-outline w-100 mb-2" type="button" onclick="window.__toggleHorarios(' + Number(c.id) + ')">'
-                    + '        <i class="bi bi-calendar3 me-2"></i>Ver Horários Disponíveis'
+
+                    + '    <div class="mt-3">'
+                    + '      <button class="btn-action-outline mb-2" type="button" onclick="window.__toggleHorarios(' + Number(c.id) + ')">'
+                    + '        <i class="bi bi-calendar3 me-2"></i>Ver horários disponíveis'
                     + '      </button>'
                     + '      <div id="' + horariosId + '" style="display:none;" class="horarios-container"></div>'
                     +      (
@@ -505,9 +817,9 @@
                                     + '<input type="hidden" name="especialidade" value="' + esc(espParaEnviar.nome) + '"/>'
                                     + '<input type="hidden" name="valor" value="' + esc(espParaEnviar.valor) + '"/>'
                                     + '<input type="hidden" name="valorComGuia" value="' + esc(espParaEnviar.valorComGuia) + '"/>'
-                                    + '<button type="submit" class="btn btn-primary-modern w-100">Agendar Consulta</button>'
+                                    + '<button type="submit" class="btn-primary-modern">Agendar Consulta</button>'
                                   + '</form>'
-                                : '<div class="alert alert-warning py-2 mt-2 mb-0 text-center" style="font-size:0.7rem; border-radius:8px;">Selecione especialidade para agendar</div>'
+                                : '<div class="alert alert-warning py-2 mt-2 mb-0 text-center" style="font-size:0.75rem; border-radius:14px;">Selecione uma especialidade para agendar</div>'
                             )
                     + '    </div>'
                     + '  </div>'
@@ -603,7 +915,7 @@
 
                 results.innerHTML = filtrados.length
                     ? filtrados.map(function (c) { return cardColaborador(c, esp); }).join("")
-                    : '<div class="col-12 text-center py-5">Nenhum profissional encontrado para os filtros selecionados.</div>';
+                    : '<div class="col-12"><div class="empty-state"><i class="bi bi-emoji-frown"></i><p class="mb-0 fw-bold">Nenhum profissional encontrado.</p><small>Tente mudar os filtros selecionados.</small></div></div>';
 
                 resultCount.textContent = String(filtrados.length);
                 atualizarBadge(esp, uf, cid);
@@ -618,7 +930,7 @@
                     preencherEstados();
                 } catch (err) {
                     console.error(err);
-                    results.innerHTML = '<div class="col-12 text-center p-4">Erro ao carregar dados da API.</div>';
+                    results.innerHTML = '<div class="col-12"><div class="empty-state"><i class="bi bi-exclamation-triangle"></i><p class="mb-0 fw-bold">Erro ao carregar dados da API.</p><small>Verifique se o endpoint está respondendo corretamente.</small></div></div>';
                 }
             }
 
@@ -632,5 +944,6 @@
         })();
         //]]>
         </script>
+
     </ui:define>
 </ui:composition>
