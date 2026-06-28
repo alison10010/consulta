@@ -1,5 +1,6 @@
 package com.consulta.rest;
 
+import java.io.InputStream;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -10,6 +11,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,10 +21,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.consulta.controller.HomeController;
 import com.consulta.model.Horario;
+import com.consulta.model.Usuario;
 import com.consulta.record.ApiColaboradoresDTO;
 import com.consulta.repository.HorarioRepository;
 import com.consulta.repository.UsuarioEspecialidadeRepository;
 import com.consulta.repository.UsuarioRepository;
+import com.consulta.service.FileStorageService;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -38,6 +42,8 @@ public class ApiColaboradorRest implements Serializable {
 	@Autowired UsuarioEspecialidadeRepository usuarioEspecialidadeRepository;	
 	
 	@Autowired private HorarioRepository horarioRepository;
+	
+	@Autowired private FileStorageService fileService;
 	
 	@Autowired HomeController homeController;
 	
@@ -65,10 +71,14 @@ public class ApiColaboradorRest implements Serializable {
 	                .sorted(Comparator.comparing(m -> (String) m.get("nome")))
 	                .toList();
 
+	            String foto = "/consulta/api/usuario/" + u.getId() + "/perfil";
+	            
 	            return new ApiColaboradoresDTO(
 	                u.getId(), u.getNome(), u.getUsername(), u.getEmail(), u.getEspecialidade(),
 	                u.getTelefone(), u.getCelular(), u.isPossuiWpp(), u.getAcesso(),
 
+	                foto,
+	                
 	                e != null ? e.getCep() : null,
 	                e != null ? e.getEndereco() : null,
 	                e != null ? e.getNumero() : null,
@@ -121,6 +131,45 @@ public class ApiColaboradorRest implements Serializable {
 
 	    return ResponseEntity.ok(lista);
 	}
+	
+	// ============ FOTO DE PERFIL    
+    @GetMapping("/usuario/{id}/perfil")
+    public ResponseEntity<byte[]> fotoUsuario(@PathVariable Long id) {
+        try {
+            Usuario usuario = usuarioRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+
+            byte[] bytes = fileService.buscarBytesArquivo(
+                    usuario.getId(),
+                    usuario.getPerfil()
+            );
+
+            if (bytes == null || bytes.length == 0) {
+                InputStream is = getClass().getResourceAsStream("/static/img/perfil.png");
+                bytes = is.readAllBytes();
+            }
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(org.springframework.http.MediaType.IMAGE_PNG);
+            headers.setCacheControl("no-cache, no-store, must-revalidate");
+
+            return ResponseEntity.ok()
+                    .headers(headers)
+                    .body(bytes);
+
+        } catch (Exception e) {
+            try {
+                InputStream is = getClass().getResourceAsStream("/static/img/perfil.png");
+                byte[] bytes = is.readAllBytes();
+
+                return ResponseEntity.ok()
+                        .contentType(org.springframework.http.MediaType.IMAGE_PNG)
+                        .body(bytes);
+            } catch (Exception ex) {
+                return ResponseEntity.notFound().build();
+            }
+        }
+    }
 
 	@GetMapping("/usuario/logado")
 	public Map<String, Object> logado() {

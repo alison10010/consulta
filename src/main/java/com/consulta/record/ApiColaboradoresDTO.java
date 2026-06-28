@@ -20,6 +20,8 @@ public class ApiColaboradoresDTO {
     private String celular;
     private boolean possuiWpp;
     private String acesso;    
+    
+    private String foto;
 
     // ===== ENDEREÇO =====
     private String cep;
