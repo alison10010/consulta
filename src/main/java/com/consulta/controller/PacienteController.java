@@ -32,7 +32,7 @@ import com.consulta.repository.HorarioRepository;
 import com.consulta.repository.PacienteConvidadoRepository;
 import com.consulta.repository.PagamentoRepository;
 import com.consulta.repository.UsuarioRepository;
-import com.consulta.service.PagamentoService;
+import com.consulta.service.PagamentoPagarMeService;
 import com.consulta.util.Mensagens;
 import com.consulta.util.Redirecionar;
 
@@ -67,7 +67,7 @@ public class PacienteController implements Serializable {
     
     @Autowired private PagamentoRepository pagamentoRepository;
     
-    private PagamentoService pagamentoService;
+    private PagamentoPagarMeService pagamentoService;
     
     private Pagamento pagamentoModal;
     
@@ -100,7 +100,7 @@ public class PacienteController implements Serializable {
         carregarMinhasConsultas();
     }
     
-    public PacienteController(PagamentoService pagamentoService,
+    public PacienteController(PagamentoPagarMeService pagamentoService,
             HorarioRepository horarioRepository,
             GuiaController guiaController) {
 		this.pagamentoService = pagamentoService;
@@ -206,7 +206,13 @@ public class PacienteController implements Serializable {
         carregarMinhasConsultas();
         
         // cria checkout do PIX (R$20)
-        pagamentoService.gerarPix(h.getId(), new BigDecimal("0.50"));
+        pagamentoService.criarPagamentoPagarme(
+                horario.getId(),
+                new BigDecimal("0.50"),
+                PagamentoPagarMeService.MetodoPagamento.PIX,
+                null,
+                null
+        );
 
         Mensagens.info("Sucesso!", "Horário agendado.");
 
@@ -244,17 +250,26 @@ public class PacienteController implements Serializable {
 
     public void abrirPagamentoPix(Long horarioId) {
         try {
-            // 1. Tenta buscar um pagamento já existente para este horário
             Optional<Pagamento> pgExistente = pagamentoRepository.findByHorarioId(horarioId);
-            
+
             if (pgExistente.isPresent()) {
+
                 this.pagamentoAtual = pgExistente.get();
+
             } else {
-                // 2. Se não existir, gera um novo via Service (passando os 20.00 em Reais)
-                this.pagamentoAtual = pagamentoService.gerarPix(horarioId, new BigDecimal("20.00"));
-            }            
-            
+
+                this.pagamentoAtual =
+                        pagamentoService.criarPagamentoPagarme(
+                                horarioId,
+                                new BigDecimal("20.00"),
+                                PagamentoPagarMeService.MetodoPagamento.PIX,
+                                null,
+                                null
+                        );
+            }
+
             PrimeFaces.current().executeScript("PF('dlgPix').show()");
+
         } catch (Exception e) {
             e.printStackTrace();
             Mensagens.erro("Erro", "Não foi possível gerar o QR Code PIX.");
@@ -262,23 +277,38 @@ public class PacienteController implements Serializable {
     }
 
     public void verificarPagamento(Long horarioId) {
-        Pagamento pg = pagamentoRepository.findByHorarioId(horarioId).orElse(null);
-        
-        if (pg != null && pg.getMpPaymentId() != null) {
-            // Vai até o Mercado Pago conferir a situação real
-            pagamentoService.verificarEAtualizarStatus(pg.getMpPaymentId());
-            
-            // Re-checa o status local após a atualização
-            pg = pagamentoRepository.findByHorarioId(horarioId).get();
-            if (pg.getStatus() == Pagamento.StatusPg.PAID) {
+
+        Pagamento pg = pagamentoRepository
+                .findByHorarioId(horarioId)
+                .orElse(null);
+
+        if (pg != null && pg.getPagarmeChargeId() != null) {
+
+            // Consulta o status diretamente no Pagar.me
+            pagamentoService.verificarEAtualizarStatusPagarme(
+                    pg.getPagarmeChargeId()
+            );
+
+            // Recarrega do banco
+            pg = pagamentoRepository.findByHorarioId(horarioId).orElse(null);
+
+            if (pg != null && pg.getStatus() == Pagamento.StatusPg.PAID) {
+
                 Mensagens.info("Sucesso!", "Pagamento confirmado!");
+
                 confirmarPagamentoAgendamento(horarioId);
+
                 carregarMinhasConsultas();
+
                 return;
             }
         }
-        Mensagens.aviso("Pendente", "O pagamento ainda não foi detectado. Se já pagou, aguarde 30 segundos.");
-    }    
+
+        Mensagens.aviso(
+                "Pendente",
+                "O pagamento ainda não foi detectado. Se já pagou, aguarde alguns segundos e tente novamente."
+        );
+    }
     
 
     public Pagamento getPagamentoAtual() {

@@ -18,8 +18,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Getter @Setter
+@Getter
+@Setter
 public class Pagamento implements Serializable {
+
     private static final long serialVersionUID = 1L;
 
     public enum StatusPg {
@@ -38,26 +40,29 @@ public class Pagamento implements Serializable {
     private BigDecimal valor;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = false, length = 30)
     private StatusPg status = StatusPg.PENDING;
 
     // =========================================================
-    // CAMPOS PARA MERCADO PAGO (PIX E CHECKOUT)
+    // CAMPOS PAGAR.ME
     // =========================================================
 
-    // ID do Pagamento (Obrigatório para o seu novo Service e Webhook)
-    @Column(length = 80)
-    private String mpPaymentId;
+    @Column(length = 100)
+    private String pagarmeOrderId;
 
-    // ID da Preferência (Mantenha para evitar erro no Repository/Service antigo)
-    @Column(length = 80)
-    private String mpPreferenceId;
+    @Column(length = 100)
+    private String pagarmeChargeId;
 
-    // Link do checkout Pro (Opcional)
-    @Column(length = 800)
-    private String initPoint;
+    @Column(length = 60)
+    private String pagarmeChargeStatus;
 
-    // Dados específicos do PIX (Para exibir o QR Code no seu XHTML)
+    @Column(length = 60)
+    private String pagarmePaymentMethod;
+
+    // =========================================================
+    // PIX
+    // =========================================================
+
     @Column(columnDefinition = "TEXT")
     private String pixCopiaECola;
 
@@ -67,12 +72,11 @@ public class Pagamento implements Serializable {
     @Column(length = 800)
     private String ticketUrl;
 
-    // Controle de Datas
     private LocalDateTime criadoEm = LocalDateTime.now();
+
     private LocalDateTime pagoEm;
 
-    // Método auxiliar para pegar o ID de pagamento mesmo que esteja em campos diferentes
     public String getMpLastPaymentId() {
-        return mpPaymentId;
+        return pagarmeChargeId;
     }
 }
