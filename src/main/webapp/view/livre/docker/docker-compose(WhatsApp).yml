@@ -1,0 +1,83 @@
+version: '3.9'
+
+services:
+  evolution-api:
+    image: evoapicloud/evolution-api:v2.3.6
+    container_name: evolution_api
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy # Espera o DB estar pronto
+    ports:
+      - "9063:8080"
+    environment:
+      # --- Auth da API ---
+      AUTHENTICATION_API_KEY: "WebConsulT4--@"
+
+      # --- Servidor ---
+      SERVER_TYPE: "http"
+      SERVER_PORT: "8080"
+      SERVER_URL: "http://localhost:9063"
+      TZ: "America/Rio_Branco"
+
+      # 🚨 --- Banco (Obrigatório: Ativar e Conectar ao PostgreSQL) ---
+      DATABASE_ENABLED: "true" # <-- Voltar para TRUE
+      DATABASE_PROVIDER: "postgresql"
+      # Conexão para o container 'postgres'
+      DATABASE_CONNECTION_URI: "postgresql://evolution:evolutionpass@postgres:5432/evolution?schema=public" 
+      DATABASE_CONNECTION_CLIENT_NAME: "evolution_local"
+
+      # --- Desabilitar o SAVE de mensagens (Para sua necessidade original) ---
+      DATABASE_SAVE_DATA_INSTANCE: "true" # Mantenha a instância salva
+      DATABASE_SAVE_DATA_NEW_MESSAGE: "false" # <--- Desabilita o registro de MSG
+      DATABASE_SAVE_MESSAGE_UPDATE: "false"
+      DATABASE_SAVE_DATA_CONTACTS: "false"
+      DATABASE_SAVE_DATA_CHATS: "false"
+      DATABASE_SAVE_DATA_HISTORIC: "false"
+
+      # --- Cache (Apenas Local) ---
+      CACHE_REDIS_ENABLED: "false" # <-- Redis Desativado
+      CACHE_LOCAL_ENABLED: "true" 
+
+      # --- Reconexão Automática ---
+      CONFIG_RECONNECT_ENABLED: "true"
+      CONFIG_RECONNECT_MAX_RETRIES: "0" # 0 = Tentativas infinitas
+      CONFIG_RECONNECT_INTERVAL: "5000" # Tenta a cada 5 segundos
+      
+      # --- Compatibilidade Baileys / Logs ---
+      CONFIG_SESSION_PHONE_CLIENT: "Evolution API"
+      CONFIG_SESSION_PHONE_NAME: "Chrome"
+      CONFIG_SESSION_PHONE_VERSION: "2.3000.1039201455"
+      LOG_LEVEL: "DEBUG"
+      LOG_BAILEYS: "info"
+    volumes:
+      - evolution_instances:/evolution/instances
+    networks:
+      - evo
+
+  postgres: # <--- Serviço de DB OBRIGATÓRIO
+    image: postgres:16-alpine
+    container_name: evolution_pg
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: evolution
+      POSTGRES_USER: evolution
+      POSTGRES_PASSWORD: evolutionpass
+      TZ: "America/Rio_Branco"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    healthcheck: # ESSENCIAL: Garante que a API espere o DB
+      test: ["CMD-SHELL", "pg_isready -U evolution -d evolution"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - evo
+
+volumes:
+  evolution_instances:
+  pg_data: # <--- Volume para o DB
+
+networks:
+  evo:
+    driver: bridge

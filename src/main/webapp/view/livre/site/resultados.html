@@ -62,7 +62,7 @@
     }
 
     /* Estilização dos Inputs */
-    .form-label { font-size: 0.8rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+    .form-label { font-size: 0.8rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
 
     .form-control, .form-select {
       border: 1px solid var(--stroke);
@@ -113,7 +113,7 @@
 
     .location-tag {
       font-size: 0.7rem;
-      font-weight: 700;
+      font-weight: 600;
       color: var(--brand);
       background: var(--brand-soft);
       padding: 4px 12px;
@@ -146,13 +146,13 @@
       justify-content: space-between;
       align-items: center;
       font-size: 0.82rem;
-      font-weight: 700;
+      font-weight: 600;
       color: #0f172a;
     }
 
     .day-head .meta {
       font-size: 0.72rem;
-      font-weight: 700;
+      font-weight: 600;
       color: var(--muted);
       display: inline-flex;
       align-items: center;
@@ -170,7 +170,7 @@
 
     .mini-pill {
       font-size: 0.72rem;
-      font-weight: 700;
+      font-weight: 600;
       padding: 6px 10px;
       border-radius: 999px;
       border: 1px solid var(--stroke);
@@ -243,7 +243,7 @@
     <div class="main-glass-card">
       <div class="row align-items-center mb-4">
         <div class="col-md-8">
-          <h1 class="h3 fw-bold mb-1">Encontre seu Especialista</h1>
+          <h1 class="h3 mb-1">Encontre seu Especialista</h1>
           <p class="text-muted small mb-0">Explore profissionais qualificados e agende sua consulta em minutos.</p>
         </div>
         <div class="col-md-4 text-md-end mt-3 mt-md-0">
@@ -254,24 +254,39 @@
       </div>
 
       <div class="row g-3 p-3 bg-white rounded-4 border shadow-sm mb-4">
-        <div class="col-md-4">
-          <label class="form-label">Especialidade</label>
-          <select id="especialidadeSelect" class="form-select"></select>
-        </div>
-        <div class="col-md-3">
-          <label class="form-label">Estado (UF)</label>
-          <select id="stateSelect" class="form-select"></select>
-        </div>
-        <div class="col-md-3">
-          <label class="form-label">Cidade</label>
-          <select id="citySelect" class="form-select"></select>
-        </div>
-        <div class="col-md-2 d-flex align-items-end">
-          <button id="btnSearch" class="btn btn-primary-modern w-100">
-            <i class="bi bi-search"></i>
-          </button>
-        </div>
-      </div>
+
+		    <div class="col-lg-3 col-md-6">
+		        <label class="form-label">Nome do Profissional</label>
+		        <input
+		            type="text"
+		            id="nomeInput"
+		            class="form-control"
+		            placeholder="Digite o nome..." />
+		    </div>
+		
+		    <div class="col-lg-3 col-md-6">
+		        <label class="form-label">Especialidade</label>
+		        <select id="especialidadeSelect" class="form-select"></select>
+		    </div>
+		
+		    <div class="col-lg-2 col-md-6">
+		        <label class="form-label">Estado (UF)</label>
+		        <select id="stateSelect" class="form-select"></select>
+		    </div>
+		
+		    <div class="col-lg-2 col-md-6">
+		        <label class="form-label">Cidade</label>
+		        <select id="citySelect" class="form-select"></select>
+		    </div>
+		
+		    <div class="col-lg-2 d-flex align-items-end">
+		        <button id="btnSearch" class="btn btn-primary-modern w-100">
+		            <i class="bi bi-search me-2"></i>
+		            Buscar
+		        </button>
+		    </div>
+		
+		</div>
 
       <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="h5 fw-bold mb-0">Resultados <span id="resultCount" class="badge bg-primary ms-2">0</span></h2>
@@ -306,6 +321,8 @@
   var espSelect   = document.getElementById("especialidadeSelect");
   var stateSelect = document.getElementById("stateSelect");
   var citySelect  = document.getElementById("citySelect");
+  var nomeInput = document.getElementById("nomeInput");
+  
   var btnSearch   = document.getElementById("btnSearch");
   var badgeResumo = document.getElementById("badgeResumo");
   var resultCount = document.getElementById("resultCount");
@@ -472,7 +489,7 @@
       + '        <p class="mb-0 text-center" style="font-size: 0.65rem; color: #854d0e; font-weight: 500;">'
       + '          <i class="bi bi-info-circle-fill me-1"></i> O valor da consulta deve ser pago diretamente ao médico no ato do atendimento.'
       + '        </p>'
-      + '        <p class="mb-1 text-center" style="font-size: 0.65rem; color: #854d0e; font-weight: 700;">'
+      + '        <p class="mb-1 text-center" style="font-size: 0.65rem; color: #854d0e; font-weight: 600;">'
       + '          <i class="bi bi-ticket-perforated-fill me-1"></i> Valor da Guia: R$ 20,00'
       + '        </p>'
       + '      </div>'
@@ -555,24 +572,54 @@
   }
 
   function filtrarERenderizar(opts){
-    opts = opts || {};
-    var esp = (espSelect && espSelect.value) ? espSelect.value : "";
-    var uf  = (stateSelect && stateSelect.value) ? stateSelect.value : "";
-    var cid = (!citySelect.disabled && citySelect.value) ? citySelect.value : "";
+	    opts = opts || {};
 
-    var filtrados = COLABORADORES.filter(function(c){
-      var matchEsp = !esp || (c.especialidades || []).some(function(e){
-        return normalize(e && e.nome) === normalize(esp);
-      });
-      var matchUf  = !uf || c.estado === uf;
-      var matchCid = !cid || c.cidade === cid;
-      return matchEsp && matchUf && matchCid;
-    });
+	    var nome = normalize(nomeInput.value);
 
-    results.innerHTML = filtrados.map(function(c){ return cardColaborador(c, esp); }).join("");
-    resultCount.textContent = String(filtrados.length);
-    atualizarBadge(esp, uf, cid);
-  }
+	    var esp = (espSelect && espSelect.value)
+	        ? espSelect.value
+	        : "";
+
+	    var uf = (stateSelect && stateSelect.value)
+	        ? stateSelect.value
+	        : "";
+
+	    var cid = (!citySelect.disabled && citySelect.value)
+	        ? citySelect.value
+	        : "";
+
+	    var filtrados = COLABORADORES.filter(function(c){
+
+	        var matchNome =
+	            !nome ||
+	            normalize(c.nome).includes(nome);
+
+	        var matchEsp =
+	            !esp ||
+	            (c.especialidades || []).some(function(e){
+	                return normalize(e.nome) === normalize(esp);
+	            });
+
+	        var matchUf =
+	            !uf ||
+	            c.estado === uf;
+
+	        var matchCid =
+	            !cid ||
+	            c.cidade === cid;
+
+	        return matchNome && matchEsp && matchUf && matchCid;
+	    });
+
+	    results.innerHTML =
+	        filtrados.map(function(c){
+	            return cardColaborador(c, esp);
+	        }).join("");
+
+	    resultCount.textContent = filtrados.length;
+
+	    atualizarBadge(esp, uf, cid);
+	}
 
   function applyUrlFilters(){
     var params = new URLSearchParams(location.search);
@@ -606,6 +653,23 @@
       stateSelect.onchange = function(){
         preencherCidades(stateSelect.value, "");
       };
+
+      nomeInput.addEventListener("keyup", function () {
+    	    filtrarERenderizar();
+    	});
+
+    	espSelect.onchange = function () {
+    	    filtrarERenderizar();
+    	};
+
+    	stateSelect.onchange = function () {
+    	    preencherCidades(stateSelect.value, "");
+    	    filtrarERenderizar();
+    	};
+
+    	citySelect.onchange = function () {
+    	    filtrarERenderizar();
+    	};
 
     } catch(err){
       console.error(err);

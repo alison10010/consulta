@@ -518,6 +518,22 @@
                     white-space: normal;
                 }
             }
+            
+            .form-control,
+				.form-select {
+				    min-height: 46px;
+				    border-radius: 14px !important;
+				    border: 1px solid var(--svc-border) !important;
+				    color: var(--svc-ink);
+				    box-shadow: none !important;
+				}
+				
+				.form-control:focus,
+				.form-select:focus {
+				    border-color: rgba(37,99,235,.65) !important;
+				    box-shadow: 0 0 0 4px rgba(37,99,235,.11) !important;
+				}
+
         </style>
 
         <div class="svc-page">
@@ -542,31 +558,42 @@
                 <section class="svc-panel">
 
                     <div class="filter-card">
-                        <div class="row g-3">
-                            <div class="col-md-4">
-                                <label class="filter-label">
-                                    <i class="bi bi-briefcase-medical"></i>
-                                    Especialidade
-                                </label>
-                                <select id="especialidadeSelect" class="form-select"></select>
-                            </div>
-
-                            <div class="col-md-4">
-                                <label class="filter-label">
-                                    <i class="bi bi-map"></i>
-                                    Estado
-                                </label>
-                                <select id="stateSelect" class="form-select"></select>
-                            </div>
-
-                            <div class="col-md-4">
-                                <label class="filter-label">
-                                    <i class="bi bi-geo-alt"></i>
-                                    Município
-                                </label>
-                                <select id="citySelect" class="form-select" disabled="true"></select>
-                            </div>
-                        </div>
+                       <div class="row g-3">
+						    <div class="col-md-3">
+						        <label class="filter-label">
+						            <i class="bi bi-person"></i>
+						            Nome do profissional
+						        </label>
+						        <input id="nomeInput"
+						               type="text"
+						               class="form-control"
+						               placeholder="Digite o nome..." />
+						    </div>
+						
+						    <div class="col-md-3">
+						        <label class="filter-label">
+						            <i class="bi bi-briefcase-medical"></i>
+						            Especialidade
+						        </label>
+						        <select id="especialidadeSelect" class="form-select"></select>
+						    </div>
+						
+						    <div class="col-md-3">
+						        <label class="filter-label">
+						            <i class="bi bi-map"></i>
+						            Estado
+						        </label>
+						        <select id="stateSelect" class="form-select"></select>
+						    </div>
+						
+						    <div class="col-md-3">
+						        <label class="filter-label">
+						            <i class="bi bi-geo-alt"></i>
+						            Município
+						        </label>
+						        <select id="citySelect" class="form-select" disabled="true"></select>
+						    </div>
+						</div>
 
                         <div class="svc-actions">
                             <button id="btnSearch" type="button" class="btn-premium flex-fill">
@@ -612,6 +639,7 @@
             var espSelect = document.getElementById("especialidadeSelect");
             var stateSelect = document.getElementById("stateSelect");
             var citySelect = document.getElementById("citySelect");
+            var nomeInput = document.getElementById("nomeInput");
             var btnSearch = document.getElementById("btnSearch");
             var badgeResumo = document.getElementById("badgeResumo");
             var resultCount = document.getElementById("resultCount");
@@ -885,40 +913,58 @@
                     }).join("");
             }
 
-            function atualizarBadge(esp, uf, cid) {
+            function atualizarBadge(nome, esp, uf, cid) {
                 var parts = [];
+
+                if (nome) parts.push("Nome: " + nome);
                 if (esp) parts.push(esp);
                 if (uf) parts.push(uf);
                 if (cid) parts.push(cid);
 
-                badgeResumo.innerHTML = '<i class="bi bi-check-circle"></i> ' + (parts.length ? parts.map(esc).join(" • ") : "Geral");
+                badgeResumo.innerHTML =
+                    '<i class="bi bi-check-circle"></i> ' +
+                    (parts.length ? parts.map(esc).join(" • ") : "Geral");
             }
 
             function filtrarERenderizar() {
+                var nomeDigitado = nomeInput ? nomeInput.value.trim() : "";
+                var nome = normalize(nomeDigitado);
+
                 var esp = (espSelect && espSelect.value) ? espSelect.value : "";
                 var uf = (stateSelect && stateSelect.value) ? stateSelect.value : "";
                 var cid = (!citySelect.disabled && citySelect.value) ? citySelect.value : "";
 
-                if (!esp) {
-                    alert("Por favor, selecione uma Especialidade.");
-                    return;
-                }
-
                 var filtrados = COLABORADORES.filter(function (c) {
-                    var matchEsp = !esp || (c.especialidades || []).some(function (e) {
-                        return normalize(e && e.nome) === normalize(esp);
-                    });
-                    var matchUf = !uf || c.estado === uf;
-                    var matchCid = !cid || c.cidade === cid;
-                    return matchEsp && matchUf && matchCid;
+
+                    var matchNome =
+                        !nome ||
+                        normalize(c.nome).includes(nome);
+
+                    var matchEsp =
+                        !esp ||
+                        (c.especialidades || []).some(function (e) {
+                            return normalize(e && e.nome) === normalize(esp);
+                        });
+
+                    var matchUf =
+                        !uf ||
+                        c.estado === uf;
+
+                    var matchCid =
+                        !cid ||
+                        c.cidade === cid;
+
+                    return matchNome && matchEsp && matchUf && matchCid;
                 });
 
                 results.innerHTML = filtrados.length
-                    ? filtrados.map(function (c) { return cardColaborador(c, esp); }).join("")
+                    ? filtrados.map(function (c) {
+                        return cardColaborador(c, esp);
+                    }).join("")
                     : '<div class="col-12"><div class="empty-state"><i class="bi bi-emoji-frown"></i><p class="mb-0 fw-bold">Nenhum profissional encontrado.</p><small>Tente mudar os filtros selecionados.</small></div></div>';
 
                 resultCount.textContent = String(filtrados.length);
-                atualizarBadge(esp, uf, cid);
+                atualizarBadge(nomeDigitado, esp, uf, cid);
             }
 
             async function init() {
@@ -935,6 +981,23 @@
             }
 
             btnSearch.addEventListener("click", filtrarERenderizar);
+
+            nomeInput.addEventListener("keyup", function () {
+                filtrarERenderizar();
+            });
+
+            espSelect.addEventListener("change", function () {
+                filtrarERenderizar();
+            });
+
+            stateSelect.addEventListener("change", function () {
+                preencherMunicipios(stateSelect.value, "");
+                filtrarERenderizar();
+            });
+
+            citySelect.addEventListener("change", function () {
+                filtrarERenderizar();
+            });
 
             stateSelect.addEventListener("change", function () {
                 preencherMunicipios(stateSelect.value, "");
